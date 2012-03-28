@@ -4,6 +4,7 @@
  */
 package com.mnorrman.datastorageproject;
 
+import com.mnorrman.datastorageproject.objects.IndexedDataObject;
 import com.mnorrman.datastorageproject.tools.Checksum;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -23,9 +24,53 @@ public class DataProcessor {
         this.dataChannel = channel;
     }
     
+    public ByteBuffer retrieveData(IndexedDataObject ido){
+        try{
+            ByteBuffer data = ByteBuffer.allocateDirect((int)ido.getLength());
+            dataChannel.position(ido.getOffset() + 512);
+            dataChannel.read(data);
+            data.flip();
+            return data;
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+        return null;
+    }
     
-    public ByteBuffer getHead(String col, String row){
-        
+    public IndexedDataObject retrieveMetaData(long offset, long length){
+        try{
+            ByteBuffer data = ByteBuffer.allocateDirect(512 + (int)length);
+            dataChannel.position(offset);
+            dataChannel.read(data);
+            data.rewind();
+            
+            byte[] temp;
+            byte[] checksum = new byte[16];
+            String colname, rowname, owner;
+            long version, len;
+            
+            temp = new byte[128];
+            data.get(temp);
+            colname = new String(temp).trim();
+            
+            temp = new byte[128];
+            data.get(temp);
+            rowname = new String(temp).trim();
+            
+            version = data.getLong();
+            
+            len = data.getLong();
+            
+            data.get(checksum);
+            
+            temp = new byte[128];
+            data.get(temp);
+            owner = new String(temp).trim();
+            
+            //return new IndexedDataObject(colname, rowname, owner, offset, length, version, checksum)
+        }catch(IOException e){
+            Logger.getGlobal().log(Level.SEVERE, e.getMessage());
+        }
         return null;
     }
     
@@ -62,7 +107,7 @@ public class DataProcessor {
         }
     }
     
-    public boolean insertData(String colname, String rowname, long version, long length, String owner, ByteBuffer data){
+    public boolean storeData(String colname, String rowname, long version, long length, String owner, ByteBuffer data){
         try{
             ByteBuffer buffer = ByteBuffer.allocateDirect(512); //416 + 96 (Void)
             byte[] colnameBytes = new byte[128];
@@ -82,9 +127,10 @@ public class DataProcessor {
             byte[] voidData = new byte[96];
             buffer.put(voidData);
             buffer.flip();
-            
+            data.flip();
             dataChannel.position(dataChannel.size());
             dataChannel.write(buffer);
+            dataChannel.write(data);
             return true;
             
         }catch(IOException e){
@@ -101,10 +147,17 @@ public class DataProcessor {
         }catch(IOException e){ e.printStackTrace(); }
         DataProcessor p = new DataProcessor(b.getChannel());
         ByteBuffer buf = ByteBuffer.allocate(10);
-        buf.put(new byte[]{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 });
-        p.insertData("Testvalue a", "Testvalue b", System.currentTimeMillis(), 10L, "Ownervalue", buf);
+        buf.put(new byte[]{ 110, 111, 112, 113, 114, 115, 116, 117, 118, 119 });
+        p.storeData("Testvalue a", "Testvalue b", System.currentTimeMillis(), 10L, "Ownervalue", buf);
         
         p.testReadData();
+        
+        System.out.println("Testing to retrieve teh data!!!!");
+        IndexedDataObject o = new IndexedDataObject("Testvalue a", "Testvalue b", "ownervalue", 0, 10, 1L, Checksum.getFor(buf));
+        
+        byte[] stringData = new byte[(int)o.getLength()];
+        p.retrieveData(o).get(stringData);
+        System.out.println(new String(stringData).trim());
     }
     
 }
