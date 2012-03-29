@@ -4,17 +4,16 @@
  */
 package com.mnorrman.datastorageproject.objects;
 
+import com.mnorrman.datastorageproject.tools.HexConverter;
 import java.io.Serializable;
 
 /**
  *
  * @author Mikael
  */
-public final class IndexedDataObject implements Serializable{
+public final class IndexedDataObject extends DataObject implements Serializable{
     
-    private String colname, rowname, owner;
-    private long offset, length, version;
-    private byte[] checksum; //always 16 byte
+    private long offset, version;
 
     public IndexedDataObject(String colname, String rowname, String owner, long offset, long length, long version, byte[] checksum) {
         this.colname = colname;
@@ -26,35 +25,30 @@ public final class IndexedDataObject implements Serializable{
         this.checksum = checksum;
     }
     
+    public IndexedDataObject(UnindexedDataObject udo, long offset, long version){
+        this.colname = udo.getColname();
+        this.rowname = udo.getRowname();
+        this.owner = udo.getOwner();
+        this.offset = offset;
+        this.length = udo.getLength();
+        this.version = version;
+        this.checksum = udo.getChecksum();
+    }
+    
     public IndexedDataObject(){
         //Should probably be removed later on.
-    }
-
-    public byte[] getChecksum() {
-        return checksum;
-    }
-
-    public String getColname() {
-        return colname;
-    }
-
-    public long getLength() {
-        return length;
     }
 
     public long getOffset() {
         return offset;
     }
 
-    public String getOwner() {
-        return owner;
-    }
-
-    public String getRowname() {
-        return rowname;
-    }
-
     public long getVersion() {
         return version;
+    }
+
+    @Override
+    public String toString() {
+        return "IndexedDataObject: colname=" + colname + ", rowname=" + rowname + ", owner=" + owner + ", offset=" + offset + ", length=" + length + ", version=" + version + ", checksum=" + HexConverter.toHex(checksum);
     }
 }

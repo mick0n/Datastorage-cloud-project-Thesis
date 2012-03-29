@@ -18,8 +18,11 @@ public class Checksum {
     
     public synchronized static byte[] getFor(ByteBuffer data){
         try{
+            int initPos = data.position();
+            data.position(0);
             MessageDigest md = MessageDigest.getInstance("MD5");
             md.update(data);
+            data.position(initPos);
             return md.digest();
         }catch(NoSuchAlgorithmException e){
             e.printStackTrace();
@@ -37,5 +40,4 @@ public class Checksum {
         }
         return null;
     }
-    
 }

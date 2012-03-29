@@ -1,0 +1,2 @@
+Tjohojava.lang.ArrayIndexOutOfBoundsException: 4
+	at com.mnorrman.datastorageproject.LoggerWriter.main(LoggerWriter.java:42)
