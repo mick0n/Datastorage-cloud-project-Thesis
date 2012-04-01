@@ -1,2 +1,4 @@
-Tjohojava.lang.ArrayIndexOutOfBoundsException: 4
-	at com.mnorrman.datastorageproject.LoggerWriter.main(LoggerWriter.java:42)
+Thu Mar 29 16:28:39 CEST 2012: INFO: java.lang.ArrayIndexOutOfBoundsException: 4
+Thu Mar 29 16:28:39 CEST 2012: INFO: 	at com.mnorrman.datastorageproject.LogTool.main(LogTool.java:89)
+Thu Mar 29 16:30:05 CEST 2012: CRITICAL: java.lang.ArrayIndexOutOfBoundsException: 4
+Thu Mar 29 16:30:05 CEST 2012: CRITICAL: 	at com.mnorrman.datastorageproject.LogTool.main(LogTool.java:89)

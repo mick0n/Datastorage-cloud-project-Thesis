@@ -4,6 +4,7 @@
  */
 package com.mnorrman.datastorageproject.objects;
 
+import com.mnorrman.datastorageproject.tools.Hash;
 import java.io.Serializable;
 
 /**
@@ -13,12 +14,11 @@ import java.io.Serializable;
 public abstract class DataObject implements Serializable{
     
     protected String colname, rowname, owner;
-    protected long length;
-    protected byte[] checksum; //always 16 byte
+    protected long length, checksum;
     
     public DataObject(){ }
 
-    public DataObject(String colname, String rowname, String owner, long length, byte[] checksum) {
+    public DataObject(String colname, String rowname, String owner, long length, long checksum) {
         this.colname = colname;
         this.rowname = rowname;
         this.owner = owner;
@@ -26,7 +26,7 @@ public abstract class DataObject implements Serializable{
         this.checksum = checksum;
     }
 
-    public byte[] getChecksum() {
+    public long getChecksum() {
         return checksum;
     }
 
@@ -44,6 +44,10 @@ public abstract class DataObject implements Serializable{
 
     public String getRowname() {
         return rowname;
+    }
+
+    public String getHash() {
+        return Hash.get(colname, rowname);
     }
     
     @Override

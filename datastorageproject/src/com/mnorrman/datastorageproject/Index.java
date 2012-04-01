@@ -5,7 +5,7 @@
 package com.mnorrman.datastorageproject;
 
 import com.mnorrman.datastorageproject.objects.IndexedDataObject;
-import com.mnorrman.datastorageproject.tools.Checksum;
+import com.mnorrman.datastorageproject.tools.Hash;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -22,7 +22,7 @@ public class Index extends HashMap<String, ArrayList<IndexedDataObject>> {
     }
     
     public void insertIndex(IndexedDataObject ido){
-        String checksum = Checksum.getFor(ido.getColname(), ido.getRowname());
+        String checksum = ido.getHash();
         if(containsKey(checksum)){
             ArrayList<IndexedDataObject> temp = get(checksum);
             IndexedDataObject idoTemp = null;
@@ -43,11 +43,15 @@ public class Index extends HashMap<String, ArrayList<IndexedDataObject>> {
     }
         
     public IndexedDataObject get(String a, String b){
-        return get(Checksum.getFor(a, b)).get(0); //Zero is head
+        return get(Hash.get(a, b)).get(0); //Zero is head
+    }
+    
+    public IndexedDataObject getWithHash(String hash){
+        return get(hash).get(0); //Zero is head
     }
     
     public int getNumberOfVersions(IndexedDataObject ido){
-        return get(Checksum.getFor(ido.getColname(), ido.getRowname())).size();
+        return get(Hash.get(ido.getColname(), ido.getRowname())).size();
     }
     
     public boolean doIndexedObjectExist(String hash){

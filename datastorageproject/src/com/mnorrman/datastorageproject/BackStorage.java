@@ -5,7 +5,7 @@
 package com.mnorrman.datastorageproject;
 
 import com.mnorrman.datastorageproject.objects.IndexedDataObject;
-import com.mnorrman.datastorageproject.tools.Checksum;
+import com.mnorrman.datastorageproject.tools.Hash;
 import com.mnorrman.datastorageproject.tools.HexConverter;
 import java.io.File;
 import java.io.IOException;
@@ -14,6 +14,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.zip.CRC32;
 
 /**
  *
@@ -21,6 +22,8 @@ import java.util.LinkedList;
  */
 public class BackStorage {
 
+    public static final int BlOCK_SIZE = 131072;
+    
     public static String dataLocation = "";
     
     private RandomAccessFile fileConnection;
@@ -53,9 +56,8 @@ public class BackStorage {
                 data.rewind();
 
                 byte[] temp;
-                byte[] checksum = new byte[16];
                 String colname, rowname, owner;
-                long version, len;
+                long version, len, checksum;
 
                 temp = new byte[128];
                 data.get(temp);
@@ -69,7 +71,7 @@ public class BackStorage {
 
                 len = data.getLong();
 
-                data.get(checksum);
+                checksum = data.getLong();
 
                 temp = new byte[128];
                 data.get(temp);
@@ -87,38 +89,50 @@ public class BackStorage {
     
     public boolean performIntegrityCheck(){
         long position = 0;
-        ByteBuffer length = ByteBuffer.allocate(8);
-        ByteBuffer checksum = ByteBuffer.allocate(16);
-        ByteBuffer data;
+        ByteBuffer meta = ByteBuffer.allocate(16);
         try{
             FileChannel channel = fileConnection.getChannel();
+            if(channel.size() <= 0)
+                return true;
             channel.position(position);
             do{
-                length.clear();
-                checksum.clear(); //Clear it first
+                meta.clear();
                 channel.position(position + 264); //Jump to length and checksum
-                channel.read(length);
-                channel.read(checksum);
-                length.rewind();
-                checksum.rewind();
+                channel.read(meta);
+                meta.flip();
 
                 //Set variables
                 long len;
-                byte[] checksumDataFromIndex = new byte[16];
+                long checksumDataFromIndex;
                 
                 //Read from bytebuffers
-                len = length.getLong();
-                checksum.get(checksumDataFromIndex);
+                len = meta.getLong();
+                checksumDataFromIndex = meta.getLong();
                 
-                data = ByteBuffer.allocate((int)len);
+                //Jump past metadata and create new CRC32-object
                 channel.position(position + 512);
-                channel.read(data);
+                CRC32 crc = new CRC32();
+
+                int readBytes = 0;
+                long totalBytesRead = 0;
+                ByteBuffer buffer = ByteBuffer.allocate(BlOCK_SIZE);
                 
-                data.flip();
+                System.out.println("What are we working with? " + len + ", " + checksumDataFromIndex);
+                do{
+                    readBytes = channel.read(buffer);
+                    buffer.flip();
+                    
+                    //Check if we read more bytes that necessary
+                    if(readBytes + totalBytesRead > len){
+                        readBytes = (int)(len - totalBytesRead);
+                    }
+                    crc.update(buffer.array(), 0, readBytes);
+                    totalBytesRead += readBytes;
+                }while(totalBytesRead < len);
+                long checksumDataFromData = crc.getValue();
                 
-                byte[] checksumDataFromData = Checksum.getFor(data);
-                
-                if(!HexConverter.toHex(checksumDataFromIndex).equals(HexConverter.toHex(checksumDataFromData))){
+                System.out.println("Checksum 1: " + checksumDataFromIndex + " 2: " + checksumDataFromData);
+                if(checksumDataFromIndex != checksumDataFromData){
                     return false;
                 }
                 
@@ -136,15 +150,15 @@ public class BackStorage {
     }
     
     public static void main(String[] args) {
-        BackStorage t = new BackStorage();
         try{
-            LinkedList<IndexedDataObject> list = t.initialize().reindexData();
-            System.out.println("List = " + list.size());
-            Iterator<IndexedDataObject> it = list.iterator();
-            while(it.hasNext()){
-                System.out.println(it.next().toString());
-            }
-            
+            BackStorage t = new BackStorage().initialize();
+//            LinkedList<IndexedDataObject> list = t.initialize().reindexData();
+//            System.out.println("List = " + list.size());
+//            Iterator<IndexedDataObject> it = list.iterator();
+//            while(it.hasNext()){
+//                System.out.println(it.next().toString());
+//            }
+//            
             System.out.println("Integrity check is: " + t.performIntegrityCheck());
         }catch(IOException e){
             e.printStackTrace();

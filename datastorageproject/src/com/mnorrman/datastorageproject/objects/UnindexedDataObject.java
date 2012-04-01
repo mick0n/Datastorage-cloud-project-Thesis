@@ -4,9 +4,7 @@
  */
 package com.mnorrman.datastorageproject.objects;
 
-import com.mnorrman.datastorageproject.tools.Checksum;
-import com.mnorrman.datastorageproject.tools.HexConverter;
-import java.nio.ByteBuffer;
+import java.io.InputStream;
 
 /**
  *
@@ -14,23 +12,26 @@ import java.nio.ByteBuffer;
  */
 public class UnindexedDataObject extends DataObject{
 
-    private ByteBuffer data;
+    private InputStream stream;
 
-    public UnindexedDataObject(ByteBuffer data, String colname, String rowname, String owner) {
-        super(colname, rowname, owner, data.capacity(), Checksum.getFor(data));
-        this.data = data;
+    public UnindexedDataObject(InputStream stream, String colname, String rowname, String owner, long length) {
+        this.stream = stream;
+        this.colname = colname;
+        this.rowname = rowname;
+        this.owner = owner;
+        this.length = length;
     }
-    
-    public UnindexedDataObject(ByteBuffer data){
-        this.data = data;
+
+    public InputStream getStream(){
+        return stream;
     }
-    
-    public ByteBuffer getData(){
-        return data;
+
+    public void setChecksum(long checksum) {
+        this.checksum = checksum;
     }
     
     @Override
     public String toString() {
-        return "UnindexedDataObject: colname=" + colname + ", rowname=" + rowname + ", owner=" + owner + ", length=" + length + ", checksum=" + HexConverter.toHex(checksum);
+        return "UnindexedDataObject: colname=" + colname + ", rowname=" + rowname + ", owner=" + owner + ", length=" + length + ", checksum=" + checksum;
     }    
 }

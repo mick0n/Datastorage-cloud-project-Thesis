@@ -6,12 +6,9 @@ package com.mnorrman.datastorageproject;
 
 import com.mnorrman.datastorageproject.objects.IndexedDataObject;
 import com.mnorrman.datastorageproject.objects.UnindexedDataObject;
-import com.mnorrman.datastorageproject.tools.Checksum;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
 
 /**
  *
@@ -27,16 +24,16 @@ public class Main {
             storage = new BackStorage().initialize();
             DataProcessor dp = new DataProcessor(storage.getChannel());
             
-            File file = new File("testfile.exe");
-            ByteBuffer dataBuffer = ByteBuffer.allocate((int)file.length());
-            FileChannel fc = new FileInputStream(file).getChannel();
-            fc.read(dataBuffer);
-            fc.close();
-            UnindexedDataObject udo = new UnindexedDataObject(dataBuffer, "Example1", "Example1-2", "Mikael Norrman");
+            File file = new File("largefile2");
+            //ByteBuffer dataBuffer = ByteBuffer.allocate((int)file.length());
+            //FileChannel fc = new FileInputStream(file).getChannel();
+            //fc.read(dataBuffer);
+            //fc.close();
+            UnindexedDataObject udo = new UnindexedDataObject(new FileInputStream(file), "Example2", "Example2-2", "Mikael Norrman", file.length());
             
             localIndex.insertIndex(dp.storeData(udo));
             
-            IndexedDataObject ido = localIndex.get("Example1", "Example1-2");
+            IndexedDataObject ido = localIndex.getWithHash(udo.getHash());
             System.out.println(ido);
             
         }catch(IOException e){

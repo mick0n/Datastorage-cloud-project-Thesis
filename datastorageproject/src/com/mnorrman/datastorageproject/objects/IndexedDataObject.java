@@ -4,7 +4,6 @@
  */
 package com.mnorrman.datastorageproject.objects;
 
-import com.mnorrman.datastorageproject.tools.HexConverter;
 import java.io.Serializable;
 
 /**
@@ -15,7 +14,7 @@ public final class IndexedDataObject extends DataObject implements Serializable{
     
     private long offset, version;
 
-    public IndexedDataObject(String colname, String rowname, String owner, long offset, long length, long version, byte[] checksum) {
+    public IndexedDataObject(String colname, String rowname, String owner, long offset, long length, long version, long checksum) {
         this.colname = colname;
         this.rowname = rowname;
         this.owner = owner;
@@ -49,6 +48,6 @@ public final class IndexedDataObject extends DataObject implements Serializable{
 
     @Override
     public String toString() {
-        return "IndexedDataObject: colname=" + colname + ", rowname=" + rowname + ", owner=" + owner + ", offset=" + offset + ", length=" + length + ", version=" + version + ", checksum=" + HexConverter.toHex(checksum);
+        return "IndexedDataObject: colname=" + colname + ", rowname=" + rowname + ", owner=" + owner + ", offset=" + offset + ", length=" + length + ", version=" + version + ", checksum=" + checksum;
     }
 }
