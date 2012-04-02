@@ -1,4 +1,15 @@
-Thu Mar 29 16:28:39 CEST 2012: INFO: java.lang.ArrayIndexOutOfBoundsException: 4
-Thu Mar 29 16:28:39 CEST 2012: INFO: 	at com.mnorrman.datastorageproject.LogTool.main(LogTool.java:89)
-Thu Mar 29 16:30:05 CEST 2012: CRITICAL: java.lang.ArrayIndexOutOfBoundsException: 4
-Thu Mar 29 16:30:05 CEST 2012: CRITICAL: 	at com.mnorrman.datastorageproject.LogTool.main(LogTool.java:89)
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2012-04-02T21:43:49</date>
+  <millis>1333395829157</millis>
+  <sequence>0</sequence>
+  <logger>b-log</logger>
+  <level>INFO</level>
+  <class>com.mnorrman.datastorageproject.BackStorage</class>
+  <method>initialize</method>
+  <thread>1</thread>
+  <message>BackStorage initialized</message>
+</record>
+Mon Apr 02 21:43:49 CEST 2012: INFO: Console Input Manager started

@@ -5,15 +5,13 @@
 package com.mnorrman.datastorageproject;
 
 import com.mnorrman.datastorageproject.objects.IndexedDataObject;
-import com.mnorrman.datastorageproject.tools.Hash;
-import com.mnorrman.datastorageproject.tools.HexConverter;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
-import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.logging.Logger;
 import java.util.zip.CRC32;
 
 /**
@@ -40,10 +38,15 @@ public class BackStorage {
         }
         
         fileConnection = new RandomAccessFile(file, "rwd");
+        
+        Logger.getLogger("b-log").info("BackStorage initialized");
+        
         return this;
     }
     
     public LinkedList<IndexedDataObject> reindexData(){
+        Main.logger.log("BackStorage: Begin reindex of data", LogTool.INFO);
+        
         LinkedList<IndexedDataObject> list = new LinkedList<IndexedDataObject>();
         long position = 0;
         ByteBuffer data = ByteBuffer.allocateDirect(512);
@@ -77,17 +80,21 @@ public class BackStorage {
                 data.get(temp);
                 owner = new String(temp).trim();
 
-                list.add(new IndexedDataObject(colname, rowname, owner, 0L, len, version, checksum));
+                list.add(new IndexedDataObject(colname, rowname, owner, position, len, version, checksum));
                 position += (512+len);
                 channel.position(position);
             }while(channel.size() - channel.position() > 0);
         }catch(IOException e){
-            e.printStackTrace();
+            Main.logger.log(e, LogTool.CRITICAL);
         }
+        
+        Main.logger.log("BackStorage: Reindexing complete", LogTool.INFO);
         return list;
     }
     
     public boolean performIntegrityCheck(){
+        Main.logger.log("BackStorage: Starting integrity check", LogTool.INFO);
+        
         long position = 0;
         ByteBuffer meta = ByteBuffer.allocate(16);
         try{
@@ -117,7 +124,6 @@ public class BackStorage {
                 long totalBytesRead = 0;
                 ByteBuffer buffer = ByteBuffer.allocate(BlOCK_SIZE);
                 
-                System.out.println("What are we working with? " + len + ", " + checksumDataFromIndex);
                 do{
                     readBytes = channel.read(buffer);
                     buffer.flip();
@@ -131,8 +137,8 @@ public class BackStorage {
                 }while(totalBytesRead < len);
                 long checksumDataFromData = crc.getValue();
                 
-                System.out.println("Checksum 1: " + checksumDataFromIndex + " 2: " + checksumDataFromData);
                 if(checksumDataFromIndex != checksumDataFromData){
+                    Main.logger.log("BackStorage: Integrity check failed", LogTool.WARNING);
                     return false;
                 }
                 
@@ -140,28 +146,14 @@ public class BackStorage {
                 channel.position(position);
             }while(channel.size() - channel.position() > 0);
         }catch(IOException e){
-            e.printStackTrace();
+            Main.logger.log(e, LogTool.CRITICAL);
         }
+        
+        Main.logger.log("BackStorage: Integrity check completed without warnings", LogTool.INFO);
         return true;
     }
     
     public FileChannel getChannel(){
         return fileConnection.getChannel();
-    }
-    
-    public static void main(String[] args) {
-        try{
-            BackStorage t = new BackStorage().initialize();
-//            LinkedList<IndexedDataObject> list = t.initialize().reindexData();
-//            System.out.println("List = " + list.size());
-//            Iterator<IndexedDataObject> it = list.iterator();
-//            while(it.hasNext()){
-//                System.out.println(it.next().toString());
-//            }
-//            
-            System.out.println("Integrity check is: " + t.performIntegrityCheck());
-        }catch(IOException e){
-            e.printStackTrace();
-        }
     }
 }

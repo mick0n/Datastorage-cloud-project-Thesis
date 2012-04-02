@@ -2,8 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mnorrman.datastorageproject;
+package com.mnorrman.datastorageproject.index;
 
+import com.mnorrman.datastorageproject.Main;
 import com.mnorrman.datastorageproject.objects.IndexedDataObject;
 import com.mnorrman.datastorageproject.tools.Hash;
 import java.util.ArrayList;
@@ -15,9 +16,9 @@ import java.util.List;
  *
  * @author Mikael
  */
-public class Index extends HashMap<String, ArrayList<IndexedDataObject>> {
+public class LocalIndex extends HashMap<String, ArrayList<IndexedDataObject>> {
         
-    public Index(){
+    public LocalIndex(){
         super();
     }
     
@@ -40,10 +41,18 @@ public class Index extends HashMap<String, ArrayList<IndexedDataObject>> {
             put(checksum, new ArrayList<IndexedDataObject>());
             get(checksum).add(ido);
         }
+        
     }
         
     public IndexedDataObject get(String a, String b){
         return get(Hash.get(a, b)).get(0); //Zero is head
+    }
+    
+    public IndexedDataObject get(String a, String b, int version){
+        if(get(Hash.get(a, b)).size() > version)
+            return get(Hash.get(a, b)).get(version);
+        else
+            return null;
     }
     
     public IndexedDataObject getWithHash(String hash){
@@ -54,8 +63,12 @@ public class Index extends HashMap<String, ArrayList<IndexedDataObject>> {
         return get(Hash.get(ido.getColname(), ido.getRowname())).size();
     }
     
-    public boolean doIndexedObjectExist(String hash){
+    public boolean contains(String hash){
         return containsKey(hash);
+    }
+    
+    public boolean contains(String a, String b){
+        return containsKey(Hash.get(a, b));
     }
     
     public void insertAll(List<IndexedDataObject> list){
@@ -64,5 +77,6 @@ public class Index extends HashMap<String, ArrayList<IndexedDataObject>> {
             IndexedDataObject temp = iterator.next();
             insertIndex(temp);
         }
+        Main.pool.submit(new IndexPercistance(getClass().getSimpleName(), values()));
     }
 }

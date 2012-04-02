@@ -4,7 +4,10 @@
  */
 package com.mnorrman.datastorageproject;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Date;
 
 /**
@@ -59,6 +62,10 @@ public class LogTool{
         }
     }
     
+    public void log(String s, int level){
+        printLine(s, level);
+    }
+    
     private void printLine(String s, int level){
         if(level >= logLevel){
             StringBuilder sb = new StringBuilder();
@@ -86,16 +93,5 @@ public class LogTool{
     public void close(){
         out.flush();
         out.close();
-    }
-    
-    public static void main(String[] args) throws IOException{
-        LogTool t = new LogTool();
-        
-        try{
-            int[] a = new int[1];
-            int b = a[4];
-        }catch(IndexOutOfBoundsException e){
-            t.log(e, CRITICAL);
-        }
     }
 }

@@ -4,11 +4,16 @@
  */
 package com.mnorrman.datastorageproject;
 
-import com.mnorrman.datastorageproject.objects.IndexedDataObject;
-import com.mnorrman.datastorageproject.objects.UnindexedDataObject;
-import java.io.File;
-import java.io.FileInputStream;
+import com.mnorrman.datastorageproject.index.LocalIndex;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
 
 /**
  *
@@ -16,45 +21,74 @@ import java.io.IOException;
  */
 public class Main {
 
-    public static Index localIndex;
+    public static LogTool logger;
+    public static LocalIndex localIndex;
+    public static ExecutorService pool;
     public BackStorage storage;
     
     public Main(){
         try{
             storage = new BackStorage().initialize();
-            DataProcessor dp = new DataProcessor(storage.getChannel());
-            
-            File file = new File("largefile2");
-            //ByteBuffer dataBuffer = ByteBuffer.allocate((int)file.length());
-            //FileChannel fc = new FileInputStream(file).getChannel();
-            //fc.read(dataBuffer);
-            //fc.close();
-            UnindexedDataObject udo = new UnindexedDataObject(new FileInputStream(file), "Example2", "Example2-2", "Mikael Norrman", file.length());
-            
-            localIndex.insertIndex(dp.storeData(udo));
-            
-            IndexedDataObject ido = localIndex.getWithHash(udo.getHash());
-            System.out.println(ido);
-            
         }catch(IOException e){
             e.printStackTrace();
         }
-        /*try{
-            storage = new BackStorage().initialize();
-            localIndex.insertAll(storage.reindexData());
-            
-            System.out.println("Local index has: " + localIndex.size());
-            System.out.println("Number of versions for first: " + localIndex.getNumberOfVersions(localIndex.get("Example1", "Example1-2")));
-        }catch(IOException e){
-            e.printStackTrace();
-        }*/
+    }
+    
+    public DataProcessor getNewDataProcessor(){
+        return new DataProcessor(storage.getChannel());
     }
     
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        localIndex = new Index();
+        SingleInstanceThread sit = new SingleInstanceThread();
+        if(!sit.tryInstance()){
+            System.out.println("Other instance found.");
+            System.exit(0);
+        }
+        
+        try{
+            Logger.getLogger("b-log").addHandler(new FileHandler("log.txt"));
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+        
+        logger = new LogTool(LogTool.INFO);
+        localIndex = new LocalIndex();
+        pool = Executors.newFixedThreadPool(5, Executors.defaultThreadFactory());
         Main m = new Main();
+        ConsoleInputManager console = new ConsoleInputManager(m);
+        console.start();
+    }
+    
+    private static class SingleInstanceThread extends Thread{
+        
+        private ServerSocket listener;
+        
+        public SingleInstanceThread(){
+        }
+        
+        public boolean tryInstance(){
+            try{
+                listener = new ServerSocket(65533, 0, InetAddress.getByName(null));
+                start();
+                return true;
+            }catch(IOException e){
+                //Unable to connect, no need to tell the world.
+            }
+            return false;
+        }
+
+        @Override
+        public void run() {
+            try{
+                while(true){
+                    listener.accept();
+                }
+            }catch(IOException e){
+                //Nothing to do here
+            }
+        }
     }
 }

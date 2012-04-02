@@ -4,6 +4,8 @@
  */
 package com.mnorrman.datastorageproject.tools;
 
+import com.mnorrman.datastorageproject.LogTool;
+import com.mnorrman.datastorageproject.Main;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -22,7 +24,7 @@ public class Hash {
             md = MessageDigest.getInstance("MD5");
             return new String(md.digest((a+b).getBytes()));
         }catch(NoSuchAlgorithmException e){
-            e.printStackTrace();
+            Main.logger.log(e, LogTool.CRITICAL);
         }
         return null;
     }

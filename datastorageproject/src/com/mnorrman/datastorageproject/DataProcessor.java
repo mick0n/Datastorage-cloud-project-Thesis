@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
@@ -31,17 +32,29 @@ public class DataProcessor {
         this.dataChannel = channel;
     }
     
-    public ByteBuffer retrieveData(IndexedDataObject ido){
+    public boolean retrieveData(OutputStream os, IndexedDataObject ido){
         try{
-            ByteBuffer data = ByteBuffer.allocateDirect((int)ido.getLength());
+            ByteBuffer buffer = ByteBuffer.allocate(BlOCK_SIZE);
             dataChannel.position(ido.getOffset() + 512);
-            dataChannel.read(data);
-            data.flip();
-            return data;
+            
+            int readBytes = 0;
+            long totalBytesRead = 0;
+
+            do{
+                readBytes = dataChannel.read(buffer);
+                buffer.flip();
+                if(readBytes + totalBytesRead > ido.getLength()){
+                        readBytes = (int)(ido.getLength() - totalBytesRead);
+                    }
+                os.write(buffer.array(), 0, readBytes);
+                totalBytesRead += readBytes;
+            }while(totalBytesRead < ido.getLength());
+            os.flush();
+            return true;
         }catch(IOException e){
-            e.printStackTrace();
+            Main.logger.log(e, LogTool.CRITICAL);
         }
-        return null;
+        return false;
     }
 
     public IndexedDataObject storeData(UnindexedDataObject udo){
@@ -54,7 +67,8 @@ public class DataProcessor {
         long totalBytesRead = 0;
         byte[] bytes = null;
         
-        try (FileOutputStream fos = new FileOutputStream(file)) {
+        try {
+            FileOutputStream fos = new FileOutputStream(file);
             do{
                 bytes = new byte[BlOCK_SIZE];
                 readBytes = udo.getStream().read(bytes);
@@ -63,8 +77,9 @@ public class DataProcessor {
                 totalBytesRead += readBytes;
             }while(totalBytesRead < udo.getLength());
             fos.flush();
+            fos.close();
         }catch(IOException e){
-            e.printStackTrace();
+            Main.logger.log(e, LogTool.CRITICAL);
         }
 
         udo.setChecksum(crc.getValue());
@@ -109,12 +124,11 @@ public class DataProcessor {
             return new IndexedDataObject(udo, newOffset, newVersion);
             
         }catch(IOException e){
-            Logger.getGlobal().log(Level.SEVERE, e.getMessage());
-            e.printStackTrace();
+            Main.logger.log(e, LogTool.CRITICAL);
             try{
                 dataChannel.truncate(filesizeBeforeOperation);
             }catch(IOException e2){
-                e2.printStackTrace();
+                Main.logger.log(e2, LogTool.CRITICAL);
             }
         }
         return null;
