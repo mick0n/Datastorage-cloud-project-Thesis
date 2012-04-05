@@ -4,30 +4,69 @@
  */
 package com.mnorrman.datastorageproject.index;
 
-import com.mnorrman.datastorageproject.Main;
 import com.mnorrman.datastorageproject.objects.IndexedDataObject;
 import com.mnorrman.datastorageproject.tools.Hash;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  *
  * @author Mikael
  */
-public class LocalIndex extends HashMap<String, ArrayList<IndexedDataObject>> {
-        
+public class LocalIndex extends Index<IndexedDataObject> {
+    
+    private HashMap<String, ArrayList<IndexedDataObject>> table;
+    
     public LocalIndex(){
-        super();
+        table = new HashMap<>();
+    }
+
+    public void clear(){
+        table.clear();
     }
     
-    public void insertIndex(IndexedDataObject ido){
-        String checksum = ido.getHash();
-        if(containsKey(checksum)){
-            ArrayList<IndexedDataObject> temp = get(checksum);
+    @Override
+    public boolean contains(String hash) {
+        return table.containsKey(hash);
+    }
+
+    @Override
+    public boolean contains(String a, String b) {
+        return table.containsKey(Hash.get(a, b));
+    }
+
+    @Override
+    public IndexedDataObject get(String a, String b) {
+        return table.get(Hash.get(a, b)).get(0);
+    }
+
+    @Override
+    public IndexedDataObject get(String a, String b, int version) {
+        if(table.get(Hash.get(a, b)).size() > version && version >= 0)
+            return table.get(Hash.get(a, b)).get(version);
+        else
+            return null;
+    }
+
+    @Override
+    public IndexedDataObject get(String hash) {
+        return table.get(hash).get(0);
+    }
+
+    @Override
+    public IndexedDataObject get(String hash, int version) {
+        if(table.get(hash).size() > version && version >= 0)
+            return table.get(hash).get(version);
+        else
+            return null;
+    }
+
+    @Override
+    public void insert(IndexedDataObject dataObject) {
+        String checksum = dataObject.getHash();
+        if(table.containsKey(checksum)){
+            ArrayList<IndexedDataObject> temp = table.get(checksum);
             IndexedDataObject idoTemp = null;
-            temp.add(ido);
+            temp.add(dataObject);
             for(int a = temp.size() - 1; a > 0; a--){
                 if(temp.get(a).getVersion() > temp.get(a-1).getVersion()){
                     idoTemp = temp.get(a-1);
@@ -38,45 +77,37 @@ public class LocalIndex extends HashMap<String, ArrayList<IndexedDataObject>> {
                 }
             }
         }else{
-            put(checksum, new ArrayList<IndexedDataObject>());
-            get(checksum).add(ido);
+            table.put(checksum, new ArrayList<IndexedDataObject>());
+            table.get(checksum).add(dataObject);
         }
-        
     }
-        
-    public IndexedDataObject get(String a, String b){
-        return get(Hash.get(a, b)).get(0); //Zero is head
-    }
-    
-    public IndexedDataObject get(String a, String b, int version){
-        if(get(Hash.get(a, b)).size() > version)
-            return get(Hash.get(a, b)).get(version);
-        else
-            return null;
-    }
-    
-    public IndexedDataObject getWithHash(String hash){
-        return get(hash).get(0); //Zero is head
-    }
-    
-    public int getNumberOfVersions(IndexedDataObject ido){
-        return get(Hash.get(ido.getColname(), ido.getRowname())).size();
-    }
-    
-    public boolean contains(String hash){
-        return containsKey(hash);
-    }
-    
-    public boolean contains(String a, String b){
-        return containsKey(Hash.get(a, b));
-    }
-    
-    public void insertAll(List<IndexedDataObject> list){
+
+    @Override
+    public void insertAll(List<IndexedDataObject> list) {
         Iterator<IndexedDataObject> iterator = list.iterator();
         while(iterator.hasNext()){
             IndexedDataObject temp = iterator.next();
-            insertIndex(temp);
+            insert(temp);
         }
-        Main.pool.submit(new IndexPercistance(getClass().getSimpleName(), values()));
+    }
+
+    @Override
+    public void remove(String a, String b) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void remove(String hash) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public int versionCount(IndexedDataObject dataObject) {
+        return table.get(Hash.get(dataObject.getColname(), dataObject.getRowname())).size();
+    }
+    
+    @Override
+    public Collection<ArrayList<IndexedDataObject>> getData(){
+        return table.values();
     }
 }

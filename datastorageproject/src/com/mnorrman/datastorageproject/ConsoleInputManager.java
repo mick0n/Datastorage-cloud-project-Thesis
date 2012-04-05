@@ -61,7 +61,7 @@ public class ConsoleInputManager extends Thread {
                     UnindexedDataObject udo = new UnindexedDataObject(new FileInputStream(file), colname, rowname, owner, file.length());
 
                     DataProcessor dp = m.getNewDataProcessor();
-                    Main.localIndex.insertIndex(dp.storeData(udo));
+                    Main.localIndex.insert(dp.storeData(udo));
                     print("Done storing \"" + file.getName() + "\"");
                 } catch (IOException e) {
                     Main.logger.log(e, LogTool.CRITICAL);
@@ -94,7 +94,7 @@ public class ConsoleInputManager extends Thread {
                 
                 
             }else if(command.toLowerCase().equals("printindex")){
-                for(ArrayList<IndexedDataObject> al : Main.localIndex.values()){
+                for(ArrayList<IndexedDataObject> al : Main.localIndex.getData()){
                     for(IndexedDataObject ido : al){
                         System.out.println(ido);
                     }

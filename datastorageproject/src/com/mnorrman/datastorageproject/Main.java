@@ -8,10 +8,9 @@ import com.mnorrman.datastorageproject.index.LocalIndex;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
+import java.util.Timer;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 
@@ -24,6 +23,7 @@ public class Main {
     public static LogTool logger;
     public static LocalIndex localIndex;
     public static ExecutorService pool;
+    public static Timer timer;
     public BackStorage storage;
     
     public Main(){
@@ -57,6 +57,7 @@ public class Main {
         logger = new LogTool(LogTool.INFO);
         localIndex = new LocalIndex();
         pool = Executors.newFixedThreadPool(5, Executors.defaultThreadFactory());
+        timer = new Timer("TimerThread");
         Main m = new Main();
         ConsoleInputManager console = new ConsoleInputManager(m);
         console.start();

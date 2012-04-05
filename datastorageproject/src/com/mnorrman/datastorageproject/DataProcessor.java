@@ -114,6 +114,17 @@ public class DataProcessor {
             dataChannel.position(newOffset);
             dataChannel.write(buffer);
             
+            //-This part makes sure that the full amount of bytes are pre-
+            //allocated, thus making it easier to rollback the changes.
+            //(Since we still know how much data to remove)
+            long tempPos = dataChannel.position();
+            ByteBuffer voidbuf = ByteBuffer.allocate(1);
+            voidbuf.put((byte)0);
+            voidbuf.flip();
+            dataChannel.position(tempPos+udo.getLength());
+            dataChannel.write(voidbuf);
+            dataChannel.position(tempPos);
+            
             FileInputStream fis = new FileInputStream(file);
             FileChannel fc = fis.getChannel();
             fc.transferTo(0, file.length(), dataChannel);
