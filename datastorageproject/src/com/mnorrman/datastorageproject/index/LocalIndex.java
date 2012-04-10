@@ -4,6 +4,7 @@
  */
 package com.mnorrman.datastorageproject.index;
 
+import com.mnorrman.datastorageproject.Main;
 import com.mnorrman.datastorageproject.objects.IndexedDataObject;
 import com.mnorrman.datastorageproject.tools.Hash;
 import java.util.*;
@@ -17,7 +18,8 @@ public class LocalIndex extends Index<IndexedDataObject> {
     private HashMap<String, ArrayList<IndexedDataObject>> table;
     
     public LocalIndex(){
-        table = new HashMap<>();
+        table = new HashMap<String, ArrayList<IndexedDataObject>>();
+        Main.timer.scheduleAtFixedRate(new IndexPercistanceTimerTask(this), 1000L, 2500L);
     }
 
     public void clear(){
@@ -98,6 +100,16 @@ public class LocalIndex extends Index<IndexedDataObject> {
 
     @Override
     public void remove(String hash) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void remove(String a, String b, int version) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void remove(String hash, int version) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

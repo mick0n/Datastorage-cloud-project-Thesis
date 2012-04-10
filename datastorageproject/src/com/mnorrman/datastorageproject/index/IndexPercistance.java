@@ -62,6 +62,7 @@ public class IndexPercistance implements Runnable{
             }
             lock.release();
             output.close();
+            System.out.println("Saved index =)");
         }catch(IOException e){
             e.printStackTrace();
         }

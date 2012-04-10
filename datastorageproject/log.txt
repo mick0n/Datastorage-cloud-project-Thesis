@@ -2,8 +2,8 @@
 <!DOCTYPE log SYSTEM "logger.dtd">
 <log>
 <record>
-  <date>2012-04-02T23:44:39</date>
-  <millis>1333403079952</millis>
+  <date>2012-04-10T12:27:18</date>
+  <millis>1334053638539</millis>
   <sequence>0</sequence>
   <logger>b-log</logger>
   <level>INFO</level>
@@ -12,7 +12,25 @@
   <thread>1</thread>
   <message>BackStorage initialized</message>
 </record>
-Mon Apr 02 23:44:39 CEST 2012: INFO: Console Input Manager started
-Mon Apr 02 23:44:42 CEST 2012: INFO: BackStorage: Begin reindex of data
-Mon Apr 02 23:44:42 CEST 2012: INFO: BackStorage: Reindexing complete
-Mon Apr 02 23:54:30 CEST 2012: INFO: BackStorage: Starting integrity check
+<record>
+  <date>2012-04-10T12:27:20</date>
+  <millis>1334053640221</millis>
+  <sequence>1</sequence>
+  <logger>b-log</logger>
+  <level>INFO</level>
+  <class>com.mnorrman.datastorageproject.BackStorage</class>
+  <method>reindexData</method>
+  <thread>11</thread>
+  <message>Begin reindex of data</message>
+</record>
+<record>
+  <date>2012-04-10T12:27:20</date>
+  <millis>1334053640262</millis>
+  <sequence>2</sequence>
+  <logger>b-log</logger>
+  <level>INFO</level>
+  <class>com.mnorrman.datastorageproject.BackStorage</class>
+  <method>reindexData</method>
+  <thread>11</thread>
+  <message>Reindexing complete</message>
+</record>

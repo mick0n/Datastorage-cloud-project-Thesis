@@ -6,10 +6,12 @@ package com.mnorrman.datastorageproject;
 
 import com.mnorrman.datastorageproject.objects.IndexedDataObject;
 import com.mnorrman.datastorageproject.objects.UnindexedDataObject;
+import com.mnorrman.datastorageproject.tools.HexConverter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Scanner;

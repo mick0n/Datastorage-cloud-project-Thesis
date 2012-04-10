@@ -4,11 +4,10 @@
  */
 package com.mnorrman.datastorageproject.index;
 
-import com.mnorrman.datastorageproject.Main;
 import com.mnorrman.datastorageproject.objects.DataObject;
-import com.mnorrman.datastorageproject.objects.IndexedDataObject;
-import com.mnorrman.datastorageproject.tools.Hash;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  *
@@ -28,7 +27,11 @@ public abstract class Index<T extends DataObject> {
     
     public abstract void remove(String a, String b);
     
+    public abstract void remove(String a, String b, int version);
+    
     public abstract void remove(String hash);
+    
+    public abstract void remove(String hash, int version);
             
     public abstract T get(String a, String b);
     

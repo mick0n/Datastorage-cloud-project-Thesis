@@ -4,13 +4,10 @@
  */
 package com.mnorrman.datastorageproject;
 
+import com.mnorrman.datastorageproject.index.LocalIndex;
 import com.mnorrman.datastorageproject.objects.IndexedDataObject;
 import com.mnorrman.datastorageproject.objects.UnindexedDataObject;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
@@ -28,31 +25,50 @@ public class DataProcessor {
     
     private FileChannel dataChannel;
     
+    
+    /**
+     * Constructor. Requires a new FileChannel-object from the backstorage.
+     * @param channel FileChannel from the backstorage.
+     */
     public DataProcessor(FileChannel channel){
         this.dataChannel = channel;
     }
     
+    /**
+     * A method for retrieving data from our backStorage. It does not return any
+     * data, it simply returns a boolean value telling if the operation was 
+     * successful or not. 
+     * @param os An outputstream to which the data will be written.
+     * @param ido The indexedDataObject that contains the metadata for the data.
+     * @return True if everything went as expected, otherwise false.
+     */
     public boolean retrieveData(OutputStream os, IndexedDataObject ido){
         try{
             ByteBuffer buffer = ByteBuffer.allocate(BlOCK_SIZE);
             dataChannel.position(ido.getOffset() + 512);
             
             int readBytes = 0;
-            long totalBytesRead = 0;
+            long totalBytes = ido.getLength();
 
-            do{
+            while(totalBytes > 0){
+                buffer.clear();
                 readBytes = dataChannel.read(buffer);
                 buffer.flip();
-                if(readBytes + totalBytesRead > ido.getLength()){
-                        readBytes = (int)(ido.getLength() - totalBytesRead);
-                    }
-                os.write(buffer.array(), 0, readBytes);
-                totalBytesRead += readBytes;
-            }while(totalBytesRead < ido.getLength());
+                
+                if(readBytes >= totalBytes){
+                    os.write(buffer.array(), 0, (int)(totalBytes));
+                }else{
+                    os.write(buffer.array(), 0, readBytes);
+                }
+                
+                totalBytes -= readBytes;
+                if(totalBytes <= 0)
+                    break;
+            }
             os.flush();
             return true;
         }catch(IOException e){
-            Main.logger.log(e, LogTool.CRITICAL);
+            Logger.getLogger("b-log").log(Level.SEVERE, "An error occured when retrieving data!", e);
         }
         return false;
     }
@@ -61,21 +77,23 @@ public class DataProcessor {
         
         CRC32 crc = new CRC32();
         String fileName = udo.getColname() + "-" + udo.getRowname() + Math.random();
-        File file = new File(fileName);
+        File tempFile = new File(fileName);
         
         int readBytes = 0;
         long totalBytesRead = 0;
         byte[] bytes = null;
         
         try {
-            FileOutputStream fos = new FileOutputStream(file);
-            do{
+            FileOutputStream fos = new FileOutputStream(tempFile);
+            while(totalBytesRead < udo.getLength()){
                 bytes = new byte[BlOCK_SIZE];
                 readBytes = udo.getStream().read(bytes);
                 crc.update(bytes, 0, readBytes);
                 fos.write(bytes, 0, readBytes);
                 totalBytesRead += readBytes;
-            }while(totalBytesRead < udo.getLength());
+                if(totalBytesRead >= udo.getLength())
+                    break;
+            }
             fos.flush();
             fos.close();
         }catch(IOException e){
@@ -86,33 +104,22 @@ public class DataProcessor {
         
         long filesizeBeforeOperation = -1; 
         
+        
+        
         try{
-            ByteBuffer buffer = ByteBuffer.allocateDirect(512); //416 + 96 (Void)
-            byte[] colnameBytes = new byte[128];
-            byte[] rownameBytes = new byte[128];
-            byte[] ownerBytes = new byte[128];
-            System.arraycopy(udo.getColname().getBytes(), 0, colnameBytes, 0, udo.getColname().getBytes().length);
-            System.arraycopy(udo.getRowname().getBytes(), 0, rownameBytes, 0, udo.getRowname().getBytes().length);
-            System.arraycopy(udo.getOwner().getBytes(), 0, ownerBytes, 0, udo.getOwner().getBytes().length);
+            ByteBuffer bbb = MetaDataComposer.decompose(udo);
+            bbb.position(264);
+            long newVersion = bbb.getLong();
+            bbb.position(0);
             
-            long newVersion = System.currentTimeMillis();
-            
-            buffer.put(colnameBytes);
-            buffer.put(rownameBytes);
-            buffer.putLong(newVersion);
-            buffer.putLong(udo.getLength());
-            buffer.putLong(udo.getChecksum());
-            buffer.put(ownerBytes);
-            
-            byte[] voidData = new byte[104];
-            buffer.put(voidData);
-            buffer.flip();
             FileLock fl = dataChannel.lock();
+
             long newOffset = dataChannel.size();
+                        
             filesizeBeforeOperation = newOffset;
             
             dataChannel.position(newOffset);
-            dataChannel.write(buffer);
+            dataChannel.write(bbb);
             
             //-This part makes sure that the full amount of bytes are pre-
             //allocated, thus making it easier to rollback the changes.
@@ -121,15 +128,22 @@ public class DataProcessor {
             ByteBuffer voidbuf = ByteBuffer.allocate(1);
             voidbuf.put((byte)0);
             voidbuf.flip();
-            dataChannel.position(tempPos+udo.getLength());
+            if(tempPos+(udo.getLength()-1) < 0)
+                dataChannel.position(0);
+            else
+                dataChannel.position(tempPos+(udo.getLength()-1));
             dataChannel.write(voidbuf);
             dataChannel.position(tempPos);
             
-            FileInputStream fis = new FileInputStream(file);
+            FileInputStream fis = new FileInputStream(tempFile);
             FileChannel fc = fis.getChannel();
-            fc.transferTo(0, file.length(), dataChannel);
+            
+            //Transfer all data from the temporary file into the backstorage.
+            dataChannel.transferFrom(fc, dataChannel.position(), tempFile.length());
             fc.close();
-            file.delete();
+            
+            //Remove the temporary file.
+            tempFile.delete();
             
             fl.release();
             return new IndexedDataObject(udo, newOffset, newVersion);
@@ -143,5 +157,19 @@ public class DataProcessor {
             }
         }
         return null;
+    }
+    
+    public static void main(String[] args) {
+        BackStorage b = null;
+        try{
+            b = new BackStorage().initialize();
+        }catch(Exception e){
+            Logger.getLogger("b-log").log(Level.SEVERE, "Error in main", e);
+        }
+        DataProcessor p = new DataProcessor(b.getChannel());
+        LocalIndex li = new LocalIndex();
+        li.insertAll(b.reindexData());
+        System.out.println("Successful? " + p.retrieveData(System.out, li.get("a", "a")));
+        System.out.println("Done");
     }
 }

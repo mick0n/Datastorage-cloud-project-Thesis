@@ -55,9 +55,10 @@ public class Main {
         }
         
         logger = new LogTool(LogTool.INFO);
-        localIndex = new LocalIndex();
         pool = Executors.newFixedThreadPool(5, Executors.defaultThreadFactory());
         timer = new Timer("TimerThread");
+        
+        localIndex = new LocalIndex();
         Main m = new Main();
         ConsoleInputManager console = new ConsoleInputManager(m);
         console.start();
