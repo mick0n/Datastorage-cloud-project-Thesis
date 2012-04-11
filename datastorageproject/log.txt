@@ -2,8 +2,8 @@
 <!DOCTYPE log SYSTEM "logger.dtd">
 <log>
 <record>
-  <date>2012-04-10T12:27:18</date>
-  <millis>1334053638539</millis>
+  <date>2012-04-10T20:30:24</date>
+  <millis>1334082624308</millis>
   <sequence>0</sequence>
   <logger>b-log</logger>
   <level>INFO</level>
@@ -12,25 +12,45 @@
   <thread>1</thread>
   <message>BackStorage initialized</message>
 </record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
 <record>
-  <date>2012-04-10T12:27:20</date>
-  <millis>1334053640221</millis>
-  <sequence>1</sequence>
+  <date>2012-04-10T20:30:57</date>
+  <millis>1334082657014</millis>
+  <sequence>0</sequence>
   <logger>b-log</logger>
   <level>INFO</level>
   <class>com.mnorrman.datastorageproject.BackStorage</class>
-  <method>reindexData</method>
-  <thread>11</thread>
-  <message>Begin reindex of data</message>
+  <method>initialize</method>
+  <thread>1</thread>
+  <message>BackStorage initialized</message>
 </record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
 <record>
-  <date>2012-04-10T12:27:20</date>
-  <millis>1334053640262</millis>
-  <sequence>2</sequence>
+  <date>2012-04-10T20:36:55</date>
+  <millis>1334083015987</millis>
+  <sequence>0</sequence>
   <logger>b-log</logger>
   <level>INFO</level>
-  <class>com.mnorrman.datastorageproject.BackStorage</class>
-  <method>reindexData</method>
-  <thread>11</thread>
-  <message>Reindexing complete</message>
+  <class>com.mnorrman.datastorageproject.storage.BackStorage</class>
+  <method>initialize</method>
+  <thread>1</thread>
+  <message>BackStorage initialized</message>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2012-04-10T20:51:31</date>
+  <millis>1334083891858</millis>
+  <sequence>0</sequence>
+  <logger>b-log</logger>
+  <level>INFO</level>
+  <class>com.mnorrman.datastorageproject.storage.BackStorage</class>
+  <method>initialize</method>
+  <thread>1</thread>
+  <message>BackStorage initialized</message>
 </record>

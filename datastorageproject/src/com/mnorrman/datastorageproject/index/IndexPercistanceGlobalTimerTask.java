@@ -11,17 +11,17 @@ import java.util.TimerTask;
  *
  * @author Mikael
  */
-public class IndexPercistanceTimerTask extends TimerTask{
+public class IndexPercistanceGlobalTimerTask extends TimerTask{
 
     private Index master;
     
-    public IndexPercistanceTimerTask(Index master){
+    public IndexPercistanceGlobalTimerTask(Index master){
         this.master = master;
     }
     
     @Override
     public void run() {
-        Main.pool.submit(new IndexPersistence(master.getData()));
+        Main.pool.submit(new IndexPersistenceGlobal(master.getData()));
     }
     
 }

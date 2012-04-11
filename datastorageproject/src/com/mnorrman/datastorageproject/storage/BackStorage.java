@@ -2,10 +2,10 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mnorrman.datastorageproject;
+package com.mnorrman.datastorageproject.storage;
 
 import com.mnorrman.datastorageproject.objects.IndexedDataObject;
-import com.mnorrman.datastorageproject.tools.HexConverter;
+import com.mnorrman.datastorageproject.tools.MetaDataComposer;
 import com.mnorrman.datastorageproject.tools.RawMetaDataPrinter;
 import java.io.File;
 import java.io.IOException;

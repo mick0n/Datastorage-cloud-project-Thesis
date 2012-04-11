@@ -4,6 +4,7 @@
  */
 package com.mnorrman.datastorageproject;
 
+import com.mnorrman.datastorageproject.storage.DataProcessor;
 import com.mnorrman.datastorageproject.objects.IndexedDataObject;
 import com.mnorrman.datastorageproject.objects.UnindexedDataObject;
 import com.mnorrman.datastorageproject.tools.HexConverter;
@@ -16,6 +17,8 @@ import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This class is mainly used for maintanence and testing during the early part
@@ -35,8 +38,6 @@ public class ConsoleInputManager extends Thread {
 
     @Override
     public void run() {
-        Main.logger.log("Console Input Manager started", LogTool.INFO);
-
         String command = "";
         StringTokenizer st = null;
         print("Welcome to Console Input Manager.");
@@ -66,10 +67,8 @@ public class ConsoleInputManager extends Thread {
                     Main.localIndex.insert(dp.storeData(udo));
                     print("Done storing \"" + file.getName() + "\"");
                 } catch (IOException e) {
-                    Main.logger.log(e, LogTool.CRITICAL);
                     print("An error occured when storing your file.");
                 } catch (NoSuchElementException e) {
-                    Main.logger.log(e, LogTool.CRITICAL);
                     print("Input parameters were wrong.");
                 }
 
@@ -88,11 +87,20 @@ public class ConsoleInputManager extends Thread {
                             dp.retrieveData(fos, ido);
                             fos.close();
                         }catch(IOException e){
-                            Main.logger.log(e, LogTool.CRITICAL);
+                            Logger.getLogger("b-log").log(Level.SEVERE, "An error occured!", e);
                         }
                 }else{
                     print("No such element in table");
                 }                
+                
+                
+            }else if(command.toLowerCase().equals("del")){
+                String colname = st.nextToken();
+                String rowname = st.nextToken();
+                IndexedDataObject temp = Main.localIndex.get(colname, rowname);
+                DataProcessor dp = m.getNewDataProcessor();
+                System.out.println("Success? " + dp.removeData(temp));
+                Main.localIndex.remove(temp.getHash());
                 
                 
             }else if(command.toLowerCase().equals("printindex")){

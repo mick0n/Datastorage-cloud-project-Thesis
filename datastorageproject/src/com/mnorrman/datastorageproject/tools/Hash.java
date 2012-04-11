@@ -8,6 +8,8 @@ import com.mnorrman.datastorageproject.LogTool;
 import com.mnorrman.datastorageproject.Main;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -24,7 +26,7 @@ public class Hash {
             md = MessageDigest.getInstance("MD5");
             return new String(md.digest((a+b).getBytes()));
         }catch(NoSuchAlgorithmException e){
-            Main.logger.log(e, LogTool.CRITICAL);
+            Logger.getLogger("b-log").log(Level.SEVERE, "An error occured when retrieving hash value!", e);
         }
         return null;
     }

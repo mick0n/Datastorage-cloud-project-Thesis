@@ -2,15 +2,16 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mnorrman.datastorageproject;
+package com.mnorrman.datastorageproject.storage;
 
-import com.mnorrman.datastorageproject.index.LocalIndex;
 import com.mnorrman.datastorageproject.objects.IndexedDataObject;
 import com.mnorrman.datastorageproject.objects.UnindexedDataObject;
+import com.mnorrman.datastorageproject.tools.MetaDataComposer;
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.CRC32;
@@ -97,7 +98,7 @@ public class DataProcessor {
             fos.flush();
             fos.close();
         }catch(IOException e){
-            Main.logger.log(e, LogTool.CRITICAL);
+            Logger.getLogger("b-log").log(Level.SEVERE, "An error occured when creating temporary data!", e);
         }
 
         udo.setChecksum(crc.getValue());
@@ -121,7 +122,7 @@ public class DataProcessor {
             dataChannel.position(newOffset);
             dataChannel.write(bbb);
             
-            //-This part makes sure that the full amount of bytes are pre-
+            //This part makes sure that the full amount of bytes are pre-
             //allocated, thus making it easier to rollback the changes.
             //(Since we still know how much data to remove)
             long tempPos = dataChannel.position();
@@ -149,27 +150,45 @@ public class DataProcessor {
             return new IndexedDataObject(udo, newOffset, newVersion);
             
         }catch(IOException e){
-            Main.logger.log(e, LogTool.CRITICAL);
+            Logger.getLogger("b-log").log(Level.SEVERE, "An error occured when storing data!", e);
             try{
                 dataChannel.truncate(filesizeBeforeOperation);
             }catch(IOException e2){
-                Main.logger.log(e2, LogTool.CRITICAL);
+                Logger.getLogger("b-log").log(Level.SEVERE, "An error occured when rolling back changes!", e);
             }
         }
         return null;
     }
     
-    public static void main(String[] args) {
-        BackStorage b = null;
+    public boolean removeData(IndexedDataObject ido){
+        long amount = ido.getLength() + 512L;
+        
         try{
-            b = new BackStorage().initialize();
-        }catch(Exception e){
-            Logger.getLogger("b-log").log(Level.SEVERE, "Error in main", e);
+            dataChannel.position(ido.getOffset() + amount);
+            dataChannel.transferFrom(dataChannel, ido.getOffset(), dataChannel.size()-(ido.getOffset()+amount));
+            dataChannel.truncate(dataChannel.size()-amount);
+            return true;
+        }catch(IOException e){
+            Logger.getLogger("b-log").log(Level.SEVERE, "Error when removing data", e);
         }
-        DataProcessor p = new DataProcessor(b.getChannel());
-        LocalIndex li = new LocalIndex();
-        li.insertAll(b.reindexData());
-        System.out.println("Successful? " + p.retrieveData(System.out, li.get("a", "a")));
-        System.out.println("Done");
+        
+        return false;
+    }
+    
+    /**
+     * Removes several indexedDataObjects. Designed to try removal of all items
+     * in the list, regardless if anyone fails.
+     * Practical to use when removing a table cell with multiple versions.
+     * @param idos List of IndexedDataObjects
+     * @return true if all IDO's were removed successfully. False if any of them
+     * failed to be removed.
+     */
+    public boolean removeData(List<IndexedDataObject> idos){
+        boolean value = true;
+        for(IndexedDataObject ido : idos){
+            if(value)
+                value = removeData(ido);
+        }
+        return value;
     }
 }

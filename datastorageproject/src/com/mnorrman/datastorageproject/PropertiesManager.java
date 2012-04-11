@@ -37,6 +37,10 @@ public class PropertiesManager {
         }
     }
     
+    public Object getValue(String key){
+        return props.getProperty(key);
+    }
+    
     private void setConfigFile(){
         try{
             PrintWriter pw = new PrintWriter(propFile);
@@ -49,9 +53,20 @@ public class PropertiesManager {
             pw.println("#dataPath - The absolute path to where all files are stored.");
             pw.println("#This does not have to be the same location as the runnable");
             pw.println("#file.");
-            pw.println("dataPath = D:\\Skola\\Exjobb\\Datastorage-cloud-project-Thesis\\datastorageproject");
+            pw.println("dataPath = " + new File("").getAbsolutePath());
             pw.println("");
             pw.println("");
+            pw.println("#indexInterval - the amount of time (in seconds) between each");
+            pw.println("#save of the index.");
+            pw.println("#A recommended amount is 900 seconds (15 minutes) on small to medium workload.");
+            pw.println("indexInterval = 900");
+            pw.println("");
+            pw.println("");
+            pw.println("#master - IP-address or hostname of the master server");
+            pw.println("#If this server is the master, use 127.0.0.1");
+            pw.println("master = 127.0.0.1");
+            pw.println("");
+            pw.println("");            
             pw.flush();
             pw.close();
         }catch(IOException e){

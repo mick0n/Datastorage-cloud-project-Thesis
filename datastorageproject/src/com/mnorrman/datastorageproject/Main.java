@@ -4,6 +4,8 @@
  */
 package com.mnorrman.datastorageproject;
 
+import com.mnorrman.datastorageproject.storage.BackStorage;
+import com.mnorrman.datastorageproject.storage.DataProcessor;
 import com.mnorrman.datastorageproject.index.LocalIndex;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -11,7 +13,9 @@ import java.net.ServerSocket;
 import java.util.Timer;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.ConsoleHandler;
 import java.util.logging.FileHandler;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -20,10 +24,10 @@ import java.util.logging.Logger;
  */
 public class Main {
 
-    public static LogTool logger;
     public static LocalIndex localIndex;
     public static ExecutorService pool;
     public static Timer timer;
+    public static PropertiesManager properties;
     public BackStorage storage;
     
     public Main(){
@@ -49,14 +53,19 @@ public class Main {
         }
         
         try{
-            Logger.getLogger("b-log").addHandler(new FileHandler("log.txt"));
+            Logger.getLogger("b-log").addHandler(new FileHandler("log.txt", true));
         }catch(IOException e){
             e.printStackTrace();
         }
         
-        logger = new LogTool(LogTool.INFO);
+        properties = new PropertiesManager();
+        
         pool = Executors.newFixedThreadPool(5, Executors.defaultThreadFactory());
         timer = new Timer("TimerThread");
+        
+        if(properties.getValue("master").toString().equalsIgnoreCase("127.0.0.1")){
+            //Start global index
+        }
         
         localIndex = new LocalIndex();
         Main m = new Main();
