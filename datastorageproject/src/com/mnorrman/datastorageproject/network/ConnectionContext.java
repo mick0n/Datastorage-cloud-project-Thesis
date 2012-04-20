@@ -18,6 +18,10 @@ public class ConnectionContext {
     
     public ConnectionContext(Protocol command){
         this.command = command;
+    }
+    
+    public void setCommand(Protocol command){
+        this.command = command;
         System.out.println("Value is = " + this.command.getValue());
     }
     

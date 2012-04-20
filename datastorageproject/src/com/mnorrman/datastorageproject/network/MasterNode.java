@@ -4,6 +4,7 @@
  */
 package com.mnorrman.datastorageproject.network;
 
+import com.mnorrman.datastorageproject.Main;
 import com.mnorrman.datastorageproject.storage.BackStorage;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -23,16 +24,20 @@ import javax.swing.text.AbstractDocument;
  */
 public class MasterNode extends Thread{
     
+    private Main main;
+    
     private MasterNodeListener mnl;
     private Selector selector;
     private ConcurrentLinkedQueue<SocketChannel> channelQueue;
     
     
-    private ByteBuffer commandBuffer;
-    private ByteBuffer largeBuffer;
+    private ByteBuffer buffer;
     private int readBytes, writtenBytes;
     
-    public MasterNode() {
+    public MasterNode(Main main) {
+        
+        this.main = main;
+        
         try{
             selector = Selector.open();
             mnl = new MasterNodeListener(this);
@@ -51,11 +56,9 @@ public class MasterNode extends Thread{
     @Override
     public void run() {
         
-        commandBuffer = ByteBuffer.allocateDirect(1024);
-        largeBuffer = ByteBuffer.allocateDirect(BackStorage.BlOCK_SIZE);
+        buffer = ByteBuffer.allocateDirect(BackStorage.BlOCK_SIZE);
         int readyChannels;
         
-        System.out.println("Starting to select");
         while(true){
             try {
                 readyChannels = selector.select();                
@@ -105,9 +108,7 @@ public class MasterNode extends Thread{
 
             boolean success = sChannel.finishConnect();
             if (!success) {
-                // An error occurred; handle it
-
-                // Unregister the channel with this selector
+                //An error occured, remove channel from selector
                 key.cancel();
             }
         }
@@ -117,23 +118,43 @@ public class MasterNode extends Thread{
             
             System.out.println("Reading event for " + sChannel.getRemoteAddress() + " #2");
             
-            if(key.attachment() == null){
-                readBytes = sChannel.read(commandBuffer);
-                if(readBytes > 0){
-                    commandBuffer.flip();
-                    ((ConnectionContext)key.attachment()).command = Protocol.PING;
-                    System.out.println("Attached value");
-                }
-            }else{
-                readBytes = sChannel.read(commandBuffer);
+            switch(((ConnectionContext)key.attachment()).command){
+                case NULL:
+                    buffer.limit(1);
+                    readBytes = sChannel.read(buffer);
+                    if(readBytes > 0){
+                        buffer.flip();
+                        ((ConnectionContext)key.attachment()).setCommand(Protocol.PING);
+                        System.out.println("Attached value");
+                    }
+                    //break;
+                
+                case GET:
+                    //Perform get
+                    break;
+                    
+                default:
+                    System.err.println("Nothing to do here #read");
             }
+            
+            
+//            if(key.attachment() == null){
+//                readBytes = sChannel.read(commandBuffer);
+//                if(readBytes > 0){
+//                    commandBuffer.flip();
+//                    ((ConnectionContext)key.attachment()).command = Protocol.PING;
+//                    System.out.println("Attached value");
+//                }
+//            }else{
+//                readBytes = sChannel.read(commandBuffer);
+//            }
             
             if(readBytes == -1){
                 key.cancel();
                 System.out.println("Ended channel");
             }
             
-            commandBuffer.clear();
+            buffer.clear();
         }
         else if (key.isValid() && key.isWritable()) {
             
@@ -144,18 +165,21 @@ public class MasterNode extends Thread{
             
             if(key.attachment() != null){
                 switch(((ConnectionContext)key.attachment()).command){
+                    case GET:
                     case PING:
-                        largeBuffer.put((byte)0x01);
-                        largeBuffer.flip();
-                        writtenBytes = sChannel.write(largeBuffer);
-                        largeBuffer.clear();
-                        key.attach(null);
+                        buffer.put((byte)0x01);
+                        buffer.flip();
+                        writtenBytes = sChannel.write(buffer);
+                        buffer.clear();
+                        ((ConnectionContext)key.attachment()).setCommand(Protocol.NULL);
+                        System.out.println("Written bytes= " + writtenBytes);
                         break;
+                        
+                    case NULL:
                     default:
-                        System.err.println("Nothing to do here");
+                        System.err.println("Nothing to do here #write");
                 }
                 
-                System.out.println("Written bytes= " + writtenBytes);
             }
             
             
@@ -177,7 +201,7 @@ public class MasterNode extends Thread{
     
     
     public static void main(String[] args) {
-        MasterNode mn = new MasterNode();
+        MasterNode mn = new MasterNode(null);
         mn.startMasterServer();
     }
     

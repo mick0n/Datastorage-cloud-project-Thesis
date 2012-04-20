@@ -124,3 +124,341 @@
   <thread>1</thread>
   <message>BackStorage initialized</message>
 </record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2012-04-20T12:15:50</date>
+  <millis>1334916950901</millis>
+  <sequence>0</sequence>
+  <logger>b-log</logger>
+  <level>INFO</level>
+  <class>com.mnorrman.datastorageproject.storage.BackStorage</class>
+  <method>initialize</method>
+  <thread>1</thread>
+  <message>BackStorage initialized</message>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2012-04-20T12:17:20</date>
+  <millis>1334917040838</millis>
+  <sequence>0</sequence>
+  <logger>b-log</logger>
+  <level>INFO</level>
+  <class>com.mnorrman.datastorageproject.storage.BackStorage</class>
+  <method>initialize</method>
+  <thread>1</thread>
+  <message>BackStorage initialized</message>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2012-04-20T12:17:35</date>
+  <millis>1334917055694</millis>
+  <sequence>0</sequence>
+  <logger>b-log</logger>
+  <level>INFO</level>
+  <class>com.mnorrman.datastorageproject.storage.BackStorage</class>
+  <method>initialize</method>
+  <thread>1</thread>
+  <message>BackStorage initialized</message>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2012-04-20T12:18:10</date>
+  <millis>1334917090759</millis>
+  <sequence>0</sequence>
+  <logger>b-log</logger>
+  <level>INFO</level>
+  <class>com.mnorrman.datastorageproject.storage.BackStorage</class>
+  <method>initialize</method>
+  <thread>1</thread>
+  <message>BackStorage initialized</message>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2012-04-20T12:18:38</date>
+  <millis>1334917118565</millis>
+  <sequence>0</sequence>
+  <logger>b-log</logger>
+  <level>INFO</level>
+  <class>com.mnorrman.datastorageproject.storage.BackStorage</class>
+  <method>initialize</method>
+  <thread>1</thread>
+  <message>BackStorage initialized</message>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2012-04-20T12:27:31</date>
+  <millis>1334917651317</millis>
+  <sequence>0</sequence>
+  <logger>b-log</logger>
+  <level>INFO</level>
+  <class>com.mnorrman.datastorageproject.storage.BackStorage</class>
+  <method>initialize</method>
+  <thread>1</thread>
+  <message>BackStorage initialized</message>
+</record>
+<record>
+  <date>2012-04-20T12:27:33</date>
+  <millis>1334917653245</millis>
+  <sequence>1</sequence>
+  <logger>b-log</logger>
+  <level>INFO</level>
+  <class>com.mnorrman.datastorageproject.storage.BackStorage</class>
+  <method>reindexData</method>
+  <thread>13</thread>
+  <message>Begin reindex of data</message>
+</record>
+<record>
+  <date>2012-04-20T12:27:33</date>
+  <millis>1334917653356</millis>
+  <sequence>2</sequence>
+  <logger>b-log</logger>
+  <level>INFO</level>
+  <class>com.mnorrman.datastorageproject.storage.BackStorage</class>
+  <method>reindexData</method>
+  <thread>13</thread>
+  <message>Reindexing complete</message>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2012-04-20T12:29:02</date>
+  <millis>1334917742424</millis>
+  <sequence>0</sequence>
+  <logger>b-log</logger>
+  <level>INFO</level>
+  <class>com.mnorrman.datastorageproject.storage.BackStorage</class>
+  <method>initialize</method>
+  <thread>1</thread>
+  <message>BackStorage initialized</message>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2012-04-20T12:30:05</date>
+  <millis>1334917805544</millis>
+  <sequence>0</sequence>
+  <logger>b-log</logger>
+  <level>INFO</level>
+  <class>com.mnorrman.datastorageproject.storage.BackStorage</class>
+  <method>initialize</method>
+  <thread>1</thread>
+  <message>BackStorage initialized</message>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2012-04-20T12:37:21</date>
+  <millis>1334918241506</millis>
+  <sequence>0</sequence>
+  <logger>b-log</logger>
+  <level>INFO</level>
+  <class>com.mnorrman.datastorageproject.storage.BackStorage</class>
+  <method>initialize</method>
+  <thread>1</thread>
+  <message>BackStorage initialized</message>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2012-04-20T12:38:48</date>
+  <millis>1334918328318</millis>
+  <sequence>0</sequence>
+  <logger>b-log</logger>
+  <level>INFO</level>
+  <class>com.mnorrman.datastorageproject.storage.BackStorage</class>
+  <method>initialize</method>
+  <thread>1</thread>
+  <message>BackStorage initialized</message>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2012-04-20T12:42:39</date>
+  <millis>1334918559078</millis>
+  <sequence>0</sequence>
+  <logger>b-log</logger>
+  <level>INFO</level>
+  <class>com.mnorrman.datastorageproject.storage.BackStorage</class>
+  <method>initialize</method>
+  <thread>1</thread>
+  <message>BackStorage initialized</message>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2012-04-20T12:44:14</date>
+  <millis>1334918654996</millis>
+  <sequence>0</sequence>
+  <logger>b-log</logger>
+  <level>INFO</level>
+  <class>com.mnorrman.datastorageproject.storage.BackStorage</class>
+  <method>initialize</method>
+  <thread>1</thread>
+  <message>BackStorage initialized</message>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2012-04-20T12:45:03</date>
+  <millis>1334918703871</millis>
+  <sequence>0</sequence>
+  <logger>b-log</logger>
+  <level>INFO</level>
+  <class>com.mnorrman.datastorageproject.storage.BackStorage</class>
+  <method>initialize</method>
+  <thread>1</thread>
+  <message>BackStorage initialized</message>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2012-04-20T12:49:18</date>
+  <millis>1334918958408</millis>
+  <sequence>0</sequence>
+  <logger>b-log</logger>
+  <level>INFO</level>
+  <class>com.mnorrman.datastorageproject.storage.BackStorage</class>
+  <method>initialize</method>
+  <thread>1</thread>
+  <message>BackStorage initialized</message>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2012-04-20T12:51:03</date>
+  <millis>1334919063495</millis>
+  <sequence>0</sequence>
+  <logger>b-log</logger>
+  <level>INFO</level>
+  <class>com.mnorrman.datastorageproject.storage.BackStorage</class>
+  <method>initialize</method>
+  <thread>1</thread>
+  <message>BackStorage initialized</message>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2012-04-20T12:52:11</date>
+  <millis>1334919131652</millis>
+  <sequence>0</sequence>
+  <logger>b-log</logger>
+  <level>INFO</level>
+  <class>com.mnorrman.datastorageproject.storage.BackStorage</class>
+  <method>initialize</method>
+  <thread>1</thread>
+  <message>BackStorage initialized</message>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2012-04-20T12:53:51</date>
+  <millis>1334919231500</millis>
+  <sequence>0</sequence>
+  <logger>b-log</logger>
+  <level>INFO</level>
+  <class>com.mnorrman.datastorageproject.storage.BackStorage</class>
+  <method>initialize</method>
+  <thread>1</thread>
+  <message>BackStorage initialized</message>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2012-04-20T12:57:25</date>
+  <millis>1334919445945</millis>
+  <sequence>0</sequence>
+  <logger>b-log</logger>
+  <level>INFO</level>
+  <class>com.mnorrman.datastorageproject.storage.BackStorage</class>
+  <method>initialize</method>
+  <thread>1</thread>
+  <message>BackStorage initialized</message>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2012-04-20T13:10:44</date>
+  <millis>1334920244982</millis>
+  <sequence>0</sequence>
+  <logger>b-log</logger>
+  <level>INFO</level>
+  <class>com.mnorrman.datastorageproject.storage.BackStorage</class>
+  <method>initialize</method>
+  <thread>1</thread>
+  <message>BackStorage initialized</message>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2012-04-20T20:52:55</date>
+  <millis>1334947975702</millis>
+  <sequence>0</sequence>
+  <logger>b-log</logger>
+  <level>INFO</level>
+  <class>com.mnorrman.datastorageproject.storage.BackStorage</class>
+  <method>initialize</method>
+  <thread>1</thread>
+  <message>BackStorage initialized</message>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2012-04-20T20:57:01</date>
+  <millis>1334948221950</millis>
+  <sequence>0</sequence>
+  <logger>b-log</logger>
+  <level>INFO</level>
+  <class>com.mnorrman.datastorageproject.storage.BackStorage</class>
+  <method>initialize</method>
+  <thread>1</thread>
+  <message>BackStorage initialized</message>
+</record>
+<record>
+  <date>2012-04-20T20:57:12</date>
+  <millis>1334948232894</millis>
+  <sequence>1</sequence>
+  <logger>b-log</logger>
+  <level>INFO</level>
+  <class>com.mnorrman.datastorageproject.storage.BackStorage</class>
+  <method>reindexData</method>
+  <thread>13</thread>
+  <message>Begin reindex of data</message>
+</record>
+<record>
+  <date>2012-04-20T20:57:13</date>
+  <millis>1334948233382</millis>
+  <sequence>2</sequence>
+  <logger>b-log</logger>
+  <level>INFO</level>
+  <class>com.mnorrman.datastorageproject.storage.BackStorage</class>
+  <method>reindexData</method>
+  <thread>13</thread>
+  <message>Reindexing complete</message>
+</record>

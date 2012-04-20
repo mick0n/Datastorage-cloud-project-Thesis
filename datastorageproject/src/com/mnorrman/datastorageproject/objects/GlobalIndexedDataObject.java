@@ -30,6 +30,11 @@ public class GlobalIndexedDataObject extends DataObject implements Serializable{
         this.version = ido.getVersion();
         this.checksum = ido.getChecksum();        
     }
+
+    @Override
+    public String getClearText() {
+        return "Whatevaaa";
+    }
     
     @Override
     public String toString() {

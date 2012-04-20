@@ -34,19 +34,15 @@ public class MasterNodeListener extends Thread{
         try{           
             ssc = ServerSocketChannel.open();
             ssc.configureBlocking(true);
-            //ssc.socket().bind(new InetSocketAddress(InetAddress.getByName(""), Integer.parseInt(Main.properties.getValue("port").toString())));
-            ssc.socket().bind(new InetSocketAddress(InetAddress.getByName(""), 8999));
+            ssc.socket().bind(new InetSocketAddress(InetAddress.getByName(""), Integer.parseInt(Main.properties.getValue("port").toString())));
+//            ssc.socket().bind(new InetSocketAddress(InetAddress.getByName(""), 8999));
             
-            System.out.println("Starting to listen");
+            System.out.println("Starting to listen as master node");
             
             while(ssc.isOpen()){
-                System.out.println("Listening, after this comes accept");
                 SocketChannel sc = ssc.accept();
                 sc.configureBlocking(false);
-                System.out.println("Socket accepted from " + sc.getRemoteAddress());
-                //sc.register(owner.getSelector(), sc.validOps());
                 owner.addSocketChannel(sc);
-                System.out.println("Registered");
             }
             /*SocketChannel sc = ssc.accept();
             sc.finishConnect();

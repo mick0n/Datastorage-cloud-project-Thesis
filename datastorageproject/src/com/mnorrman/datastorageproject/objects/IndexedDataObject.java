@@ -47,6 +47,11 @@ public final class IndexedDataObject extends DataObject implements Serializable{
     }
 
     @Override
+    public String getClearText() {
+        return "colname=" + colname + ",rowname=" + rowname + ",owner=" + owner + ",offset=" + offset + ",length=" + length + ",version=" +version + ",checksum=" + checksum;
+    }
+    
+    @Override
     public String toString() {
         return "IndexedDataObject: colname=" + colname + ", rowname=" + rowname + ", owner=" + owner + ", offset=" + offset + ", length=" + length + ", version=" + version + ", checksum=" + checksum;
     }

@@ -50,6 +50,8 @@ public abstract class DataObject implements Serializable{
         return Hash.get(colname, rowname);
     }
     
+    public abstract String getClearText();
+    
     @Override
     public abstract String toString();
     

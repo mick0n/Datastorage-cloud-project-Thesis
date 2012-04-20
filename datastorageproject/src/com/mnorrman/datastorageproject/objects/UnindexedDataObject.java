@@ -4,7 +4,7 @@
  */
 package com.mnorrman.datastorageproject.objects;
 
-import java.io.InputStream;
+import java.io.File;
 
 /**
  *
@@ -12,22 +12,32 @@ import java.io.InputStream;
  */
 public class UnindexedDataObject extends DataObject{
 
-    private InputStream stream;
+    private File tempFile;
 
-    public UnindexedDataObject(InputStream stream, String colname, String rowname, String owner, long length) {
-        this.stream = stream;
+    public UnindexedDataObject(File file, String colname, String rowname, String owner, long length) {
+        this.tempFile = file;
         this.colname = colname;
         this.rowname = rowname;
         this.owner = owner;
         this.length = length;
     }
 
-    public InputStream getStream(){
-        return stream;
+    public File getTempFile(){
+        return tempFile;
+    }
+    
+    public void removeTempFile(){
+        tempFile.delete();
+        tempFile = null;
     }
 
     public void setChecksum(long checksum) {
         this.checksum = checksum;
+    }
+
+    @Override
+    public String getClearText() {
+        return "colname=" + colname + ",rowname=" + rowname + ",owner=" + owner + ",length=" + length + ",checksum=" + checksum;
     }
     
     @Override

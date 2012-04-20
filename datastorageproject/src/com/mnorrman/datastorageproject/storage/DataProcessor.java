@@ -35,6 +35,24 @@ public class DataProcessor {
         this.dataChannel = channel;
     }
     
+    public int retrieveData(ByteBuffer buffer, long position, IndexedDataObject ido){
+        try{
+            if(buffer.position() != 0)
+                buffer.clear();
+            
+            dataChannel.position(((ido.getOffset() + 512L) + position));
+            
+            if(ido.getLength() - position < buffer.capacity() ){
+                buffer.limit((int)(ido.getLength() - position));
+            }
+            
+            return dataChannel.read(buffer);
+        }catch(IOException e){
+            Logger.getLogger("b-log").log(Level.SEVERE, "An error occured when retrieving data!", e);
+        }
+        return -1;
+    }
+    
     /**
      * A method for retrieving data from our backStorage. It does not return any
      * data, it simply returns a boolean value telling if the operation was 
@@ -76,32 +94,31 @@ public class DataProcessor {
 
     public IndexedDataObject storeData(UnindexedDataObject udo){
         
-        CRC32 crc = new CRC32();
-        String fileName = udo.getColname() + "-" + udo.getRowname() + Math.random();
-        File tempFile = new File(fileName);
+//        CRC32 crc = new CRC32();
+        //String fileName = udo.getColname() + "-" + udo.getRowname() + Math.random();
         
-        int readBytes = 0;
-        long totalBytesRead = 0;
-        byte[] bytes = null;
-        
-        try {
-            FileOutputStream fos = new FileOutputStream(tempFile);
-            while(totalBytesRead < udo.getLength()){
-                bytes = new byte[BlOCK_SIZE];
-                readBytes = udo.getStream().read(bytes);
-                crc.update(bytes, 0, readBytes);
-                fos.write(bytes, 0, readBytes);
-                totalBytesRead += readBytes;
-                if(totalBytesRead >= udo.getLength())
-                    break;
-            }
-            fos.flush();
-            fos.close();
-        }catch(IOException e){
-            Logger.getLogger("b-log").log(Level.SEVERE, "An error occured when creating temporary data!", e);
-        }
+//        int readBytes = 0;
+//        long totalBytesRead = 0;
+//        byte[] bytes = null;
+//        
+//        try {
+//            FileOutputStream fos = new FileOutputStream(udo.getTempFile());
+//            while(totalBytesRead < udo.getLength()){
+//                bytes = new byte[BlOCK_SIZE];
+//                readBytes = udo.getStream().read(bytes);
+//                crc.update(bytes, 0, readBytes);
+//                fos.write(bytes, 0, readBytes);
+//                totalBytesRead += readBytes;
+//                if(totalBytesRead >= udo.getLength())
+//                    break;
+//            }
+//            fos.flush();
+//            fos.close();
+//        }catch(IOException e){
+//            Logger.getLogger("b-log").log(Level.SEVERE, "An error occured when creating temporary data!", e);
+//        }
 
-        udo.setChecksum(crc.getValue());
+//        udo.setChecksum(crc.getValue());
         
         long filesizeBeforeOperation = -1; 
         
@@ -136,15 +153,15 @@ public class DataProcessor {
             dataChannel.write(voidbuf);
             dataChannel.position(tempPos);
             
-            FileInputStream fis = new FileInputStream(tempFile);
+            FileInputStream fis = new FileInputStream(udo.getTempFile());
             FileChannel fc = fis.getChannel();
             
             //Transfer all data from the temporary file into the backstorage.
-            dataChannel.transferFrom(fc, dataChannel.position(), tempFile.length());
+            dataChannel.transferFrom(fc, dataChannel.position(), udo.getTempFile().length());
             fc.close();
             
             //Remove the temporary file.
-            tempFile.delete();
+            udo.removeTempFile();
             
             fl.release();
             return new IndexedDataObject(udo, newOffset, newVersion);

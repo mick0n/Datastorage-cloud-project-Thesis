@@ -7,6 +7,7 @@ package com.mnorrman.datastorageproject;
 import com.mnorrman.datastorageproject.storage.BackStorage;
 import com.mnorrman.datastorageproject.storage.DataProcessor;
 import com.mnorrman.datastorageproject.index.LocalIndex;
+import com.mnorrman.datastorageproject.network.MasterNode;
 import com.mnorrman.datastorageproject.network.MasterNodeListener;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -30,12 +31,18 @@ public class Main {
     public static Timer timer;
     public static PropertiesManager properties;
     public BackStorage storage;
+    public MasterNode masterNode;
     
     public Main(){
         try{
             storage = new BackStorage().initialize();
         }catch(IOException e){
             e.printStackTrace();
+        }
+        
+        if(properties.getValue("master").toString().equalsIgnoreCase("127.0.0.1")){
+            masterNode = new MasterNode(this);
+            masterNode.startMasterServer();
         }
         
         //MasterNodeListener mdl = new MasterNodeListener();

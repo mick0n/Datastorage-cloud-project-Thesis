@@ -3,7 +3,6 @@
  * and open the template in the editor.
  */
 package com.mnorrman.datastorageproject.network;
-
 /**
  *
  * @author Mikael
@@ -11,6 +10,7 @@ package com.mnorrman.datastorageproject.network;
 public enum Protocol {
     
     NULL (0x00),
+    GET (0x04),
     PING (0x7F);
 
     private final byte value;

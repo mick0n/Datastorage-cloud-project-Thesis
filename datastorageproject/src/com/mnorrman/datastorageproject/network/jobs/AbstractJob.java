@@ -10,6 +10,13 @@ package com.mnorrman.datastorageproject.network.jobs;
  */
 public abstract class AbstractJob {
     
-    
-    
+    private boolean finished = false;
+
+    public boolean isFinished() {
+        return finished;
+    }
+  
+    void setFinished(boolean value){
+        finished = value;
+    }
 }
