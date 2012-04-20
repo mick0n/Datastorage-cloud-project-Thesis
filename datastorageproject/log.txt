@@ -54,3 +54,73 @@
   <thread>1</thread>
   <message>BackStorage initialized</message>
 </record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2012-04-11T20:48:12</date>
+  <millis>1334170092727</millis>
+  <sequence>0</sequence>
+  <logger>b-log</logger>
+  <level>INFO</level>
+  <class>com.mnorrman.datastorageproject.storage.BackStorage</class>
+  <method>initialize</method>
+  <thread>1</thread>
+  <message>BackStorage initialized</message>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2012-04-17T08:47:38</date>
+  <millis>1334645258453</millis>
+  <sequence>0</sequence>
+  <logger>b-log</logger>
+  <level>INFO</level>
+  <class>com.mnorrman.datastorageproject.storage.BackStorage</class>
+  <method>initialize</method>
+  <thread>1</thread>
+  <message>BackStorage initialized</message>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2012-04-17T08:48:24</date>
+  <millis>1334645304931</millis>
+  <sequence>0</sequence>
+  <logger>b-log</logger>
+  <level>INFO</level>
+  <class>com.mnorrman.datastorageproject.storage.BackStorage</class>
+  <method>initialize</method>
+  <thread>1</thread>
+  <message>BackStorage initialized</message>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2012-04-17T08:49:10</date>
+  <millis>1334645350366</millis>
+  <sequence>0</sequence>
+  <logger>b-log</logger>
+  <level>INFO</level>
+  <class>com.mnorrman.datastorageproject.storage.BackStorage</class>
+  <method>initialize</method>
+  <thread>1</thread>
+  <message>BackStorage initialized</message>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2012-04-17T08:49:46</date>
+  <millis>1334645386214</millis>
+  <sequence>0</sequence>
+  <logger>b-log</logger>
+  <level>INFO</level>
+  <class>com.mnorrman.datastorageproject.storage.BackStorage</class>
+  <method>initialize</method>
+  <thread>1</thread>
+  <message>BackStorage initialized</message>
+</record>

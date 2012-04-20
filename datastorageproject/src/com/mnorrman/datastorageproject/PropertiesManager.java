@@ -67,6 +67,11 @@ public class PropertiesManager {
             pw.println("master = 127.0.0.1");
             pw.println("");
             pw.println("");            
+            pw.println("#port - port number used by this server.");
+            pw.println("#Always make sure that your port is opened in your firewall.");
+            pw.println("port = 8999");
+            pw.println("");
+            pw.println("");            
             pw.flush();
             pw.close();
         }catch(IOException e){

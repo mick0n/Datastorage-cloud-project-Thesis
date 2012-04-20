@@ -1,5 +1,5 @@
 #Config-file
-#Created Tue Apr 10 20:36:55 CEST 2012
+#Created Tue Apr 17 08:49:10 CEST 2012
 #
 #Warning! Editing this file can lead to malfunction of
 #this software. Make changes with caution!
@@ -16,8 +16,13 @@ dataPath = D:\Skola\Exjobb\Datastorage-cloud-project-Thesis\datastorageproject
 indexInterval = 900
 
 
-#master - IP-address of the master server
+#master - IP-address or hostname of the master server
 #If this server is the master, use 127.0.0.1
 master = 127.0.0.1
+
+
+#port - port number used by this server.
+#Always make sure that your port is opened in your firewall.
+port = 8999
 
 

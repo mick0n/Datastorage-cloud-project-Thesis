@@ -7,6 +7,7 @@ package com.mnorrman.datastorageproject;
 import com.mnorrman.datastorageproject.storage.BackStorage;
 import com.mnorrman.datastorageproject.storage.DataProcessor;
 import com.mnorrman.datastorageproject.index.LocalIndex;
+import com.mnorrman.datastorageproject.network.MasterNodeListener;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -36,6 +37,9 @@ public class Main {
         }catch(IOException e){
             e.printStackTrace();
         }
+        
+        //MasterNodeListener mdl = new MasterNodeListener();
+        System.out.println("Property: " + (Integer.parseInt(properties.getValue("port").toString())));
     }
     
     public DataProcessor getNewDataProcessor(){
