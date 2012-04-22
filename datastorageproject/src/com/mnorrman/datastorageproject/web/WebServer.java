@@ -30,7 +30,9 @@ public class WebServer {
     }
     
     public static void main(String[] args) throws IOException {
-       WebServer ws = new WebServer(8080);
+       WebServer ws = new WebServer(8429);
        ws.addWebRole("/", new MainWebRole());
+       //ws.addWebRole("/index", new PrintIndexWebRole());
+       //ws.addWebRole("/get", new SimpleGetWebRole());
     }
 }

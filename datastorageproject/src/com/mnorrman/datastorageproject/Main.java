@@ -9,6 +9,7 @@ import com.mnorrman.datastorageproject.storage.DataProcessor;
 import com.mnorrman.datastorageproject.index.LocalIndex;
 import com.mnorrman.datastorageproject.network.MasterNode;
 import com.mnorrman.datastorageproject.network.MasterNodeListener;
+import com.mnorrman.datastorageproject.web.*;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -32,71 +33,78 @@ public class Main {
     public static PropertiesManager properties;
     public BackStorage storage;
     public MasterNode masterNode;
-    
-    public Main(){
-        try{
+    public WebServer webServer;
+
+    public Main() {
+        try {
             storage = new BackStorage().initialize();
-        }catch(IOException e){
+            
+            webServer = new WebServer(8429);
+            webServer.addWebRole("/", new MainWebRole());
+            webServer.addWebRole("/index", new PrintIndexWebRole());
+            webServer.addWebRole("/get", new SimpleGetWebRole(this));
+            webServer.addWebRole("/post", new SimplePostWebRole(this));
+        } catch (IOException e) {
             e.printStackTrace();
         }
-        
-        if(properties.getValue("master").toString().equalsIgnoreCase("127.0.0.1")){
+
+        if (properties.getValue("master").toString().equalsIgnoreCase("127.0.0.1")) {
             masterNode = new MasterNode(this);
             masterNode.startMasterServer();
         }
-        
+
         //MasterNodeListener mdl = new MasterNodeListener();
         System.out.println("Property: " + (Integer.parseInt(properties.getValue("port").toString())));
     }
-    
-    public DataProcessor getNewDataProcessor(){
+
+    public DataProcessor getNewDataProcessor() {
         return new DataProcessor(storage.getChannel());
     }
-    
+
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         SingleInstanceThread sit = new SingleInstanceThread();
-        if(!sit.tryInstance()){
+        if (!sit.tryInstance()) {
             System.out.println("Other instance found.");
             System.exit(0);
         }
-        
-        try{
+
+        try {
             Logger.getLogger("b-log").addHandler(new FileHandler("log.txt", true));
-        }catch(IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
-        
+
         properties = new PropertiesManager();
-        
+
         pool = Executors.newFixedThreadPool(5, Executors.defaultThreadFactory());
         timer = new Timer("TimerThread");
-        
-        if(properties.getValue("master").toString().equalsIgnoreCase("127.0.0.1")){
+
+        if (properties.getValue("master").toString().equalsIgnoreCase("127.0.0.1")) {
             //Start global index
         }
-        
+
         localIndex = new LocalIndex();
         Main m = new Main();
         ConsoleInputManager console = new ConsoleInputManager(m);
         console.start();
     }
-    
-    private static class SingleInstanceThread extends Thread{
-        
+
+    private static class SingleInstanceThread extends Thread {
+
         private ServerSocket listener;
-        
-        public SingleInstanceThread(){
+
+        public SingleInstanceThread() {
         }
-        
-        public boolean tryInstance(){
-            try{
+
+        public boolean tryInstance() {
+            try {
                 listener = new ServerSocket(65533, 0, InetAddress.getByName(null));
                 start();
                 return true;
-            }catch(IOException e){
+            } catch (IOException e) {
                 //Unable to connect, no need to tell the world.
             }
             return false;
@@ -104,11 +112,11 @@ public class Main {
 
         @Override
         public void run() {
-            try{
-                while(true){
+            try {
+                while (true) {
                     listener.accept();
                 }
-            }catch(IOException e){
+            } catch (IOException e) {
                 //Nothing to do here
             }
         }

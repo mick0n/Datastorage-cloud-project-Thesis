@@ -44,6 +44,8 @@ public class StoreDataJob extends AbstractJob{
             udo.setChecksum(crc.getValue());
             output.close();
             Main.localIndex.insert(dataProcessor.storeData(udo));
+        }else if(output.size() > udo.getLength()){
+            System.out.println("Huge error occured, too much data!");
         }
     }
     

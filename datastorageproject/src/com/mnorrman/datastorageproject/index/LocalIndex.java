@@ -96,6 +96,7 @@ public class LocalIndex extends Index<IndexedDataObject> {
             IndexedDataObject temp = iterator.next();
             insert(temp);
         }
+        Main.pool.submit(new IndexPersistence(table.values()));
     }
 
     /**

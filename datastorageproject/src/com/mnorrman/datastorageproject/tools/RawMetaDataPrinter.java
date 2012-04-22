@@ -58,4 +58,41 @@ public class RawMetaDataPrinter {
         System.out.println("");
     }
     
+    public static void print(ByteBuffer bb, StringBuilder sb){
+        sb.append("<br/>1-128:\t\tColname:\t0x");
+        for(int a = 0; a < 128; a++){
+            sb.append(HexConverter.toHex(new byte[]{ bb.get() }));
+        }
+        
+        sb.append("<br/>\r\n129-256:\tRowname:\t0x");
+        for(int b = 0; b < 128; b++){
+            sb.append(HexConverter.toHex(new byte[]{ bb.get() }));
+        }
+        
+        sb.append("<br/>\r\n257-264:\tVersion:\t0x");
+        for(int c = 0; c < 8; c++){
+            sb.append("" + HexConverter.toHex(new byte[]{ bb.get() }));
+        }
+        
+        sb.append("<br/>\r\n265-272:\tLength:\t\t0x");
+        for(int d = 0; d < 8; d++){
+            sb.append("" + HexConverter.toHex(new byte[]{ bb.get() }));
+        }
+        
+        sb.append("<br/>\r\n273-280:\tChecksum:\t0x");
+        for(int e = 0; e < 8; e++){
+            sb.append("" + HexConverter.toHex(new byte[]{ bb.get() }));
+        }
+        
+        sb.append("<br/>\r\n281-408:\tOwner:\t\t0x");
+        for(int f = 0; f < 128; f++){
+            sb.append("" + HexConverter.toHex(new byte[]{ bb.get() }));
+        }
+        
+        sb.append("<br/>\r\n409-512:\tVoid:\t\t0x");
+        for(int g = 0; g < 104; g++){
+            sb.append("" + HexConverter.toHex(new byte[]{ bb.get() }));
+        }
+    }
+    
 }
