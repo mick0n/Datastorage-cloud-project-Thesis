@@ -126,9 +126,10 @@ public class DataProcessor {
         
         try{
             ByteBuffer bbb = MetaDataComposer.decompose(udo);
-            bbb.position(264);
+            bbb.position(256);
             long newVersion = bbb.getLong();
             bbb.position(0);
+            
             
             FileLock fl = dataChannel.lock();
 
