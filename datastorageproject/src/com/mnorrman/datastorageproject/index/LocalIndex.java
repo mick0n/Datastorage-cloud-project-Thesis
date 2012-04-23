@@ -147,4 +147,23 @@ public class LocalIndex extends Index<IndexedDataObject> {
     public Collection<ArrayList<IndexedDataObject>> getData(){
         return table.values();
     }
+    
+    /**
+     * Populates a hashtable that uses only column as key, not hash(column + row)
+     * @return 
+     */
+    public HashMap<String, ArrayList<IndexedDataObject>> getDistinctData(){
+        HashMap<String, ArrayList<IndexedDataObject>> list = new HashMap<String, ArrayList<IndexedDataObject>>();
+        
+        for(ArrayList<IndexedDataObject> al : table.values()){
+            for(IndexedDataObject odi : al){
+                if(!list.containsKey(odi.getColname())){
+                    list.put(odi.getColname(), new ArrayList<IndexedDataObject>());
+                }
+                list.get(odi.getColname()).add(odi);
+            }
+        }
+        
+        return list;
+    }
 }

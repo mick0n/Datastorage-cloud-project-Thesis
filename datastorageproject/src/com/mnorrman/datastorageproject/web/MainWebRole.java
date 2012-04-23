@@ -39,7 +39,7 @@ public class MainWebRole implements HttpHandler {
             webString.append("<div style=\"width:100%;\" align=\"center\">\r\n");
             webString.append("<div id=\"box\">\r\n");
             webString.append("<h1>Datastorage with no name</h1>");
-            webString.append("<p class=\"text\">Welcome to the datastorage with no name!<br>This should be your number one source for data storage!<br/><a href=\"/index\">See index</a><br/><a href=\"/post\">Upload</a><br/><a href=\"\">Get data (coming soon)</a><p>\r\n");
+            webString.append("<p class=\"text\">Welcome to the datastorage with no name!<br>This should be your number one source for data storage!<br/><a href=\"/index\">See index</a><br/><a href=\"/post\">Upload</a><br/><a href=\"/get\">Get data</a><p>\r\n");
             webString.append("</div>\r\n");
             webString.append("</div>\r\n");
             webString.append("</body>\r\n");

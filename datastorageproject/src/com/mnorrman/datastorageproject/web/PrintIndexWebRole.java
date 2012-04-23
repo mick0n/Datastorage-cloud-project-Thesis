@@ -44,22 +44,22 @@ public class PrintIndexWebRole implements HttpHandler {
             webString.append("<h1>Datastorage with no name - Local index</h1>\r\n");
             webString.append("<table border=\"1\" class=\"text\" style=\"padding: 3px;\">\r\n");
             webString.append("<tr>\r\n");
-            webString.append("<td style\"border: 1px solid black; padding: 3px;\">Column name</td>\r\n");
-            webString.append("<td style\"border: 1px solid black; padding: 3px;\">Row name</td>\r\n");
-            webString.append("<td style\"border: 1px solid black; padding: 3px;\">Owner name</td>\r\n");
-            webString.append("<td style\"border: 1px solid black; padding: 3px;\">Version number</td>\r\n");
-            webString.append("<td style\"border: 1px solid black; padding: 3px;\">Data size</td>\r\n");
-            webString.append("<td style\"border: 1px solid black; padding: 3px;\">Checksum(CRC32) value</td>\r\n");
+            webString.append("<td style=\"border: 1px solid black; padding: 3px;background-color:lightgrey;\">Column name</td>\r\n");
+            webString.append("<td style=\"border: 1px solid black; padding: 3px;background-color:lightgrey;\">Row name</td>\r\n");
+            webString.append("<td style=\"border: 1px solid black; padding: 3px;background-color:lightgrey;\">Owner name</td>\r\n");
+            webString.append("<td style=\"border: 1px solid black; padding: 3px;background-color:lightgrey;\">Version number</td>\r\n");
+            webString.append("<td style=\"border: 1px solid black; padding: 3px;background-color:lightgrey;\">Data size</td>\r\n");
+            webString.append("<td style=\"border: 1px solid black; padding: 3px;background-color:lightgrey;\">Checksum(CRC32) value</td>\r\n");
             webString.append("</tr>\r\n");
             for(ArrayList<IndexedDataObject> al : Main.localIndex.getData()){
                 for(IndexedDataObject ido : al){
                     webString.append("<tr>\r\n");
-                    webString.append("<td style\"border: 1px solid black; padding: 3px;\">" + ido.getColname() + "</td>\r\n");
-                    webString.append("<td style\"border: 1px solid black; padding: 3px;\">" + ido.getRowname() + "</td>\r\n");
-                    webString.append("<td style\"border: 1px solid black; padding: 3px;\">" + ido.getOwner() + "</td>\r\n");
-                    webString.append("<td style\"border: 1px solid black; padding: 3px;\">" + ido.getVersion() + "</td>\r\n");
-                    webString.append("<td style\"border: 1px solid black; padding: 3px;\">" + ido.getLength() + " bytes</td>\r\n");
-                    webString.append("<td style\"border: 1px solid black; padding: 3px;\">" + ido.getChecksum() + "</td>\r\n");
+                    webString.append("<td style=\"border: 1px solid black; padding: 3px;background-color:white;\">" + ido.getColname() + "</td>\r\n");
+                    webString.append("<td style=\"border: 1px solid black; padding: 3px;background-color:white;\">" + ido.getRowname() + "</td>\r\n");
+                    webString.append("<td style=\"border: 1px solid black; padding: 3px;background-color:white;\">" + ido.getOwner() + "</td>\r\n");
+                    webString.append("<td style=\"border: 1px solid black; padding: 3px;background-color:white;\">" + ido.getVersion() + "</td>\r\n");
+                    webString.append("<td style=\"border: 1px solid black; padding: 3px;background-color:white;\">" + ido.getLength() + " bytes</td>\r\n");
+                    webString.append("<td style=\"border: 1px solid black; padding: 3px;background-color:white;\">" + ido.getChecksum() + "</td>\r\n");
                     webString.append("</tr>\r\n");
                 }
             }

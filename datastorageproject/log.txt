@@ -1,0 +1,92 @@
+Mon Apr 23 20:36:49 CEST 2012: INFO: Local index was loaded successfully
+Mon Apr 23 20:36:49 CEST 2012: INFO: LocalIndex was saved to persistent storage successfully
+Mon Apr 23 20:36:49 CEST 2012: INFO: Backstorage initialized
+Mon Apr 23 20:36:49 CEST 2012: INFO: MasterNodeListener started listening
+Mon Apr 23 20:39:32 CEST 2012: INFO: Local index was loaded successfully
+Mon Apr 23 20:39:32 CEST 2012: INFO: Backstorage initialized
+Mon Apr 23 20:39:32 CEST 2012: INFO: LocalIndex was saved to persistent storage successfully
+Mon Apr 23 20:39:32 CEST 2012: INFO: MasterNodeListener started listening
+Mon Apr 23 20:40:41 CEST 2012: INFO: Local index was loaded successfully
+Mon Apr 23 20:40:41 CEST 2012: INFO: LocalIndex was saved to persistent storage successfully
+Mon Apr 23 20:40:41 CEST 2012: INFO: Backstorage initialized
+Mon Apr 23 20:40:41 CEST 2012: INFO: MasterNodeListener started listening
+Mon Apr 23 20:40:57 CEST 2012: INFO: Local index was loaded successfully
+Mon Apr 23 20:40:58 CEST 2012: INFO: Backstorage initialized
+Mon Apr 23 20:40:58 CEST 2012: INFO: LocalIndex was saved to persistent storage successfully
+Mon Apr 23 20:40:58 CEST 2012: INFO: MasterNodeListener started listening
+Mon Apr 23 20:41:11 CEST 2012: INFO: Local index was loaded successfully
+Mon Apr 23 20:41:11 CEST 2012: INFO: Backstorage initialized
+Mon Apr 23 20:41:11 CEST 2012: INFO: LocalIndex was saved to persistent storage successfully
+Mon Apr 23 20:41:11 CEST 2012: INFO: MasterNodeListener started listening
+Mon Apr 23 20:46:29 CEST 2012: INFO: Local index was loaded successfully
+Mon Apr 23 20:46:29 CEST 2012: INFO: Backstorage initialized
+Mon Apr 23 20:46:29 CEST 2012: INFO: LocalIndex was saved to persistent storage successfully
+Mon Apr 23 20:46:29 CEST 2012: INFO: MasterNodeListener started listening
+Mon Apr 23 20:47:55 CEST 2012: INFO: Local index was loaded successfully
+Mon Apr 23 20:47:55 CEST 2012: INFO: Backstorage initialized
+Mon Apr 23 20:47:55 CEST 2012: INFO: LocalIndex was saved to persistent storage successfully
+Mon Apr 23 20:47:55 CEST 2012: INFO: MasterNodeListener started listening
+Mon Apr 23 20:48:20 CEST 2012: INFO: Local index was loaded successfully
+Mon Apr 23 20:48:20 CEST 2012: INFO: Backstorage initialized
+Mon Apr 23 20:48:20 CEST 2012: INFO: LocalIndex was saved to persistent storage successfully
+Mon Apr 23 20:48:20 CEST 2012: INFO: MasterNodeListener started listening
+Mon Apr 23 21:03:20 CEST 2012: INFO: LocalIndex was saved to persistent storage successfully
+Mon Apr 23 22:19:29 CEST 2012: INFO: Local index was loaded successfully
+Mon Apr 23 22:19:29 CEST 2012: INFO: Backstorage initialized
+Mon Apr 23 22:19:29 CEST 2012: INFO: LocalIndex was saved to persistent storage successfully
+Mon Apr 23 22:19:29 CEST 2012: INFO: MasterNodeListener started listening
+Mon Apr 23 22:20:02 CEST 2012: INFO: Local index was loaded successfully
+Mon Apr 23 22:20:02 CEST 2012: INFO: Backstorage initialized
+Mon Apr 23 22:20:02 CEST 2012: INFO: LocalIndex was saved to persistent storage successfully
+Mon Apr 23 22:20:02 CEST 2012: INFO: MasterNodeListener started listening
+Mon Apr 23 22:22:36 CEST 2012: INFO: Local index was loaded successfully
+Mon Apr 23 22:22:36 CEST 2012: INFO: Backstorage initialized
+Mon Apr 23 22:22:36 CEST 2012: INFO: LocalIndex was saved to persistent storage successfully
+Mon Apr 23 22:22:36 CEST 2012: INFO: MasterNodeListener started listening
+Mon Apr 23 22:23:17 CEST 2012: INFO: Local index was loaded successfully
+Mon Apr 23 22:23:17 CEST 2012: INFO: Backstorage initialized
+Mon Apr 23 22:23:17 CEST 2012: INFO: LocalIndex was saved to persistent storage successfully
+Mon Apr 23 22:23:17 CEST 2012: INFO: MasterNodeListener started listening
+Mon Apr 23 22:23:48 CEST 2012: INFO: Local index was loaded successfully
+Mon Apr 23 22:23:48 CEST 2012: INFO: Backstorage initialized
+Mon Apr 23 22:23:48 CEST 2012: INFO: LocalIndex was saved to persistent storage successfully
+Mon Apr 23 22:23:48 CEST 2012: INFO: MasterNodeListener started listening
+Mon Apr 23 22:24:01 CEST 2012: INFO: Local index was loaded successfully
+Mon Apr 23 22:24:01 CEST 2012: INFO: Backstorage initialized
+Mon Apr 23 22:24:01 CEST 2012: INFO: LocalIndex was saved to persistent storage successfully
+Mon Apr 23 22:24:01 CEST 2012: INFO: MasterNodeListener started listening
+Mon Apr 23 22:24:09 CEST 2012: INFO: Local index was loaded successfully
+Mon Apr 23 22:24:09 CEST 2012: INFO: Backstorage initialized
+Mon Apr 23 22:24:09 CEST 2012: INFO: LocalIndex was saved to persistent storage successfully
+Mon Apr 23 22:24:09 CEST 2012: INFO: MasterNodeListener started listening
+Mon Apr 23 22:24:36 CEST 2012: INFO: Local index was loaded successfully
+Mon Apr 23 22:24:36 CEST 2012: INFO: Backstorage initialized
+Mon Apr 23 22:24:36 CEST 2012: INFO: LocalIndex was saved to persistent storage successfully
+Mon Apr 23 22:24:37 CEST 2012: INFO: MasterNodeListener started listening
+Mon Apr 23 22:25:59 CEST 2012: INFO: Local index was loaded successfully
+Mon Apr 23 22:25:59 CEST 2012: INFO: Backstorage initialized
+Mon Apr 23 22:25:59 CEST 2012: INFO: LocalIndex was saved to persistent storage successfully
+Mon Apr 23 22:25:59 CEST 2012: INFO: MasterNodeListener started listening
+Mon Apr 23 22:28:00 CEST 2012: INFO: Local index was loaded successfully
+Mon Apr 23 22:28:00 CEST 2012: INFO: Backstorage initialized
+Mon Apr 23 22:28:00 CEST 2012: INFO: LocalIndex was saved to persistent storage successfully
+Mon Apr 23 22:28:00 CEST 2012: INFO: MasterNodeListener started listening
+Mon Apr 23 22:28:57 CEST 2012: INFO: Local index was loaded successfully
+Mon Apr 23 22:28:57 CEST 2012: INFO: Backstorage initialized
+Mon Apr 23 22:28:57 CEST 2012: INFO: LocalIndex was saved to persistent storage successfully
+Mon Apr 23 22:28:57 CEST 2012: INFO: MasterNodeListener started listening
+Mon Apr 23 22:29:28 CEST 2012: INFO: Local index was loaded successfully
+Mon Apr 23 22:29:28 CEST 2012: INFO: Backstorage initialized
+Mon Apr 23 22:29:28 CEST 2012: INFO: LocalIndex was saved to persistent storage successfully
+Mon Apr 23 22:29:28 CEST 2012: INFO: MasterNodeListener started listening
+Mon Apr 23 22:30:23 CEST 2012: INFO: Local index was loaded successfully
+Mon Apr 23 22:30:23 CEST 2012: INFO: Backstorage initialized
+Mon Apr 23 22:30:23 CEST 2012: INFO: LocalIndex was saved to persistent storage successfully
+Mon Apr 23 22:30:23 CEST 2012: INFO: MasterNodeListener started listening
+Mon Apr 23 22:30:37 CEST 2012: INFO: Begin reindex of data
+Mon Apr 23 22:30:37 CEST 2012: INFO: Reindexing complete
+Mon Apr 23 22:30:38 CEST 2012: INFO: LocalIndex was saved to persistent storage successfully
+Mon Apr 23 22:31:03 CEST 2012: INFO: Local index was loaded successfully
+Mon Apr 23 22:31:03 CEST 2012: INFO: Backstorage initialized
+Mon Apr 23 22:31:03 CEST 2012: INFO: LocalIndex was saved to persistent storage successfully
+Mon Apr 23 22:31:03 CEST 2012: INFO: MasterNodeListener started listening
