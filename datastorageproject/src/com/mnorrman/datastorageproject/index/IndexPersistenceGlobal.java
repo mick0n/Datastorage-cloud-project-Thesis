@@ -1,9 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.mnorrman.datastorageproject.index;
 
+import com.mnorrman.datastorageproject.Main;
 import com.mnorrman.datastorageproject.objects.GlobalIndexedDataObject;
 import java.io.*;
 import java.util.ArrayList;
@@ -15,26 +13,39 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author Mikael
+ * @author Mikael Norrman
  */
 public class IndexPersistenceGlobal implements Runnable{
 
     private String className;
     private Collection<ArrayList<GlobalIndexedDataObject>> data;
 
+    /**
+     * Create new instance of IndexPersistenceGlobal
+     * @param data The data that should be saved
+     */
     public IndexPersistenceGlobal(Collection<ArrayList<GlobalIndexedDataObject>> data) {
         this.className = "GlobalIndex";
         this.data = data;
     }
     
+    /**
+     * Create new instance of IndexPersistence. This constructor is mainly used
+     * when reading data.
+     */
     public IndexPersistenceGlobal(){
         this.className = "GlobalIndex";
         this.data = null;
     }
     
+    /**
+     * Read indexdata from GlobalIndex_ file. If the file doesn't exist an empty
+     * list will be returned.
+     * @return List containing all indexdata.
+     */
     public List<GlobalIndexedDataObject> load(){
         List<GlobalIndexedDataObject> l = new LinkedList<GlobalIndexedDataObject>();
-        File file = new File(className + "_");
+        File file = new File(Main.properties.getValue("dataPath") + File.separator + className + "_");
         
         //If the file exist, try to load the data
         if(file.exists()){
@@ -59,7 +70,7 @@ public class IndexPersistenceGlobal implements Runnable{
     @Override
     public void run() {
         try{
-            File file = new File(className + "_");
+            File file = new File(Main.properties.getValue("dataPath") + File.separator + className + "_");
             ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file));
             
             for(ArrayList<GlobalIndexedDataObject> al : data){

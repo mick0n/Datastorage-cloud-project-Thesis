@@ -1,11 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.mnorrman.datastorageproject.web;
 
 import com.mnorrman.datastorageproject.Main;
-import com.mnorrman.datastorageproject.index.IndexPersistence;
 import com.mnorrman.datastorageproject.network.jobs.StoreDataJob;
 import com.mnorrman.datastorageproject.objects.UnindexedDataObject;
 import com.mnorrman.datastorageproject.storage.BackStorage;
@@ -15,12 +11,11 @@ import com.sun.net.httpserver.HttpHandler;
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
-import java.util.Iterator;
-import java.util.Set;
 
 /**
- *
- * @author Mikael
+ * This web role is for uploading data to the backstorage. Later on it will,
+ * per definition, upload it to this cloud.
+ * @author Mikael Norrman
  */
 public class SimplePostWebRole implements HttpHandler{
 
@@ -31,13 +26,15 @@ public class SimplePostWebRole implements HttpHandler{
     }
     
     public void handle(HttpExchange he) throws IOException {
-        
         String requestMethod = he.getRequestMethod();
+        
+        //If the HTTP request is GET
         if (requestMethod.equalsIgnoreCase("GET")) {
             Headers responseHeaders = he.getResponseHeaders();
             responseHeaders.set("Content-Type", "text/HTML");
             he.sendResponseHeaders(200, 0);
 
+            //Build web content
             StringBuilder webString = new StringBuilder();
             webString.append("<html>\r\n");
             webString.append("<head>\r\n");
@@ -67,8 +64,20 @@ public class SimplePostWebRole implements HttpHandler{
             responseStream.write(webString.toString().getBytes());
             responseStream.flush();
             responseStream.close();
-        }else if(requestMethod.equalsIgnoreCase("POST")){
-            System.out.println("Content-length: " + he.getRequestHeaders().get("Content-length").get(0));
+        }
+        
+        //If the HTTP request is POST
+        else if(requestMethod.equalsIgnoreCase("POST")){
+            //This part is probably the most inefficient solution ever, but
+            //for now it serves its purpose and I'll overhaul it later on.
+            //
+            //Also because there's no good way to tell the size of the file
+            //being sent we have to create our own temporary file. This file
+            //will then be copied to another temp file in the DataProcessor
+            //class and then stored in the backStorage.
+            //Not very effective, that is.
+            
+            he.sendResponseHeaders(200, 0);
             long length = Long.parseLong(he.getRequestHeaders().get("Content-length").get(0));
             DataInputStream is = new DataInputStream(he.getRequestBody());
             
@@ -79,23 +88,20 @@ public class SimplePostWebRole implements HttpHandler{
             while((readbyte = is.read()) != -1){
                 metadata[countBytes] = (byte)readbyte;
                 
+                //If we find the Carriage return line feed x2 that means it's the end of head.
                 if(countBytes >= 3 && (char)metadata[countBytes-3] == '\r' && (char)metadata[countBytes-2] == '\n' && (char)metadata[countBytes-1] == '\r' && (char)metadata[countBytes] == '\n'){
                     break; //Found the end of meta
                 }
-//                System.out.print((char)readbyte);
-//                if((char)readbyte == '\r'){
-//                    System.out.println(countBytes + ": Carriage return");
-//                }else if((char)readbyte == '\n'){
-//                    System.out.println(countBytes + ": Line feed");
-//                }
                 countBytes++;
             }
-            System.out.println("Countb: " + countBytes);
+            
+            //Set values
             String meta = new String(metadata);
             String column = "webupload";
             String filename = meta.substring(meta.indexOf("filename="), meta.indexOf("\r", meta.indexOf("filename=")));
             String row = filename.substring(filename.indexOf("\"")+1, filename.lastIndexOf("\""));
             
+            //Start creating our own temporary file
             File tempFile = new File(column + "_" + row + "_" + System.currentTimeMillis());
             FileOutputStream fos = new FileOutputStream(tempFile);
             
@@ -114,6 +120,12 @@ public class SimplePostWebRole implements HttpHandler{
             fos.flush();
             fos.close();
             
+            //Since there is extra form data at the end of the file we need to
+            //see where the real file ends and the cut off the rest.
+            //The end of form data looks like this:
+            //[cr][lf]
+            //-------------------<random integer>--
+            //[cr][lf]
             RandomAccessFile raf = new RandomAccessFile(tempFile, "rw");
             
             long fileLength = tempFile.length()-1;
@@ -130,11 +142,13 @@ public class SimplePostWebRole implements HttpHandler{
                 crntPos++;
             }
             
-            raf.getChannel().truncate(fileLength-crntPos);
+            raf.getChannel().truncate(fileLength-crntPos); //The "cutting-off"
             raf.close();
-            System.out.println("Len: " + (fileLength-crntPos));
+            
+            //Now compose unindexedDataObject
             UnindexedDataObject udo = new UnindexedDataObject(new File(column + "_" + row + "_" + Math.random()), column, row, "uploader", fileLength-crntPos);
             
+            //And then create a storeDataJob which will take care of the rest.
             try{
                 StoreDataJob job = new StoreDataJob(udo, reference.getNewDataProcessor());
                 ByteBuffer buff = ByteBuffer.allocate(BackStorage.BlOCK_SIZE);
@@ -146,15 +160,13 @@ public class SimplePostWebRole implements HttpHandler{
                     buff.clear();
                 }
                 input.close();
-                Main.pool.submit(new IndexPersistence(Main.localIndex.getData()));
-                System.out.println("Storing should be complete!");
             }catch(IOException e){
                 e.printStackTrace();
             }
             
+            //Delete our own temporary file
             tempFile.delete();
             
-            he.sendResponseHeaders(200, 0);
             he.getResponseBody().close();
         }
     }

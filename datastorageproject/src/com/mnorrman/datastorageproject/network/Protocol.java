@@ -1,11 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.mnorrman.datastorageproject.network;
 /**
- *
- * @author Mikael
+ * This class should be pretty self explanatory.
+ * @author Mikael Norrman
  */
 public enum Protocol {
     

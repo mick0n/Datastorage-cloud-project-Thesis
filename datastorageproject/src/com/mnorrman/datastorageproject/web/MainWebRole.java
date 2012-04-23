@@ -1,7 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.mnorrman.datastorageproject.web;
 
 import com.sun.net.httpserver.Headers;
@@ -11,19 +8,23 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- *
- * @author Mikael
+ * This web role should work as a portal. Right now it will display links
+ * to other predefined roles.
+ * @author Mikael Norrman
  */
 public class MainWebRole implements HttpHandler {
 
     @Override
     public void handle(HttpExchange he) throws IOException {
         String requestMethod = he.getRequestMethod();
+        
+        //If the HTTP request is GET
         if (requestMethod.equalsIgnoreCase("GET")) {
             Headers responseHeaders = he.getResponseHeaders();
             responseHeaders.set("Content-Type", "text/HTML");
             he.sendResponseHeaders(200, 0);
 
+            //Build web content
             StringBuilder webString = new StringBuilder();
             webString.append("<html>\r\n");
             webString.append("<head>\r\n");

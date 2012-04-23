@@ -1,14 +1,10 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.mnorrman.datastorageproject;
 
-import com.mnorrman.datastorageproject.storage.BackStorage;
-import com.mnorrman.datastorageproject.storage.DataProcessor;
 import com.mnorrman.datastorageproject.index.LocalIndex;
 import com.mnorrman.datastorageproject.network.MasterNode;
-import com.mnorrman.datastorageproject.network.MasterNodeListener;
+import com.mnorrman.datastorageproject.storage.BackStorage;
+import com.mnorrman.datastorageproject.storage.DataProcessor;
 import com.mnorrman.datastorageproject.web.*;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -16,14 +12,10 @@ import java.net.ServerSocket;
 import java.util.Timer;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
- * @author Mikael
+ * @author Mikael Norrman
  */
 public class Main {
 
@@ -35,17 +27,23 @@ public class Main {
     public MasterNode masterNode;
     public WebServer webServer;
 
+    /**
+     * Create new instance of this class. This method initiates major 
+     * components such as BackStorage, WebServer and Server nodes.
+     */
     public Main() {
         try {
+            //Initiate BackStorage
             storage = new BackStorage().initialize();
             
+            //Initiate webserver and add necessary roles
             webServer = new WebServer(8429);
             webServer.addWebRole("/", new MainWebRole());
             webServer.addWebRole("/index", new PrintIndexWebRole());
             webServer.addWebRole("/get", new SimpleGetWebRole(this));
             webServer.addWebRole("/post", new SimplePostWebRole(this));
         } catch (IOException e) {
-            e.printStackTrace();
+            LogTool.log(e, LogTool.CRITICAL);
         }
 
         if (properties.getValue("master").toString().equalsIgnoreCase("127.0.0.1")) {
@@ -54,51 +52,82 @@ public class Main {
         }
 
         //MasterNodeListener mdl = new MasterNodeListener();
-        System.out.println("Property: " + (Integer.parseInt(properties.getValue("port").toString())));
     }
 
+    /**
+     * Fetches a new DataProcessor from the BackStorage.
+     * @return new DataProcessor object.
+     */
     public DataProcessor getNewDataProcessor() {
         return new DataProcessor(storage.getChannel());
     }
 
     /**
-     * @param args the command line arguments
+     * Main method of this application.
+     * @param args the command line arguments, which are not used at the moment.
      */
     public static void main(String[] args) {
+        //Check if there's already an instance of this software running.
+        //Only one instance is allowed at any given time.
         SingleInstanceThread sit = new SingleInstanceThread();
         if (!sit.tryInstance()) {
             System.out.println("Other instance found.");
             System.exit(0);
         }
 
-        try {
-            Logger.getLogger("b-log").addHandler(new FileHandler("log.txt", true));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        LogTool.setLogLevel(LogTool.INFO);
 
+        //Propertiesmanager handles information from "config_"-file.
         properties = new PropertiesManager();
+        
+        System.out.println("Prop: " + properties.getValue("dataPath"));
 
+        //General purpose objects. 
         pool = Executors.newFixedThreadPool(5, Executors.defaultThreadFactory());
         timer = new Timer("TimerThread");
 
+        //Initiate indexes. Check if this server is the master and if so, start
+        //global index as well.
         if (properties.getValue("master").toString().equalsIgnoreCase("127.0.0.1")) {
             //Start global index
         }
-
+        //always start localIndex.
         localIndex = new LocalIndex();
+        
+        /******Done initiating static variables*********/
+        
+        //Create new Instance
         Main m = new Main();
+        
+        //Add a consoleInputManager
         ConsoleInputManager console = new ConsoleInputManager(m);
         console.start();
     }
 
+    /**
+     * A class for detecting existing instances.
+     * 
+     * Uses a ServerSocket and tries to listen on port 65533.
+     * If the ServerSocket initiates successfully then everything is fine, but
+     * if it can't listen on the port then there is another instance and the
+     * main class is notified.
+     */
     private static class SingleInstanceThread extends Thread {
 
         private ServerSocket listener;
 
+        /**
+         * Create a new instance of this class.
+         */
         public SingleInstanceThread() {
         }
 
+        /**
+         * Start a new ServerSocket to see if another instance is already
+         * running.
+         * @return True if ServerSocket starts to listen successfully, false
+         * if it couldn't and an exception gets thrown.
+         */
         public boolean tryInstance() {
             try {
                 listener = new ServerSocket(65533, 0, InetAddress.getByName(null));
@@ -114,7 +143,7 @@ public class Main {
         public void run() {
             try {
                 while (true) {
-                    listener.accept();
+                    listener.accept(); //Accept but don't use returned socket.
                 }
             } catch (IOException e) {
                 //Nothing to do here

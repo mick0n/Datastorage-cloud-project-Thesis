@@ -1,7 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.mnorrman.datastorageproject.network.jobs;
 
 import com.mnorrman.datastorageproject.objects.IndexedDataObject;
@@ -9,7 +6,7 @@ import com.mnorrman.datastorageproject.storage.DataProcessor;
 
 /**
  *
- * @author Mikael
+ * @author Mikael Norrman
  */
 public class GetDataJob extends AbstractJob{
     

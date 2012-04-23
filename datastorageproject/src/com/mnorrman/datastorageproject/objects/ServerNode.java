@@ -1,14 +1,11 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.mnorrman.datastorageproject.objects;
 
 import java.net.InetAddress;
 
 /**
  *
- * @author Mikael
+ * @author Mikael Norrman
  */
 public class ServerNode {
         

@@ -1,7 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.mnorrman.datastorageproject;
 
 import com.mnorrman.datastorageproject.network.jobs.GetDataJob;
@@ -27,7 +24,7 @@ import java.util.logging.Logger;
  * This class is mainly used for maintanence and testing during the early part
  * of this project. This will be limited to a set of very simple commands later
  * on so that it is not missused. 
- * @author Mikael
+ * @author Mikael Norrman
  */
 public class ConsoleInputManager extends Thread {
 

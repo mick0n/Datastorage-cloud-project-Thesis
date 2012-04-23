@@ -1,13 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.mnorrman.datastorageproject.web;
 
 import com.mnorrman.datastorageproject.Main;
 import com.mnorrman.datastorageproject.objects.IndexedDataObject;
-import com.mnorrman.datastorageproject.tools.MetaDataComposer;
-import com.mnorrman.datastorageproject.tools.RawMetaDataPrinter;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -16,20 +11,23 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 
 /**
- *
- * @author Mikael
+ * This web role prints out a table of all indexes (only columns and rows)
+ * in localIndex.
+ * @author Mikael Norrman
  */
 public class PrintIndexWebRole implements HttpHandler {
 
     @Override
     public void handle(HttpExchange he) throws IOException {
         String requestMethod = he.getRequestMethod();
+        
+        //If the HTTP request is GET
         if (requestMethod.equalsIgnoreCase("GET")) {
             Headers responseHeaders = he.getResponseHeaders();
             responseHeaders.set("Content-Type", "text/HTML");
-            he.sendResponseHeaders(200, 0);
+            he.sendResponseHeaders(200, 0); //ok
 
-            
+            //Build web content
             StringBuilder webString = new StringBuilder();
             webString.append("<html>\r\n");
             webString.append("<head>\r\n");
@@ -63,8 +61,6 @@ public class PrintIndexWebRole implements HttpHandler {
                     webString.append("<td style\"border: 1px solid black; padding: 3px;\">" + ido.getLength() + " bytes</td>\r\n");
                     webString.append("<td style\"border: 1px solid black; padding: 3px;\">" + ido.getChecksum() + "</td>\r\n");
                     webString.append("</tr>\r\n");
-                    //RawMetaDataPrinter.print(MetaDataComposer.decompose(ido), webString);
-                    //webString.append("\r\n");
                 }
             }
             webString.append("</table>");

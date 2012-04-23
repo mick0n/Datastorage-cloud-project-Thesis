@@ -1,14 +1,11 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.mnorrman.datastorageproject.objects;
 
 import java.io.Serializable;
 
 /**
  *
- * @author Mikael
+ * @author Mikael Norrman
  */
 public final class IndexedDataObject extends DataObject implements Serializable{
     
@@ -38,10 +35,18 @@ public final class IndexedDataObject extends DataObject implements Serializable{
         //Should probably be removed later on.
     }
 
+    /**
+     * Returns the offset in the backStorage.
+     * @return 
+     */
     public long getOffset() {
         return offset;
     }
 
+    /**
+     * Returns the version timestamp of this object
+     * @return 
+     */
     public long getVersion() {
         return version;
     }

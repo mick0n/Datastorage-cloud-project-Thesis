@@ -1,7 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.mnorrman.datastorageproject;
 
 import java.io.File;
@@ -12,37 +9,49 @@ import java.util.Date;
 
 /**
  *
- * @author Mikael
+ * @author Mikael Norrman
  */
 public class LogTool{
 
+    /**
+     * Lowest log-level
+     */
     public static final int INFO = 0;
-    public static final int WARNING = 1;
+    
+    /**
+     * Medium log-level
+     */
+    public static final int WARNING = 1; 
+    
+    /**
+     * Highest log-level
+     */
     public static final int CRITICAL = 2;
     
-    public int logLevel;
-    private File logFile;
-    private PrintWriter out;
+    private static int logLevel = CRITICAL;
+    private static File logFile;
+    private static PrintWriter out;
     
-    public LogTool() {
-        logLevel = WARNING;
-        init();
-    }
+    private LogTool(){ } //Disable instantiation
     
-    public LogTool(int level){
-        this.logLevel = level;
-        init();
-    }
-
-    public int getLogLevel() {
+    /**
+     * Get the current loglevel
+     * @return Integer representing current loglevel
+     */
+    public static int getLogLevel() {
         return logLevel;
     }
 
-    public void setLogLevel(int logLevel) {
-        this.logLevel = logLevel;
+    /**
+     * Set the current loglevel
+     * @param logLevel New loglevel
+     */
+    public static void setLogLevel(int logLevel) {
+        LogTool.logLevel = logLevel;
     }
         
-    private void init(){
+    //Initiate the logFile and outputStream
+    private static void init(){
         logFile = new File("log.txt");
         try{
             if(!logFile.exists())
@@ -53,7 +62,14 @@ public class LogTool{
         }
     }
 
-    public void log(Exception e, int level){
+    /**
+     * Prints an exception to the log.
+     * @param e Exception to be printed to log.
+     * @param level The severity of the exception.
+     */
+    public static void log(Exception e, int level){
+        if(logFile == null && out == null)
+            init();
         printLine(e.toString(), level);
         
         StackTraceElement[] trace = e.getStackTrace();
@@ -62,12 +78,19 @@ public class LogTool{
         }
     }
     
-    public void log(String s, int level){
+    /**
+     * Prints a string to the log.
+     * @param s The string that should be printed.
+     * @param level The severity of the exception.
+     */
+    public static void log(String s, int level){
+        if(logFile == null && out == null)
+            init();
         printLine(s, level);
     }
-    
-    private void printLine(String s, int level){
-        if(level >= logLevel){
+
+    private static void printLine(String s, int level){
+        if(level >= logLevel){ //Print only if level is higher or equal to the minimum level.
             StringBuilder sb = new StringBuilder();
             sb.append(new Date().toString());
             sb.append(": ");
@@ -84,13 +107,16 @@ public class LogTool{
             }
             sb.append(": ");
             sb.append(s);
-            System.out.println(sb.toString());
-            out.println(sb.toString());
+            System.out.println(sb.toString()); //Print to system output
+            out.println(sb.toString()); //Print to file output
             out.flush();
         }
     }
     
-    public void close(){
+    /**
+     * Close outputStream
+     */
+    public static void close(){
         out.flush();
         out.close();
     }

@@ -1,7 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.mnorrman.datastorageproject.index;
 
 import com.mnorrman.datastorageproject.Main;
@@ -9,13 +6,17 @@ import java.util.TimerTask;
 
 /**
  *
- * @author Mikael
+ * @author Mikael Norrman
  */
-public class IndexPercistanceGlobalTimerTask extends TimerTask{
+public class IndexPersistenceGlobalTimerTask extends TimerTask{
 
     private Index master;
     
-    public IndexPercistanceGlobalTimerTask(Index master){
+    /**
+     * Create new IndexPersistenceGlobalTimerTask instance
+     * @param master The index to save through this task
+     */
+    public IndexPersistenceGlobalTimerTask(Index master){
         this.master = master;
     }
     

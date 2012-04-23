@@ -1,19 +1,14 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.mnorrman.datastorageproject.tools;
 
-import com.mnorrman.datastorageproject.LogTool;
-import com.mnorrman.datastorageproject.Main;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
- * @author Mikael
+ * Utility class for generating hash values.
+ * @author Mikael Norrman
  */
 public class Hash {
     
@@ -21,6 +16,12 @@ public class Hash {
     
     private static MessageDigest md;
 
+    /**
+     * Get hash value from string a and string b
+     * @param a
+     * @param b
+     * @return new MD5-hash based on a+b
+     */
     public synchronized static String get(String a, String b){
         try{
             md = MessageDigest.getInstance("MD5");

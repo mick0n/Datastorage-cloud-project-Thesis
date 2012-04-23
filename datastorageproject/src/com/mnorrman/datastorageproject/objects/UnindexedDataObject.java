@@ -1,14 +1,11 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.mnorrman.datastorageproject.objects;
 
 import java.io.File;
 
 /**
  *
- * @author Mikael
+ * @author Mikael Norrman
  */
 public class UnindexedDataObject extends DataObject{
 
@@ -22,15 +19,26 @@ public class UnindexedDataObject extends DataObject{
         this.length = length;
     }
 
+    /**
+     * Return the temporary file-object
+     * @return 
+     */
     public File getTempFile(){
         return tempFile;
     }
     
+    /**
+     * Removes the "physical" file that is connected to this object
+     */
     public void removeTempFile(){
         tempFile.delete();
         tempFile = null;
     }
 
+    /**
+     * Set the checksum
+     * @param checksum 
+     */
     public void setChecksum(long checksum) {
         this.checksum = checksum;
     }

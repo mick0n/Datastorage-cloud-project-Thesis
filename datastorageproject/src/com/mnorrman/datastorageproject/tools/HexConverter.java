@@ -1,5 +1,10 @@
+
 package com.mnorrman.datastorageproject.tools;
 
+/**
+ * Utility class for converting between bytes and hex
+ * @author Mikael Norrman
+ */
 public class HexConverter {
 
 	private static final char[] hexBytes = new char[] { '0', '1', '2', '3',

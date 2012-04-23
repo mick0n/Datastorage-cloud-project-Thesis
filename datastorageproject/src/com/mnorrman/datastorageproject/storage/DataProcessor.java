@@ -1,28 +1,25 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.mnorrman.datastorageproject.storage;
 
+import com.mnorrman.datastorageproject.LogTool;
 import com.mnorrman.datastorageproject.objects.IndexedDataObject;
 import com.mnorrman.datastorageproject.objects.UnindexedDataObject;
 import com.mnorrman.datastorageproject.tools.MetaDataComposer;
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.zip.CRC32;
 
 /**
  *
- * @author Mikael
+ * @author Mikael Norrman
  */
 public class DataProcessor {
-    
-    public static final int BlOCK_SIZE = 131072;
     
     private FileChannel dataChannel;
     
@@ -48,6 +45,7 @@ public class DataProcessor {
             
             return dataChannel.read(buffer);
         }catch(IOException e){
+            LogTool.log(e, LogTool.CRITICAL);
             Logger.getLogger("b-log").log(Level.SEVERE, "An error occured when retrieving data!", e);
         }
         return -1;
@@ -63,7 +61,7 @@ public class DataProcessor {
      */
     public boolean retrieveData(OutputStream os, IndexedDataObject ido){
         try{
-            ByteBuffer buffer = ByteBuffer.allocate(BlOCK_SIZE);
+            ByteBuffer buffer = ByteBuffer.allocate(BackStorage.BlOCK_SIZE);
             dataChannel.position(ido.getOffset() + 512);
             
             int readBytes = 0;

@@ -1,7 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.mnorrman.datastorageproject.network.jobs;
 
 import com.mnorrman.datastorageproject.Main;
@@ -15,7 +12,7 @@ import java.util.zip.CRC32;
 
 /**
  *
- * @author Mikael
+ * @author Mikael Norrman
  */
 public class StoreDataJob extends AbstractJob{
     

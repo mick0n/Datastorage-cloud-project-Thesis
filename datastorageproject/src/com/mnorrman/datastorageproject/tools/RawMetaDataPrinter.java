@@ -1,19 +1,21 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.mnorrman.datastorageproject.tools;
 
 import java.nio.ByteBuffer;
 
 /**
  *
- * @author Mikael
+ * @author Mikael Norrman
  */
 public class RawMetaDataPrinter {
     
     private RawMetaDataPrinter(){}
     
+    /**
+     * Prints out the contents of a raw metadata bytebuffer. Prints it in hex-
+     * decimal form.
+     * @param bb 
+     */
     public static void print(ByteBuffer bb){
         System.out.print("1-128:\t\tColname:\t0x");
         for(int a = 0; a < 128; a++){
@@ -58,6 +60,12 @@ public class RawMetaDataPrinter {
         System.out.println("");
     }
     
+    /**
+     * Prints out the contents of a raw metadata bytebuffer. Prints it in hex-
+     * decimal form. 
+     * @param bb
+     * @param sb Send output to specified stringbuilder
+     */
     public static void print(ByteBuffer bb, StringBuilder sb){
         sb.append("<br/>1-128:\t\tColname:\t0x");
         for(int a = 0; a < 128; a++){

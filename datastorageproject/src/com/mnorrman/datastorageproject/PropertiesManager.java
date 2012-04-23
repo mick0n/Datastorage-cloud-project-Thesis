@@ -1,13 +1,6 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.mnorrman.datastorageproject;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.Date;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -15,13 +8,16 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author Mikael
+ * @author Mikael Norrman
  */
 public class PropertiesManager {
     
     private File propFile;
     private Properties props;
 
+    /**
+     * Create new instance of PropertiesManager
+     */
     public PropertiesManager() {
         try{
             propFile = new File("config_");
@@ -31,16 +27,32 @@ public class PropertiesManager {
             }
             
             props = new Properties();
-            props.load(new FileInputStream(propFile));
+            
+            /****** This part is a fix, it makes sure that backslash is read properly *******/
+            String propertiesFileString = "";
+            String temp = "";
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(propFile)));
+            while((temp = br.readLine()) != null){
+                propertiesFileString = propertiesFileString.concat(temp + "\r\n");
+            }
+            br.close();
+            propertiesFileString = propertiesFileString.replace("\\", "\\\\");
+            /****** END OF FIX ******/
+            
+            props.load(new StringReader(propertiesFileString));
         }catch(IOException e){
             Logger.getLogger("b-log").log(Level.SEVERE, "Error when initializing properties", e);
         }
     }
     
+    /*
+     * An extension of Properties.getProperty()-method.
+     */
     public Object getValue(String key){
         return props.getProperty(key);
     }
     
+    //Write a new config file with standard values
     private void setConfigFile(){
         try{
             PrintWriter pw = new PrintWriter(propFile);
@@ -78,6 +90,4 @@ public class PropertiesManager {
             Logger.getLogger("b-log").log(Level.SEVERE, "Error when creating config_ file", e);
         }
     }
-    
-    
 }

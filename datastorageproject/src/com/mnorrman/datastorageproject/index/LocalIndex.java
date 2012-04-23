@@ -1,7 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.mnorrman.datastorageproject.index;
 
 import com.mnorrman.datastorageproject.Main;
@@ -11,22 +8,30 @@ import java.util.*;
 
 /**
  *
- * @author Mikael
+ * @author Mikael Norrman
  */
 public class LocalIndex extends Index<IndexedDataObject> {
     
     private HashMap<String, ArrayList<IndexedDataObject>> table;
     
+    /**
+     * Creates new instance of LocalIndex
+     */
     public LocalIndex(){
         table = new HashMap<String, ArrayList<IndexedDataObject>>();
+        
+        //Load indexdata from file. IndexPersistance may return an empty file.
         IndexPersistence ip = new IndexPersistence();
         insertAll(ip.load());
-        ip = null;
         
+        //Add a scheduled task for automatically saving this index
         long delay = Long.parseLong(Main.properties.getValue("indexInterval").toString()) * 1000L;
-        Main.timer.scheduleAtFixedRate(new IndexPercistanceTimerTask(this), delay, delay);
+        Main.timer.scheduleAtFixedRate(new IndexPersistenceTimerTask(this), delay, delay);
     }
 
+    /**
+     * Clear the index
+     */
     public void clear(){
         table.clear();
     }
@@ -69,11 +74,13 @@ public class LocalIndex extends Index<IndexedDataObject> {
 
     @Override
     public void insert(IndexedDataObject dataObject) {
-        String checksum = dataObject.getHash();
-        if(table.containsKey(checksum)){
-            ArrayList<IndexedDataObject> temp = table.get(checksum);
+        String hash = dataObject.getHash();
+        if(table.containsKey(hash)){
+            ArrayList<IndexedDataObject> temp = table.get(hash);
             IndexedDataObject idoTemp = null;
             temp.add(dataObject);
+            
+            //Sort list so the newest version is at index 0
             for(int a = temp.size() - 1; a > 0; a--){
                 if(temp.get(a).getVersion() > temp.get(a-1).getVersion()){
                     idoTemp = temp.get(a-1);
@@ -84,8 +91,9 @@ public class LocalIndex extends Index<IndexedDataObject> {
                 }
             }
         }else{
-            table.put(checksum, new ArrayList<IndexedDataObject>());
-            table.get(checksum).add(dataObject);
+            //Create new arraylist for this index
+            table.put(hash, new ArrayList<IndexedDataObject>());
+            table.get(hash).add(dataObject);
         }
     }
 
@@ -93,47 +101,28 @@ public class LocalIndex extends Index<IndexedDataObject> {
     public void insertAll(List<IndexedDataObject> list) {
         Iterator<IndexedDataObject> iterator = list.iterator();
         while(iterator.hasNext()){
-            IndexedDataObject temp = iterator.next();
-            insert(temp);
+            insert(iterator.next());
         }
+        
+        //When inserting many values, save to local file also. 
         Main.pool.submit(new IndexPersistence(table.values()));
     }
 
-    /**
-     * Implies to remove all versions of column a and row b
-     * @param a Column
-     * @param b Row
-     */
     @Override
     public void remove(String a, String b) {
         table.remove(Hash.get(a, b));
     }
 
-    /**
-     * Implies to remove all versions of column and row-hash
-     * @param hash column and row-hash
-     */
     @Override
     public void remove(String hash) {
         table.remove(hash);
     }
 
-    /**
-     * Removes only one version of column a and row b
-     * @param a Column
-     * @param b Row
-     * @param version Version number
-     */
     @Override
     public void remove(String a, String b, int version) {
         table.get(Hash.get(a, b)).remove(version);
     }
 
-    /**
-     * Removes only one version of column and row-hash
-     * @param hash Column and row-hash
-     * @param version Version number
-     */
     @Override
     public void remove(String hash, int version) {
         table.get(hash).remove(version);
@@ -142,6 +131,16 @@ public class LocalIndex extends Index<IndexedDataObject> {
     @Override
     public int versionCount(IndexedDataObject dataObject) {
         return table.get(Hash.get(dataObject.getColname(), dataObject.getRowname())).size();
+    }
+
+    @Override
+    public int versionCount(String a, String b) {
+        return table.get(Hash.get(a, b)).size();
+    }
+
+    @Override
+    public int versionCount(String hash) {
+        return table.get(hash).size();
     }
     
     @Override
