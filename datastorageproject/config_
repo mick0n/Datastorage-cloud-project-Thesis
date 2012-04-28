@@ -1,5 +1,5 @@
 #Config-file
-#Created Tue Apr 17 08:49:10 CEST 2012
+#Created Sat Apr 28 14:21:31 CEST 2012
 #
 #Warning! Editing this file can lead to malfunction of
 #this software. Make changes with caution!
@@ -24,5 +24,11 @@ master = 127.0.0.1
 #port - port number used by this server.
 #Always make sure that your port is opened in your firewall.
 port = 8999
+
+
+#autoclean - True if the server should be able to initiate
+#cleaning when errors are found and false if it has to be
+run manually.
+autoclean = true
 
 

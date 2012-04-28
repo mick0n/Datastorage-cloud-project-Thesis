@@ -1,17 +1,23 @@
 
 package com.mnorrman.datastorageproject;
 
+import com.mnorrman.datastorageproject.index.GlobalIndex;
+import com.mnorrman.datastorageproject.index.IndexPersistence;
+import com.mnorrman.datastorageproject.index.IndexPersistenceGlobal;
 import com.mnorrman.datastorageproject.index.LocalIndex;
 import com.mnorrman.datastorageproject.network.MasterNode;
 import com.mnorrman.datastorageproject.storage.BackStorage;
 import com.mnorrman.datastorageproject.storage.DataProcessor;
+import com.mnorrman.datastorageproject.storage.DataTicket;
 import com.mnorrman.datastorageproject.web.*;
+import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.util.Timer;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -19,13 +25,17 @@ import java.util.concurrent.Executors;
  */
 public class Main {
 
+    public static GlobalIndex globalIndex;
     public static LocalIndex localIndex;
     public static ExecutorService pool;
     public static Timer timer;
     public static PropertiesManager properties;
+    public static State state;
     public BackStorage storage;
     public MasterNode masterNode;
     public WebServer webServer;
+    
+    private File shutdownSafetyFile;
 
     /**
      * Create new instance of this class. This method initiates major 
@@ -35,6 +45,23 @@ public class Main {
         try {
             //Initiate BackStorage
             storage = new BackStorage().initialize();
+            
+            //Test to see if software was successfully closed last time it
+            //shutdown. If not then see if the data is allright!
+            shutdownSafetyFile = new File(properties.getValue("dataPath") + File.separator + "safeCheck_");
+            if(shutdownSafetyFile.exists()){
+                if(!storage.performIntegrityCheck()){
+                    LogTool.log("Backstorage integrity check return with errors", LogTool.CRITICAL);
+                    if(Boolean.parseBoolean(properties.getValue("autoclean").toString())){
+                        storage.clean();
+                    }else{
+                        LogTool.log("Perform a clean operation to repair the errors", LogTool.CRITICAL);
+                    }
+                }
+                localIndex.clear().insertAll(storage.reindexData());
+            }else{
+                shutdownSafetyFile.createNewFile();
+            }
             
             //Initiate webserver and add necessary roles
             webServer = new WebServer(8429);
@@ -51,6 +78,7 @@ public class Main {
             masterNode.startMasterServer();
         }
 
+        state = State.IDLE;
         //MasterNodeListener mdl = new MasterNodeListener();
     }
 
@@ -59,9 +87,52 @@ public class Main {
      * @return new DataProcessor object.
      */
     public DataProcessor getNewDataProcessor() {
-        return new DataProcessor(storage.getChannel());
+        //return new DataProcessor(storage.getChannel());
+        DataTicket dt = storage.getTicket();
+        if(dt != null)
+            return new DataProcessor(dt);
+        else
+            return null;
     }
 
+    /**
+     * Method used to try and gracefully shut down this server instance.
+     * @throws InterruptedException
+     * @throws IOException 
+     */
+    public void shutdown() throws InterruptedException, IOException{
+        //End the timer
+        timer.cancel();
+        
+        //Save indexes
+        if(globalIndex != null)
+            pool.submit(new IndexPersistenceGlobal(globalIndex.getData()));
+        pool.submit(new IndexPersistence(localIndex.getData()));
+        
+        //Close the backstorage
+        if(storage != null)
+            storage.close();
+        
+        //Shut down the thread pool. Use timeout and hope that every thread is
+        //done by the end of timeout.
+        pool.shutdown();
+        if(pool.awaitTermination(30, TimeUnit.SECONDS)){
+            pool.shutdownNow();
+        }
+
+        //Stop network mechanisms from receiving and sending more input data.
+        if(masterNode != null)
+            masterNode.close();
+        if(webServer != null)
+            webServer.close();
+        
+        //Remove the shutdownsafetyfile to tell us that it was a safe shutdown
+        //next time we start. 
+        shutdownSafetyFile.delete();
+        
+        System.exit(0);
+    }
+    
     /**
      * Main method of this application.
      * @param args the command line arguments, which are not used at the moment.
@@ -77,6 +148,8 @@ public class Main {
 
         LogTool.setLogLevel(LogTool.INFO);
 
+        state = State.NOTRUNNING;
+        
         //Propertiesmanager handles information from "config_"-file.
         properties = new PropertiesManager();
         

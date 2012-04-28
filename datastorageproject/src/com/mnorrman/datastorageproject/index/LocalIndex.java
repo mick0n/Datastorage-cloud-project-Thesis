@@ -32,8 +32,9 @@ public class LocalIndex extends Index<IndexedDataObject> {
     /**
      * Clear the index
      */
-    public void clear(){
+    public LocalIndex clear(){
         table.clear();
+        return this;
     }
     
     @Override

@@ -10,8 +10,9 @@ import java.io.Serializable;
 public final class IndexedDataObject extends DataObject implements Serializable{
     
     private long offset, version;
+    private boolean cleanupFlag;
 
-    public IndexedDataObject(String colname, String rowname, String owner, long offset, long length, long version, long checksum) {
+    public IndexedDataObject(String colname, String rowname, String owner, long offset, long length, long version, long checksum, boolean cleanupFlag) {
         this.colname = colname;
         this.rowname = rowname;
         this.owner = owner;
@@ -19,6 +20,7 @@ public final class IndexedDataObject extends DataObject implements Serializable{
         this.length = length;
         this.version = version;
         this.checksum = checksum;
+        this.cleanupFlag = cleanupFlag;
     }
     
     public IndexedDataObject(UnindexedDataObject udo, long offset, long version){
@@ -29,6 +31,7 @@ public final class IndexedDataObject extends DataObject implements Serializable{
         this.length = udo.getLength();
         this.version = version;
         this.checksum = udo.getChecksum();
+        this.cleanupFlag = false;
     }
     
     public IndexedDataObject(){
@@ -50,6 +53,21 @@ public final class IndexedDataObject extends DataObject implements Serializable{
     public long getVersion() {
         return version;
     }
+    
+    /**
+     * Check to see whether this indexedDataObject has been flagged for cleanup.
+     * @return 
+     */
+    public boolean isCleanupFlagged(){
+        return cleanupFlag;
+    }
+    
+    /**
+     * Mark this indexedDataObject for cleanup.
+     */
+    public void markForCleanup(){
+        cleanupFlag = true;
+    }
 
     @Override
     public String getClearText() {
@@ -58,6 +76,6 @@ public final class IndexedDataObject extends DataObject implements Serializable{
     
     @Override
     public String toString() {
-        return "IndexedDataObject: colname=" + colname + ", rowname=" + rowname + ", owner=" + owner + ", offset=" + offset + ", length=" + length + ", version=" + version + ", checksum=" + checksum;
+        return "IndexedDataObject: colname=" + colname + ", rowname=" + rowname + ", owner=" + owner + ", offset=" + offset + ", length=" + length + ", version=" + version + ", checksum=" + checksum + ", cleanup=" + cleanupFlag;
     }
 }

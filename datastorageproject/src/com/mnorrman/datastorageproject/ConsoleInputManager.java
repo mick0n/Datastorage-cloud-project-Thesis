@@ -7,6 +7,8 @@ import com.mnorrman.datastorageproject.objects.IndexedDataObject;
 import com.mnorrman.datastorageproject.objects.UnindexedDataObject;
 import com.mnorrman.datastorageproject.storage.BackStorage;
 import com.mnorrman.datastorageproject.storage.DataProcessor;
+import com.mnorrman.datastorageproject.tools.MetaDataComposer;
+import com.mnorrman.datastorageproject.tools.RawMetaDataPrinter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -53,6 +55,10 @@ public class ConsoleInputManager extends Thread {
             } else if (command.toLowerCase().equals("reindex")) {
                 Main.localIndex.clear();
                 Main.localIndex.insertAll(m.storage.reindexData());
+
+
+            } else if (command.toLowerCase().equals("clean")) {
+                m.storage.clean();
 
 
             } else if (command.toLowerCase().equals("storelocal")) {
@@ -152,15 +158,6 @@ public class ConsoleInputManager extends Thread {
                         }catch(IOException e){
                             Logger.getLogger("b-log").log(Level.SEVERE, "An error occured!", e);
                         }
-                        
-//                        try{
-//                            FileOutputStream fos = new FileOutputStream(new File("testOutput.txt"));
-//                            DataProcessor dp = m.getNewDataProcessor();
-//                            dp.retrieveData(fos, ido);
-//                            fos.close();
-//                        }catch(IOException e){
-//                            Logger.getLogger("b-log").log(Level.SEVERE, "An error occured!", e);
-//                        }
                 }else{
                     print("No such element in table");
                 }                
@@ -172,7 +169,7 @@ public class ConsoleInputManager extends Thread {
                 IndexedDataObject temp = Main.localIndex.get(colname, rowname);
                 DataProcessor dp = m.getNewDataProcessor();
                 System.out.println("Success? " + dp.removeData(temp));
-                Main.localIndex.remove(temp.getHash());
+                Main.localIndex.clear().insertAll(m.storage.reindexData());
                 
                 
             }else if(command.toLowerCase().equals("printindex")){
@@ -186,9 +183,15 @@ public class ConsoleInputManager extends Thread {
             } else {
                 print("Unknown command. Type help for help.");
             }
-        } while (!command.toLowerCase().equals("exit"));
+        } while (!command.toLowerCase().equals("shutdown"));
         
-        System.exit(0);
+        try{
+            m.shutdown();
+        }catch(IOException e){
+            LogTool.log(e, LogTool.CRITICAL);
+        }catch(InterruptedException e){
+            LogTool.log(e, LogTool.CRITICAL);
+        }
     }
 
     private void print(String s) {

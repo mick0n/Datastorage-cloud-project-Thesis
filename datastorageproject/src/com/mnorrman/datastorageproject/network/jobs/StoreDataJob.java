@@ -46,4 +46,7 @@ public class StoreDataJob extends AbstractJob{
         }
     }
     
+    public void finishDataProcessor(){
+        dataProcessor.finish();
+    }
 }

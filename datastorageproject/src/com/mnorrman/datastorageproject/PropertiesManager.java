@@ -83,7 +83,13 @@ public class PropertiesManager {
             pw.println("#Always make sure that your port is opened in your firewall.");
             pw.println("port = 8999");
             pw.println("");
-            pw.println("");            
+            pw.println("");
+            pw.println("#autoclean - True if the server should be able to initiate");
+            pw.println("#cleaning when errors are found and false if it has to be");
+            pw.println("run manually.");
+            pw.println("autoclean = true");
+            pw.println("");
+            pw.println("");
             pw.flush();
             pw.close();
         }catch(IOException e){

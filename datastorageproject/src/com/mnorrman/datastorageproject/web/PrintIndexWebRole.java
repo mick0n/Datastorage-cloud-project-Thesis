@@ -8,6 +8,7 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /**
@@ -58,7 +59,18 @@ public class PrintIndexWebRole implements HttpHandler {
                     webString.append("<td style=\"border: 1px solid black; padding: 3px;background-color:white;\">" + ido.getRowname() + "</td>\r\n");
                     webString.append("<td style=\"border: 1px solid black; padding: 3px;background-color:white;\">" + ido.getOwner() + "</td>\r\n");
                     webString.append("<td style=\"border: 1px solid black; padding: 3px;background-color:white;\">" + ido.getVersion() + "</td>\r\n");
-                    webString.append("<td style=\"border: 1px solid black; padding: 3px;background-color:white;\">" + ido.getLength() + " bytes</td>\r\n");
+                    webString.append("<td style=\"border: 1px solid black; padding: 3px;background-color:white;\">");
+                    DecimalFormat df = new DecimalFormat("#.###");
+                    if(ido.getLength() < 1000){
+                        webString.append(ido.getLength() + " Bytes");
+                    }else if(ido.getLength() < 1000000){
+                        webString.append(df.format((double)ido.getLength()/1000.0) + " KB");
+                    }else if(ido.getLength() < 1000000000){
+                        webString.append(df.format((double)ido.getLength()/1000000.0) + " MB");
+                    }else if(ido.getLength() < 1000000000000L){
+                        webString.append(df.format((double)ido.getLength()/1000000000.0) + " GB");
+                    }
+                    webString.append("</td>\r\n");
                     webString.append("<td style=\"border: 1px solid black; padding: 3px;background-color:white;\">" + ido.getChecksum() + "</td>\r\n");
                     webString.append("</tr>\r\n");
                 }

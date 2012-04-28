@@ -22,28 +22,46 @@ import java.util.logging.Logger;
 public class DataProcessor {
     
     private FileChannel dataChannel;
+    private DataTicket ticket;
     
     
     /**
      * Constructor. Requires a new FileChannel-object from the backstorage.
      * @param channel FileChannel from the backstorage.
+     * @deprecated Replaced by DataProcessor(DataTicket ticket)-constructor.
      */
     public DataProcessor(FileChannel channel){
         this.dataChannel = channel;
     }
     
+    /**
+     * Creates new DataProcessor instance. Takes a DataTicket as argument.
+     * @param ticket DataTicket received from BackStorage class.
+     */
+    public DataProcessor(DataTicket ticket){
+        this.ticket = ticket;
+    }
+    
+    /**
+     * Retrieve data in a non-blocking environment. When using this method 
+     * the finish()-method must be called manually when transfer is complete.
+     * @param buffer Use pre-allocated buffer
+     * @param position The position in-file that we are going to start at.
+     * @param ido The indexedDataObject belonging to the data we are fetching.
+     * @return amount of bytes read. May return -1.
+     */
     public int retrieveData(ByteBuffer buffer, long position, IndexedDataObject ido){
         try{
             if(buffer.position() != 0)
                 buffer.clear();
             
-            dataChannel.position(((ido.getOffset() + 512L) + position));
+            ticket.getChannel().position(((ido.getOffset() + 512L) + position));
             
             if(ido.getLength() - position < buffer.capacity() ){
                 buffer.limit((int)(ido.getLength() - position));
             }
             
-            return dataChannel.read(buffer);
+            return ticket.getChannel().read(buffer);
         }catch(IOException e){
             LogTool.log(e, LogTool.CRITICAL);
             Logger.getLogger("b-log").log(Level.SEVERE, "An error occured when retrieving data!", e);
@@ -62,14 +80,14 @@ public class DataProcessor {
     public boolean retrieveData(OutputStream os, IndexedDataObject ido){
         try{
             ByteBuffer buffer = ByteBuffer.allocate(BackStorage.BlOCK_SIZE);
-            dataChannel.position(ido.getOffset() + 512);
+            ticket.getChannel().position(ido.getOffset() + 512);
             
             int readBytes = 0;
             long totalBytes = ido.getLength();
 
             while(totalBytes > 0){
                 buffer.clear();
-                readBytes = dataChannel.read(buffer);
+                readBytes = ticket.getChannel().read(buffer);
                 buffer.flip();
                 
                 if(readBytes >= totalBytes){
@@ -83,41 +101,17 @@ public class DataProcessor {
                     break;
             }
             os.flush();
+            finish();
             return true;
         }catch(IOException e){
             Logger.getLogger("b-log").log(Level.SEVERE, "An error occured when retrieving data!", e);
         }
+        finish();
         return false;
     }
 
     public IndexedDataObject storeData(UnindexedDataObject udo){
-        
-//        CRC32 crc = new CRC32();
-        //String fileName = udo.getColname() + "-" + udo.getRowname() + Math.random();
-        
-//        int readBytes = 0;
-//        long totalBytesRead = 0;
-//        byte[] bytes = null;
-//        
-//        try {
-//            FileOutputStream fos = new FileOutputStream(udo.getTempFile());
-//            while(totalBytesRead < udo.getLength()){
-//                bytes = new byte[BlOCK_SIZE];
-//                readBytes = udo.getStream().read(bytes);
-//                crc.update(bytes, 0, readBytes);
-//                fos.write(bytes, 0, readBytes);
-//                totalBytesRead += readBytes;
-//                if(totalBytesRead >= udo.getLength())
-//                    break;
-//            }
-//            fos.flush();
-//            fos.close();
-//        }catch(IOException e){
-//            Logger.getLogger("b-log").log(Level.SEVERE, "An error occured when creating temporary data!", e);
-//        }
 
-//        udo.setChecksum(crc.getValue());
-        
         long filesizeBeforeOperation = -1; 
         
         
@@ -129,34 +123,34 @@ public class DataProcessor {
             bbb.position(0);
             
             
-            FileLock fl = dataChannel.lock();
+            FileLock fl = ticket.getChannel().lock();
 
-            long newOffset = dataChannel.size();
+            long newOffset = ticket.getChannel().size();
                         
             filesizeBeforeOperation = newOffset;
             
-            dataChannel.position(newOffset);
-            dataChannel.write(bbb);
+            ticket.getChannel().position(newOffset);
+            ticket.getChannel().write(bbb);
             
             //This part makes sure that the full amount of bytes are pre-
             //allocated, thus making it easier to rollback the changes.
             //(Since we still know how much data to remove)
-            long tempPos = dataChannel.position();
+            long tempPos = ticket.getChannel().position();
             ByteBuffer voidbuf = ByteBuffer.allocate(1);
             voidbuf.put((byte)0);
             voidbuf.flip();
             if(tempPos+(udo.getLength()-1) < 0)
-                dataChannel.position(0);
+                ticket.getChannel().position(0);
             else
-                dataChannel.position(tempPos+(udo.getLength()-1));
-            dataChannel.write(voidbuf);
-            dataChannel.position(tempPos);
+                ticket.getChannel().position(tempPos+(udo.getLength()-1));
+            ticket.getChannel().write(voidbuf);
+            ticket.getChannel().position(tempPos);
             
             FileInputStream fis = new FileInputStream(udo.getTempFile());
             FileChannel fc = fis.getChannel();
             
             //Transfer all data from the temporary file into the backstorage.
-            dataChannel.transferFrom(fc, dataChannel.position(), udo.getTempFile().length());
+            ticket.getChannel().transferFrom(fc, ticket.getChannel().position(), udo.getTempFile().length());
             fc.close();
             
             //Remove the temporary file.
@@ -168,7 +162,7 @@ public class DataProcessor {
         }catch(IOException e){
             Logger.getLogger("b-log").log(Level.SEVERE, "An error occured when storing data!", e);
             try{
-                dataChannel.truncate(filesizeBeforeOperation);
+                ticket.getChannel().truncate(filesizeBeforeOperation);
             }catch(IOException e2){
                 Logger.getLogger("b-log").log(Level.SEVERE, "An error occured when rolling back changes!", e);
             }
@@ -180,14 +174,18 @@ public class DataProcessor {
         long amount = ido.getLength() + 512L;
         
         try{
-            dataChannel.position(ido.getOffset() + amount);
-            dataChannel.transferFrom(dataChannel, ido.getOffset(), dataChannel.size()-(ido.getOffset()+amount));
-            dataChannel.truncate(dataChannel.size()-amount);
+            ticket.getChannel().position(ido.getOffset() + amount);
+            System.out.println("Length of file: " + ticket.getChannel().size());
+            System.out.println("Amount = " + amount);
+            System.out.println("How much we want to transfer: " + ido.getOffset() + " to " + (ticket.getChannel().size()-(ido.getOffset()+amount)));
+            ticket.getChannel().transferFrom(ticket.getChannel(), ido.getOffset(), ticket.getChannel().size()-(ido.getOffset()+amount));
+            ticket.getChannel().truncate(ticket.getChannel().size()-amount);
+            finish();
             return true;
         }catch(IOException e){
             Logger.getLogger("b-log").log(Level.SEVERE, "Error when removing data", e);
         }
-        
+        finish();
         return false;
     }
     
@@ -206,5 +204,12 @@ public class DataProcessor {
                 value = removeData(ido);
         }
         return value;
+    }
+    
+    /**
+     * Tell the backstorage that we are done with this ticket.
+     */
+    public void finish(){
+        this.ticket.finish();
     }
 }

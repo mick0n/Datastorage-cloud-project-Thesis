@@ -41,6 +41,7 @@ public class MetaDataComposer {
         byte[] temp;
         String colname, rowname, owner;
         long version, len, checksum;
+        boolean cleanupFlag;
 
         temp = new byte[128];
         bb.get(temp);
@@ -59,8 +60,11 @@ public class MetaDataComposer {
         temp = new byte[128];
         bb.get(temp);
         owner = new String(temp).trim();
+        
+        bb.position(511);
+        cleanupFlag = (bb.get() == 1 ? true : false);
 
-        return new IndexedDataObject(colname, rowname, owner, offset, len, version, checksum);
+        return new IndexedDataObject(colname, rowname, owner, offset, len, version, checksum, cleanupFlag);
     }
     
     /**
@@ -78,6 +82,7 @@ public class MetaDataComposer {
         byte[] temp;
         String colname, rowname, owner;
         long version, len, checksum, offset;
+        boolean cleanupFlag;
 
         temp = new byte[128];
         bb.get(temp);
@@ -98,8 +103,11 @@ public class MetaDataComposer {
         owner = new String(temp).trim();
         
         offset = bb.getLong();
-
-        return new IndexedDataObject(colname, rowname, owner, offset, len, version, checksum);
+        
+        bb.position(511);
+        cleanupFlag = (bb.get() == 1 ? true : false);
+        
+        return new IndexedDataObject(colname, rowname, owner, offset, len, version, checksum, cleanupFlag);
     }
     
     /**
@@ -139,6 +147,13 @@ public class MetaDataComposer {
         }else{
             bb.put(VOID_BYTES);
         }
+        
+        //Write to the last byte which represents the cleanup-flag.
+        if(edo instanceof IndexedDataObject){
+            bb.position(511);
+            bb.put((((IndexedDataObject)edo).isCleanupFlagged() ? (byte)1 : (byte)0));
+        }
+        
         bb.flip();
         
         return bb;

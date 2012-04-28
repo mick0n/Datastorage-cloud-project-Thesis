@@ -160,12 +160,14 @@ public class SimplePostWebRole implements HttpHandler{
                     buff.clear();
                 }
                 input.close();
+                //Delete our own temporary file
+                tempFile.delete();
+                job.finishDataProcessor();
             }catch(IOException e){
                 e.printStackTrace();
             }
             
-            //Delete our own temporary file
-            tempFile.delete();
+            
             
             he.getResponseBody().close();
         }

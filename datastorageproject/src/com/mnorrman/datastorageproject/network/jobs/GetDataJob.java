@@ -46,6 +46,10 @@ public class GetDataJob extends AbstractJob{
         return largebuf.array();
     }
     
+    public int getBufferLimit(){
+        return largebuf.limit();
+    }
+    
     public void update(long pos){
         this.crntPos = pos;
         if(crntPos == ido.getLength()){

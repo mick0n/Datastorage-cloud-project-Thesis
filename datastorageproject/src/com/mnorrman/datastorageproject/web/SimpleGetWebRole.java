@@ -37,7 +37,6 @@ public class SimpleGetWebRole implements HttpHandler{
         
         //If the HTTP request is GET
         if (requestMethod.equalsIgnoreCase("GET")) {
-            System.out.println("Variables? " + he.getRequestURI().getQuery());
             
             if(he.getRequestURI().getQuery() != null){
                 //Get request parameters from queryString
@@ -81,7 +80,7 @@ public class SimpleGetWebRole implements HttpHandler{
                     try{
                         OutputStream os = he.getResponseBody();
                         while(!job.isFinished()){
-                            os.write(job.getData());
+                            os.write(job.getData(), 0, job.getBufferLimit());
                         }
                         os.flush();
                         os.close();
@@ -123,25 +122,6 @@ public class SimpleGetWebRole implements HttpHandler{
                     webString.append("</tr>\r\n");
                 }
                 webString.append("</tr>\r\n");
-//                webString.append("<td style\"border: 1px solid black; padding: 3px;\">Column name</td>\r\n");
-//                webString.append("<td style\"border: 1px solid black; padding: 3px;\">Row name</td>\r\n");
-//                webString.append("<td style\"border: 1px solid black; padding: 3px;\">Owner name</td>\r\n");
-//                webString.append("<td style\"border: 1px solid black; padding: 3px;\">Version number</td>\r\n");
-//                webString.append("<td style\"border: 1px solid black; padding: 3px;\">Data size</td>\r\n");
-//                webString.append("<td style\"border: 1px solid black; padding: 3px;\">Checksum(CRC32) value</td>\r\n");
-//                webString.append("</tr>\r\n");
-//                for(ArrayList<IndexedDataObject> al : Main.localIndex.getData()){
-//                    for(IndexedDataObject idoo : al){
-//                        webString.append("<tr>\r\n");
-//                        webString.append("<td style\"border: 1px solid black; padding: 3px;\">" + idoo.getColname() + "</td>\r\n");
-//                        webString.append("<td style\"border: 1px solid black; padding: 3px;\">" + idoo.getRowname() + "</td>\r\n");
-//                        webString.append("<td style\"border: 1px solid black; padding: 3px;\">" + idoo.getOwner() + "</td>\r\n");
-//                        webString.append("<td style\"border: 1px solid black; padding: 3px;\">" + idoo.getVersion() + "</td>\r\n");
-//                        webString.append("<td style\"border: 1px solid black; padding: 3px;\">" + idoo.getLength() + " bytes</td>\r\n");
-//                        webString.append("<td style\"border: 1px solid black; padding: 3px;\">" + idoo.getChecksum() + "</td>\r\n");
-//                        webString.append("</tr>\r\n");
-//                    }
-//                }
                 webString.append("</table>");
                 webString.append("</div>\r\n");
                 webString.append("</div>\r\n");

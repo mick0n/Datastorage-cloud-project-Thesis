@@ -11,8 +11,6 @@ import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -26,6 +24,8 @@ public class MasterNode extends Thread {
     private ConcurrentLinkedQueue<SocketChannel> channelQueue;
     private ByteBuffer buffer;
     private int readBytes, writtenBytes;
+    
+    private boolean keepWorking = true;
     
     /**
      * Creates new instance of MasterNode class.
@@ -64,7 +64,7 @@ public class MasterNode extends Thread {
         buffer = ByteBuffer.allocateDirect(BackStorage.BlOCK_SIZE);
         int readyChannels;
 
-        while (true) {
+        while (keepWorking) {
             try {
                 //Block until theres a minimum of one channel with a ready
                 //action
@@ -209,6 +209,12 @@ public class MasterNode extends Thread {
         return selector;
     }
 
+    public void close() throws IOException{
+        listener.close();
+        keepWorking = false;
+        selector.wakeup();
+    }
+    
     //For test purposes
     public static void main(String[] args) {
         MasterNode mn = new MasterNode(null);

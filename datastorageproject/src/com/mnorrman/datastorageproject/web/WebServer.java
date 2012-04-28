@@ -38,12 +38,11 @@ public class WebServer {
     public void addWebRole(String path, HttpHandler role){
         server.createContext(path, role);
     }
-    
-    //For testing only
-    public static void main(String[] args) throws IOException {
-       WebServer ws = new WebServer(8429);
-       ws.addWebRole("/", new MainWebRole());
-       //ws.addWebRole("/index", new PrintIndexWebRole());
-       //ws.addWebRole("/get", new SimpleGetWebRole());
+
+    /**
+     * Stop this webserver
+     */
+    public void close(){
+        server.stop(0);
     }
 }
