@@ -143,10 +143,14 @@ public class MasterNode extends Thread {
                         buffer.flip();
                         
                         //Set new command in ConnectionContext
-                        ((ConnectionContext) key.attachment()).setCommand(Protocol.PING);
+                        ((ConnectionContext) key.attachment()).setCommand(Protocol.getCommand(buffer.get()));
                     }
-                //break;
-
+                    break;
+                    
+                case CONNECT:
+                    System.out.println("We wish to connect");
+                    break;
+                    
                 case GET:
                     //Perform get
                     break;

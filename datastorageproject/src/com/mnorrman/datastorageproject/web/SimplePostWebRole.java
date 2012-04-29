@@ -35,33 +35,55 @@ public class SimplePostWebRole implements HttpHandler{
             he.sendResponseHeaders(200, 0);
 
             //Build web content
-            StringBuilder webString = new StringBuilder();
-            webString.append("<html>\r\n");
-            webString.append("<head>\r\n");
-            webString.append("<title>Datastorage thesis - upload</title>\r\n");
-            webString.append("<style type=\"text/css\">\r\n");
-            webString.append("h1{ font-weight:bold; font-size:16px; font-family: arial; color: #06189E; }\r\n");
-            webString.append("#box{width:400px; height: 250px; -moz-border-radius: 15px; border-radius: 15px; background-color: #A5CFFA; border: 2px solid #06189E; padding: 10px; margin-top:200px;}\r\n");
-            webString.append(".text{ font-size: 14px; font-family: arial; color: white;}\r\n");
-            webString.append("</style>\r\n");
-            webString.append("</head>\r\n");
-            webString.append("<body>\r\n");
-            webString.append("<div style=\"width:100%;\" align=\"center\">\r\n");
-            webString.append("<div id=\"box\">\r\n");
-            webString.append("<h1>Datastorage with no name - Upload</h1>");
-            webString.append("<p class=\"text\">Welcome to the datastorage with no name!<br>\r\n");
-            webString.append("<form method=\"post\" action=\"/post\" enctype=\"multipart/form-data\"> \r\n");
-            webString.append("<input type=\"file\" name=\"att\" />\r\n");
-            webString.append("<input type=\"submit\" value=\"Upload\" />\r\n");
-            webString.append("</form>\r\n");
-            webString.append("</p>\r\n");
-            webString.append("</div>\r\n");
-            webString.append("</div>\r\n");
-            webString.append("</body>\r\n");
-            webString.append("</html>\r\n");
+//            StringBuilder webString = new StringBuilder();
+//            webString.append("<html>\r\n");
+//            webString.append("<head>\r\n");
+//            webString.append("<title>Datastorage thesis - upload</title>\r\n");
+//            webString.append("<style type=\"text/css\">\r\n");
+//            webString.append("h1{ font-weight:bold; font-size:16px; font-family: arial; color: #06189E; }\r\n");
+//            webString.append("#box{width:400px; height: 250px; -moz-border-radius: 15px; border-radius: 15px; background-color: #A5CFFA; border: 2px solid #06189E; padding: 10px; margin-top:200px;}\r\n");
+//            webString.append(".text{ font-size: 14px; font-family: arial; color: white;}\r\n");
+//            webString.append("</style>\r\n");
+//            webString.append("<script type=\"text/javascript\">\r\n");
+//            webString.append("function handleFileSelect(evt){\r\n");
+//            webString.append("alert('istime');\r\n");
+//            webString.append("if (window.File && window.FileReader && window.FileList && window.Blob) {\r\n");
+//            webString.append("var files = evt.target.files;\r\n");
+//            webString.append("alert('size = ' + files[0].size);\r\n");
+//            webString.append("\r\n");
+//            webString.append("\r\n");
+//            webString.append("\r\n");
+//            webString.append("\r\n");
+//            webString.append("\r\n");
+//            webString.append("\r\n");
+//            webString.append("}}\r\n");
+//            webString.append("</script>\r\n");
+//            webString.append("</head>\r\n");
+//            webString.append("<body>\r\n");
+//            webString.append("<div style=\"width:100%;\" align=\"center\">\r\n");
+//            webString.append("<div id=\"box\">\r\n");
+//            webString.append("<h1>Datastorage with no name - Upload</h1>");
+//            webString.append("<p class=\"text\">Welcome to the datastorage with no name!<br>\r\n");
+//            webString.append("<form method=\"post\" action=\"/post\" enctype=\"multipart/form-data\"> \r\n");
+//            webString.append("<input type=\"file\" name=\"att\" />\r\n");
+//            webString.append("<input type=\"file\" id=\"files\" name=\"files[]\" multiple />\r\n");
+//            webString.append("<input type=\"submit\" value=\"Upload\" />\r\n");
+//            webString.append("</form>\r\n");
+//            webString.append("</p>\r\n");
+//            webString.append("</div>\r\n");
+//            webString.append("</div>\r\n");
+//            webString.append("</body>\r\n");
+//            webString.append("</html>\r\n");
+            
+            File postFile = new File("resource\\post.html");
+            byte[] data = new byte[(int)postFile.length()];
+            FileInputStream fis = new FileInputStream(postFile);
+            fis.read(data);
+            fis.close();
             
             OutputStream responseStream = he.getResponseBody();
-            responseStream.write(webString.toString().getBytes());
+//            responseStream.write(webString.toString().getBytes());
+            responseStream.write(data);
             responseStream.flush();
             responseStream.close();
         }
@@ -87,7 +109,7 @@ public class SimplePostWebRole implements HttpHandler{
             int countBytes = 0;
             while((readbyte = is.read()) != -1){
                 metadata[countBytes] = (byte)readbyte;
-                
+
                 //If we find the Carriage return line feed x2 that means it's the end of head.
                 if(countBytes >= 3 && (char)metadata[countBytes-3] == '\r' && (char)metadata[countBytes-2] == '\n' && (char)metadata[countBytes-1] == '\r' && (char)metadata[countBytes] == '\n'){
                     break; //Found the end of meta
