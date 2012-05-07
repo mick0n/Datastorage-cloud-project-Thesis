@@ -19,6 +19,7 @@ public class GetDataJob extends AbstractJob{
     private ByteBuffer largebuf;
     
     public GetDataJob(IndexedDataObject ido, DataProcessor dp){
+        super(null);
         this.ido = ido;
         this.dataProcessor = dp;
         crntPos = 0L;

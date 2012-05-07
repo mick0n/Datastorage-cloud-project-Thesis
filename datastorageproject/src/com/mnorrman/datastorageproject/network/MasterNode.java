@@ -184,13 +184,13 @@ public class MasterNode extends Thread {
                     //We should tell the slave of his ID, therefore we set a
                     //connectJob.
                     System.out.println("Connection");
-                    context.setTask(new ConnectJob());
+                    context.setTask(new ConnectJob(""));
                     keyWantsToWrite(key);
                     break;
                     
                 case SYNC_STATE:
                     byte newState = buffer.get();
-                    context.getNode().setState(com.mnorrman.datastorageproject.State.getState(newState));
+                    context.getNode().setState(com.mnorrman.datastorageproject.ServerState.getState(newState));
                     break;
                     
                 case GET:

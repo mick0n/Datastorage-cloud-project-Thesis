@@ -5,7 +5,7 @@
 package com.mnorrman.datastorageproject.storage;
 
 import com.mnorrman.datastorageproject.Main;
-import com.mnorrman.datastorageproject.State;
+import com.mnorrman.datastorageproject.ServerState;
 import java.util.TimerTask;
 
 /**
@@ -25,8 +25,8 @@ public class BackStorageActiveConnectionCleanerTimerTask extends TimerTask{
         if(!owner.activeProcesses.isEmpty())
             Main.pool.submit(new BackStorageActiveConnectionCleaner(owner.activeProcesses.iterator()));
         else{
-            if(Main.state != State.CHKINTEG && Main.state != State.INDEXING)
-                Main.state = State.IDLE;
+            if(Main.state != ServerState.CHKINTEG && Main.state != ServerState.INDEXING)
+                Main.state = ServerState.IDLE;
         }
     }
     

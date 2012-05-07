@@ -8,7 +8,7 @@ package com.mnorrman.datastorageproject;
  *
  * @author Mikael
  */
-public enum State {
+public enum ServerState {
     
     NOTRUNNING (0x30),
     CONNECTING (0x31),
@@ -21,16 +21,16 @@ public enum State {
     
     private final byte value;
     
-    private State(int byteValue) {
+    private ServerState(int byteValue) {
         this.value = (byte)byteValue;
     }
     
-    protected byte getValue(){
+    public byte getValue(){
         return value;
     }
     
-    public static State getState(byte value){
-        State[] val = values();
+    public static ServerState getState(byte value){
+        ServerState[] val = values();
         for(int b = 0; b < val.length; b++){
             if(val[b].getValue() == value)
                 return val[b];

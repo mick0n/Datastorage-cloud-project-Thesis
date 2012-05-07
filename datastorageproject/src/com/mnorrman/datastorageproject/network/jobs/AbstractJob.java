@@ -13,7 +13,16 @@ import java.nio.channels.SocketChannel;
 public abstract class AbstractJob {
     
     private boolean finished = false;
+    private String owner;
 
+    /**
+     * Main constructor. Should always be used when creating a new job.
+     * @param owner 
+     */
+    public AbstractJob(String owner){
+        this.owner = owner;
+    }
+    
     /**
      * Check if this job is finished
      * @return the current state of this job
@@ -28,6 +37,14 @@ public abstract class AbstractJob {
      */
     void setFinished(boolean value){
         finished = value;
+    }
+
+    /**
+     * Get the owner string of this job.
+     * @return The owner string
+     */
+    public String getOwner() {
+        return owner;
     }
     
     /**

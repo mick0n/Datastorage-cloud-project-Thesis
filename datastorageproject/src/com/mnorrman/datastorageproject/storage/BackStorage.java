@@ -2,7 +2,7 @@ package com.mnorrman.datastorageproject.storage;
 
 import com.mnorrman.datastorageproject.LogTool;
 import com.mnorrman.datastorageproject.Main;
-import com.mnorrman.datastorageproject.State;
+import com.mnorrman.datastorageproject.ServerState;
 import com.mnorrman.datastorageproject.index.IndexPersistence;
 import com.mnorrman.datastorageproject.objects.IndexedDataObject;
 import com.mnorrman.datastorageproject.tools.MetaDataComposer;
@@ -80,7 +80,7 @@ public class BackStorage {
      * datafile.
      */
     public LinkedList<IndexedDataObject> reindexData() {
-        Main.state = State.INDEXING;
+        Main.state = ServerState.INDEXING;
         LogTool.log("Begin reindex of data", LogTool.INFO);
 
         LinkedList<IndexedDataObject> list = new LinkedList<IndexedDataObject>();
@@ -91,7 +91,7 @@ public class BackStorage {
             //If the datafile is empty then there's no data to index.
             if (channel.size() <= 0) {
                 LogTool.log("No data in file, jumping out", LogTool.WARNING);
-                Main.state = State.IDLE;
+                Main.state = ServerState.IDLE;
                 return list;
             }
 
@@ -120,7 +120,7 @@ public class BackStorage {
             LogTool.log(e, LogTool.CRITICAL);
         }
         LogTool.log("Reindexing complete", LogTool.INFO);
-        Main.state = State.IDLE;
+        Main.state = ServerState.IDLE;
         return list;
     }
 
@@ -137,7 +137,7 @@ public class BackStorage {
      * error was encountered.
      */
     public boolean performIntegrityCheck() {
-        Main.state = State.CHKINTEG;
+        Main.state = ServerState.CHKINTEG;
         LogTool.log("Starting integrity check", LogTool.INFO);
 
         boolean returnValue = true;
@@ -149,7 +149,7 @@ public class BackStorage {
 
             //If there is no data we don't have to do anything
             if (channel.size() <= 0) {
-                Main.state = State.IDLE;
+                Main.state = ServerState.IDLE;
                 return returnValue;
             }
 
@@ -215,7 +215,7 @@ public class BackStorage {
             LogTool.log("Integrity check completed without warnings", LogTool.INFO);
         else
             Main.localIndex.clear().insertAll(reindexData());
-        Main.state = State.IDLE;
+        Main.state = ServerState.IDLE;
         return returnValue;
     }
 
@@ -230,7 +230,7 @@ public class BackStorage {
     }
 
     public boolean clean() {
-        Main.state = State.CLEANING;
+        Main.state = ServerState.CLEANING;
         LogTool.log("Starting to clean the backstorage", LogTool.INFO);
 
         long position = 0; //Position in file
@@ -241,7 +241,7 @@ public class BackStorage {
 
             //If there is no data we don't have to do anything
             if (channel.size() <= 0) {
-                Main.state = State.IDLE;
+                Main.state = ServerState.IDLE;
                 return true;
             }
 
@@ -271,7 +271,7 @@ public class BackStorage {
         }
 
         LogTool.log("Done cleaning backstorage", LogTool.INFO);
-        Main.state = State.IDLE;
+        Main.state = ServerState.IDLE;
         return true;
     }
 
@@ -283,11 +283,11 @@ public class BackStorage {
      * @return new DataTicket instance.
      */
     public DataTicket getTicket() {
-        if (Main.state != State.CLOSING) {
+        if (Main.state != ServerState.CLOSING) {
             DataTicket dt = new DataTicket(fileConnection.getChannel());
             activeProcesses.add(dt);
-            if (Main.state != State.RUNNING) {
-                Main.state = State.RUNNING;
+            if (Main.state != ServerState.RUNNING) {
+                Main.state = ServerState.RUNNING;
             }
             return dt;
         } else {
@@ -309,7 +309,7 @@ public class BackStorage {
      * Closes the connection to the datafile
      */
     public void close() throws IOException {
-        Main.state = State.CLOSING;
+        Main.state = ServerState.CLOSING;
         while (!activeProcesses.isEmpty()) {
             Main.pool.submit(new BackStorageActiveConnectionCleaner(activeProcesses.iterator()));
             try {

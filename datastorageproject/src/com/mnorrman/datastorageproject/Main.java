@@ -32,7 +32,7 @@ public class Main {
     public static ExecutorService pool;
     public static Timer timer;
     public static PropertiesManager properties;
-    public static State state;
+    public static ServerState state;
     public static byte[] ID;
     public BackStorage storage;
     public MasterNode masterNode;
@@ -77,7 +77,7 @@ public class Main {
             LogTool.log(e, LogTool.CRITICAL);
         }
 
-        state = State.IDLE;
+        state = ServerState.IDLE;
         
         if (properties.getValue("master").toString().equalsIgnoreCase("127.0.0.1")) {
             masterNode = new MasterNode(this);
@@ -86,7 +86,7 @@ public class Main {
         }else{
             slaveNode = new SlaveNode(this);
             slaveNode.startSlaveServer();
-            state = State.CONNECTING;
+            state = ServerState.CONNECTING;
             ID = new byte[]{ -128, 0, 0, 0 };
         }
         
@@ -163,7 +163,7 @@ public class Main {
 
         LogTool.setLogLevel(LogTool.INFO);
 
-        state = State.NOTRUNNING;
+        state = ServerState.NOTRUNNING;
         
         //Propertiesmanager handles information from "config_"-file.
         properties = new PropertiesManager();

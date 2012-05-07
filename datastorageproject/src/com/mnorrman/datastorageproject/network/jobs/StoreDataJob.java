@@ -24,6 +24,7 @@ public class StoreDataJob extends AbstractJob{
     private DataProcessor dataProcessor;
     
     public StoreDataJob(UnindexedDataObject udo, DataProcessor dp) throws IOException{
+        super(null);
         this.udo = udo;
         this.dataProcessor = dp;
         

@@ -15,19 +15,9 @@ import java.nio.channels.SocketChannel;
  * @author Mikael
  */
 public class ConnectJob extends AbstractJob{
-    
-    private boolean haveSentCommand;
-    
-    public ConnectJob() {
-        this.haveSentCommand = false;
-    }
 
-    public void setHaveSentCommand(boolean haveSentCommand) {
-        this.haveSentCommand = haveSentCommand;
-    }
-
-    public boolean getHaveSentCommand() {
-        return haveSentCommand;
+    public ConnectJob(String owner) {
+        super(owner);
     }
 
     @Override
@@ -38,8 +28,6 @@ public class ConnectJob extends AbstractJob{
         buffer.rewind();
         s.write(buffer);
         buffer.clear(); //Always clear buffer
-        
-        System.out.println("Sent my shit!");
         return true;
     }
 }

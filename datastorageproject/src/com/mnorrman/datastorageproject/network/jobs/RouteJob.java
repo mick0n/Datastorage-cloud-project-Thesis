@@ -16,6 +16,7 @@ public class RouteJob extends AbstractJob{
     byte[] destinationNode, client;
     
     public RouteJob(byte[] destinationNode, byte[] client){
+        super(null);
         this.destinationNode = destinationNode;
         this.client = client;
     }
