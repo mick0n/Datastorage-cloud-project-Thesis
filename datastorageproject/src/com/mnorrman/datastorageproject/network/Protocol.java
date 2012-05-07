@@ -11,6 +11,7 @@ public enum Protocol {
     SYNC_LOCAL_INDEX (0x11),
     SYNC_STATE (0x12),
     GET (0x04),
+    DISCONNECT (0x7E),
     PING (0x7F);
 
     private final byte value;

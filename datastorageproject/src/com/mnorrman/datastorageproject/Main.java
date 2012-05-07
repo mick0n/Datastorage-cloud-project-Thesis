@@ -10,6 +10,7 @@ import com.mnorrman.datastorageproject.network.SlaveNode;
 import com.mnorrman.datastorageproject.storage.BackStorage;
 import com.mnorrman.datastorageproject.storage.DataProcessor;
 import com.mnorrman.datastorageproject.storage.DataTicket;
+import com.mnorrman.datastorageproject.tools.HexConverter;
 import com.mnorrman.datastorageproject.web.*;
 import java.io.File;
 import java.io.IOException;
@@ -32,6 +33,7 @@ public class Main {
     public static Timer timer;
     public static PropertiesManager properties;
     public static State state;
+    public static byte[] ID;
     public BackStorage storage;
     public MasterNode masterNode;
     public SlaveNode slaveNode;
@@ -80,10 +82,12 @@ public class Main {
         if (properties.getValue("master").toString().equalsIgnoreCase("127.0.0.1")) {
             masterNode = new MasterNode(this);
             masterNode.startMasterServer();
+            ID = new byte[]{ 0, 0, 0, 0 };
         }else{
             slaveNode = new SlaveNode(this);
             slaveNode.startSlaveServer();
             state = State.CONNECTING;
+            ID = new byte[]{ -128, 0, 0, 0 };
         }
         
         Thread sm = new Thread(new ServerMonitor(masterNode));

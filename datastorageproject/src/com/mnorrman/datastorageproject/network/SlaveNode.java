@@ -6,8 +6,8 @@ package com.mnorrman.datastorageproject.network;
 
 import com.mnorrman.datastorageproject.LogTool;
 import com.mnorrman.datastorageproject.Main;
+import com.mnorrman.datastorageproject.network.jobs.AbstractJob;
 import com.mnorrman.datastorageproject.network.jobs.ConnectJob;
-import com.mnorrman.datastorageproject.storage.BackStorage;
 import com.mnorrman.datastorageproject.tools.HexConverter;
 import com.mnorrman.datastorageproject.tools.IntConverter;
 import java.io.IOException;
@@ -17,146 +17,157 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.PriorityQueue;
 
 /**
  *
  * @author Mikael
  */
-public class SlaveNode extends Thread{
-    
+public class SlaveNode extends Thread {
+
     private Main main;
     private ConnectionContext context;
     private Selector selector;
     private ByteBuffer buffer;
-    private int readBytes, writtenBytes;
-    
     private boolean keepWorking = true;
-    
-    public SlaveNode(Main main){
+    private HashMap<String, AbstractJob> jobs;
+
+    public SlaveNode(Main main) {
         this.main = main;
-        try{
+        try {
             selector = Selector.open();
             context = new ConnectionContext(SocketChannel.open(), Protocol.NULL);
             context.channel.configureBlocking(false);
-        }catch(IOException e){
+            jobs = new HashMap<String, AbstractJob>();
+        } catch (IOException e) {
             LogTool.log(e, LogTool.CRITICAL);
         }
     }
-    
-    public void startSlaveServer(){
+
+    public void startSlaveServer() {
         this.start();
     }
 
     @Override
     public void run() {
-        
+
         //The bytebuffer here is used in multiple ways. Even though it is
         //quite big, it can be used for small amounts of data by setting
         //the limit to appropriate sizes.
-        buffer = ByteBuffer.allocateDirect(BackStorage.BlOCK_SIZE);
-        int readyChannels = 0;
-        
-        while(keepWorking){
-            try{
-                while(keepWorking && !context.channel.isConnected()){
+        buffer = ByteBuffer.allocateDirect(MasterNode.NETWORK_BLOCK_SIZE);
+
+        while (keepWorking) {
+            try {
+                while (keepWorking && !context.channel.isConnected()) {
                     context.channel.connect(new InetSocketAddress(InetAddress.getByName(Main.properties.getValue("master").toString()), Integer.parseInt(Main.properties.getValue("port").toString())));
-                    if(!context.channel.finishConnect()){
-                        System.out.println("Not working, sleeping for ten secs");
-                        try{
+                    if (!context.channel.finishConnect()) {
+                        LogTool.log("Could not connect to master node, trying again in 10 seconds", LogTool.WARNING);
+                        try {
                             sleep(10000);
-                        }catch(InterruptedException e){
+                        } catch (InterruptedException e) {
                             LogTool.log(e, LogTool.CRITICAL);
                         }
-                    }else{
-                        System.out.println("Everything went better then expected");
+                    } else {
                         context.channel.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE);
                         context.setCommand(Protocol.CONNECT);
                         context.setTask(new ConnectJob());
                     }
                 }
-                
-                
-                readyChannels = selector.select();
-                
-                if(readyChannels <= 0){
-                    System.out.println("hello");
+
+                if (selector.select() <= 0) {
                     continue;
                 }
-                
+
                 Iterator it = selector.selectedKeys().iterator();
-                
-                while(it.hasNext()){
-                    SelectionKey key = (SelectionKey)it.next();
+
+                while (it.hasNext()) {
+                    SelectionKey key = (SelectionKey) it.next();
                     it.remove();
-                    
+
                     key.interestOps(key.interestOps() & ~SelectionKey.OP_WRITE);
-                    
-                    //DETTA FUNKAR INTE SOM TÄNKT; WHY???
-                    // Obtain the interest of the key
-//                    int readyOps = key.readyOps();
-                    // Disable the interest for the operation
-                    // that is ready. This prevents the same 
-                    // event from being raised multiple times.
-//                    key.interestOps(key.interestOps() & ~readyOps);
-                    
-                    if(key.isValid()){
-                        if(key.isReadable()){
-                            //Read
-                           switch(context.command){
+
+                    if (key.isValid()) {
+                        if (key.isReadable()) {
+
+                            while (buffer.position() != buffer.capacity()) {
+                                if (context.channel.read(buffer) == -1) {
+                                    //Connection has been terminated, cleanup.                                   
+                                    key.cancel();
+                                    LogTool.log("Connection to master was closed", LogTool.INFO);
+                                    buffer.clear();
+                                    return;
+                                }
+                            }
+                            buffer.flip();
+                            byte[] from = new byte[4];
+                            buffer.get(from);
+                            int length = buffer.getInt();
+
+                            if(context.command == Protocol.NULL){
+                                context.setCommand(Protocol.getCommand(buffer.get()));
+                            }
+                            
+                            switch (context.command) {
                                 case CONNECT:
-                                    System.out.println("READ");
-                                    if(((ConnectJob)context.task).getHaveSentCommand()){
-                                        buffer.limit(8);
-                                        context.channel.read(buffer);
-                                        buffer.flip();
+                                    if (((ConnectJob) context.task).getHaveSentCommand()) {
                                         System.out.println("From: 0x" + HexConverter.toHex(IntConverter.intToByteArray(buffer.getInt())));
-                                        //HexConverter.toHex(buffer.array());
-                                        System.out.println("My ID: 0x" + HexConverter.toHex(IntConverter.intToByteArray(buffer.getInt())));
+                                        System.out.println("Length: " + HexConverter.toHex(IntConverter.intToByteArray(buffer.getInt())));
+                                        Main.ID = IntConverter.intToByteArray(buffer.getInt());
+                                        System.out.println("My ID: 0x" + HexConverter.toHex(Main.ID));
                                         context.setCommand(Protocol.NULL);
                                         context.setTask(null);
                                     }
                                     break;
                                 default:
-                                    //Hello?! Is there anybody out there?!
+                                //Hello?! Is there anybody out there?!
                             }
                         }
-                        if(key.isWritable()){
+                        if (key.isWritable()) {
                             System.out.println("Will write once?");
-                            switch(context.command){
+                            switch (context.command) {
                                 case CONNECT:
-                                    if(!((ConnectJob)context.task).getHaveSentCommand()){
+                                    if (!((ConnectJob) context.task).getHaveSentCommand()) {
+                                        buffer.put(Main.ID); //Unknown so far
+                                        buffer.putInt(1);
                                         buffer.put(Protocol.CONNECT.getValue());
-                                        buffer.flip();
+                                        buffer.rewind();
                                         context.channel.write(buffer);
                                         buffer.clear();
-                                        ((ConnectJob)context.task).setHaveSentCommand(true);
+                                        ((ConnectJob) context.task).setHaveSentCommand(true);
                                     }
                                     break;
                                 default:
-                                    //Hoho? Anybody here?
+                                //Hoho? Anybody here?
                             }
                         }
                     }
-                    
+
                     selector.selectedKeys().clear();
                 }
-                
-            }catch(IOException e){
+
+            } catch (IOException e) {
                 LogTool.log(e, LogTool.CRITICAL);
             }
-            
+
         }
     }
-    
-    private SelectionKey keyWantsToWrite(SelectionKey key){
+
+    private SelectionKey keyWantsToWrite(SelectionKey key) {
         key.interestOps(key.interestOps() | SelectionKey.OP_WRITE);
         return key;
     }
-    
-    public void close(){
-        
+
+    public void close() throws IOException {
+        buffer.clear();
+        buffer.put(Main.ID);
+        buffer.putInt(1);
+        buffer.put(Protocol.DISCONNECT.getValue());
+        buffer.rewind();
+        context.channel.write(buffer);
+        context.channel.close();
+        selector.close();
+        keepWorking = false;
     }
-    
-    
 }

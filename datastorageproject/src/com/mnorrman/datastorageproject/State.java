@@ -29,7 +29,7 @@ public enum State {
         return value;
     }
     
-    protected static State getState(byte value){
+    public static State getState(byte value){
         State[] val = values();
         for(int b = 0; b < val.length; b++){
             if(val[b].getValue() == value)

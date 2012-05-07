@@ -71,7 +71,7 @@ public class MasterNode extends Thread {
         //The bytebuffer here is used in multiple ways. Even though it is
         //quite big, it can be used for small amounts of data by setting
         //the limit to appropriate sizes.
-        buffer = ByteBuffer.allocateDirect(BackStorage.BlOCK_SIZE);
+        buffer = ByteBuffer.allocateDirect(NETWORK_BLOCK_SIZE);
         int readyChannels;
 
         while (keepWorking) {
@@ -109,9 +109,10 @@ public class MasterNode extends Thread {
 
             }
 
-            //After checking all keys we see if there are any channels waiting
-            //to be registered with this selector. Always adds a ConnectionContext
-            //to a connection.
+            //After checking all keys we check if there are any channels waiting
+            //to be registered with this selector. Creates a new ID for each
+            //connection and stores the id as an attachment while a 
+            //connectionContext is stored in a hashmap.
             if (!channelQueue.isEmpty()) {
                 try {
                     SocketChannel temp = channelQueue.poll();
@@ -148,29 +149,34 @@ public class MasterNode extends Thread {
             SocketChannel sChannel = (SocketChannel) key.channel();
             ConnectionContext context = connections.get(key.attachment().toString());
             
+            while(buffer.position() != buffer.capacity()){
+                if((readBytes = sChannel.read(buffer)) == -1){
+                    //Connection has been terminated, cleanup.
+                    connections.remove(key.attachment().toString());
+                    key.cancel();
+                    LogTool.log("Connection from " + sChannel.getRemoteAddress() + " was closed", LogTool.INFO);
+                    buffer.clear();
+                    return;
+                }
+            }
+            buffer.flip();
+            byte[] from = new byte[4];
+            buffer.get(from);
+            int length = buffer.getInt();
+            
+            System.out.println("From: 0x" + HexConverter.toHex(from) + " with len: " + length);
+            
             if(context.command == Protocol.NULL){
-                //Set limit to 1 since we want to read a command first.
-                    buffer.limit(1);
-                    readBytes = sChannel.read(buffer);
-                    if(readBytes == -1){
-                        buffer.clear();
-                    }else{
-                        if (readBytes > 0) {
-                            buffer.flip();
-
-                            //Set new command in ConnectionContext
-                            context.setCommand(Protocol.getCommand(buffer.get()));
-                        }
-                        buffer.clear();
-                    }
+                context.setCommand(Protocol.getCommand(buffer.get()));
             }
             
             //If we read -1 bytes then the connection is dead
-            if (readBytes == -1) {
-                connections.remove(key.attachment().toString());
-                key.cancel();
-                LogTool.log("Connection from " + sChannel.getRemoteAddress() + " was closed", LogTool.INFO);
-            }
+//            if (readBytes == -1) {
+//                connections.remove(key.attachment().toString());
+//                key.cancel();
+//                LogTool.log("Connection from " + sChannel.getRemoteAddress() + " was closed", LogTool.INFO);
+//                return;
+//            }
             
             //Process command
             switch (context.command) {
@@ -180,6 +186,11 @@ public class MasterNode extends Thread {
                     System.out.println("Connection");
                     context.setTask(new ConnectJob());
                     keyWantsToWrite(key);
+                    break;
+                    
+                case SYNC_STATE:
+                    byte newState = buffer.get();
+                    context.getNode().setState(com.mnorrman.datastorageproject.State.getState(newState));
                     break;
                     
                 case GET:
@@ -194,6 +205,7 @@ public class MasterNode extends Thread {
                     //I don't always go to default in a switch, but when I do
                     //I do it eternally. 
             }
+            buffer.clear();
         } else if (key.isValid() && key.isWritable()) {
             SocketChannel sChannel = (SocketChannel) key.channel();
             ConnectionContext context = connections.get(key.attachment().toString());
@@ -204,9 +216,10 @@ public class MasterNode extends Thread {
                         break;
                     case CONNECT:
                         if(context.task instanceof ConnectJob && !context.task.isFinished()){
-                            buffer.putInt(0x00000000);
+                            buffer.putInt(0x00000000); //From ID
+                            buffer.putInt(1); //length
                             buffer.put(context.node.getId());
-                            buffer.flip();
+                            buffer.rewind();
                             sChannel.write(buffer);
                             buffer.clear();
                             context.setCommand(Protocol.NULL);
@@ -215,8 +228,10 @@ public class MasterNode extends Thread {
                         break;
                     case PING:
                         buffer.putInt(0x00000000);
+                        buffer.putInt(1);
                         buffer.put((byte) 0x01);
-                        buffer.flip();
+                        buffer.rewind();
+                        sChannel.write(buffer);
                         buffer.clear();
                         context.setCommand(Protocol.NULL);
                         break;

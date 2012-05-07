@@ -7,14 +7,12 @@ package com.mnorrman.datastorageproject;
 import com.mnorrman.datastorageproject.network.ConnectionContext;
 import com.mnorrman.datastorageproject.network.MasterNode;
 import com.mnorrman.datastorageproject.tools.HexConverter;
-import com.sun.xml.internal.bind.util.Which;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.LinkedList;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.LineBorder;
 
 /**
  *
