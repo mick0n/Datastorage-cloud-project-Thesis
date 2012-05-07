@@ -33,6 +33,7 @@ public class SlaveNode extends Thread {
     private ByteBuffer buffer;
     private boolean keepWorking = true;
     private HashMap<String, AbstractJob> jobs;
+    private PriorityQueue<AbstractJob> jobQueue;
 
     public SlaveNode(Main main) {
         this.main = main;
@@ -41,6 +42,7 @@ public class SlaveNode extends Thread {
             context = new ConnectionContext(SocketChannel.open(), Protocol.NULL);
             context.channel.configureBlocking(false);
             jobs = new HashMap<String, AbstractJob>();
+            jobQueue = new PriorityQueue<AbstractJob>();
         } catch (IOException e) {
             LogTool.log(e, LogTool.CRITICAL);
         }
@@ -71,8 +73,11 @@ public class SlaveNode extends Thread {
                         }
                     } else {
                         context.channel.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE);
-                        context.setCommand(Protocol.CONNECT);
-                        context.setTask(new ConnectJob());
+                        ConnectJob conJob = new ConnectJob();
+                        jobs.put("00000000", conJob);
+                        jobQueue.add(conJob);
+//                        context.setCommand(Protocol.CONNECT);
+//                        context.setTask(new ConnectJob());
                     }
                 }
 
@@ -86,12 +91,13 @@ public class SlaveNode extends Thread {
                     SelectionKey key = (SelectionKey) it.next();
                     it.remove();
 
-                    key.interestOps(key.interestOps() & ~SelectionKey.OP_WRITE);
+                    //key.interestOps(key.interestOps() & ~SelectionKey.OP_WRITE);
 
                     if (key.isValid()) {
                         if (key.isReadable()) {
-
+                            System.out.println("Reading");
                             while (buffer.position() != buffer.capacity()) {
+                                System.out.println("Didn't get enough");
                                 if (context.channel.read(buffer) == -1) {
                                     //Connection has been terminated, cleanup.                                   
                                     key.cancel();
@@ -105,42 +111,71 @@ public class SlaveNode extends Thread {
                             buffer.get(from);
                             int length = buffer.getInt();
 
-                            if(context.command == Protocol.NULL){
-                                context.setCommand(Protocol.getCommand(buffer.get()));
-                            }
+                            System.out.println("From: 0x" + HexConverter.toHex(from) + " with len: " + length);
                             
-                            switch (context.command) {
-                                case CONNECT:
-                                    if (((ConnectJob) context.task).getHaveSentCommand()) {
-                                        System.out.println("From: 0x" + HexConverter.toHex(IntConverter.intToByteArray(buffer.getInt())));
-                                        System.out.println("Length: " + HexConverter.toHex(IntConverter.intToByteArray(buffer.getInt())));
-                                        Main.ID = IntConverter.intToByteArray(buffer.getInt());
-                                        System.out.println("My ID: 0x" + HexConverter.toHex(Main.ID));
-                                        context.setCommand(Protocol.NULL);
-                                        context.setTask(null);
-                                    }
-                                    break;
-                                default:
-                                //Hello?! Is there anybody out there?!
+                            System.out.println("Ok time to see");
+                            
+                            if (jobs.containsKey(HexConverter.toHex(from))) {
+                                System.out.println("Contains!");
+                                AbstractJob job = jobs.get(HexConverter.toHex(from));
+                                if (job instanceof ConnectJob) {
+                                    Main.ID = IntConverter.intToByteArray(buffer.getInt());
+                                    System.out.println("My ID: 0x" + HexConverter.toHex(Main.ID));
+                                    jobs.remove(HexConverter.toHex(from));
+                                }
                             }
+
+//                            if (context.command == Protocol.NULL) {
+//                                context.setCommand(Protocol.getCommand(buffer.get()));
+//                            }
+//
+//                            switch (context.command) {
+//                                case CONNECT:
+//                                    if (((ConnectJob) context.task).getHaveSentCommand()) {
+//
+//                                        Main.ID = IntConverter.intToByteArray(buffer.getInt());
+//                                        System.out.println("My ID: 0x" + HexConverter.toHex(Main.ID));
+//                                        context.setCommand(Protocol.NULL);
+//                                        context.setTask(null);
+//                                    }
+//                                    break;
+//                                default:
+//                                //Hello?! Is there anybody out there?!
+//                            }
                         }
-                        if (key.isWritable()) {
-                            System.out.println("Will write once?");
-                            switch (context.command) {
-                                case CONNECT:
-                                    if (!((ConnectJob) context.task).getHaveSentCommand()) {
-                                        buffer.put(Main.ID); //Unknown so far
-                                        buffer.putInt(1);
-                                        buffer.put(Protocol.CONNECT.getValue());
-                                        buffer.rewind();
-                                        context.channel.write(buffer);
-                                        buffer.clear();
-                                        ((ConnectJob) context.task).setHaveSentCommand(true);
-                                    }
-                                    break;
-                                default:
-                                //Hoho? Anybody here?
+//                        if (key.isWritable()) {
+//                            System.out.println("Will write once?");
+//                            switch (context.command) {
+//                                case CONNECT:
+//                                    if (!((ConnectJob) context.task).getHaveSentCommand()) {
+//                                        buffer.put(Main.ID); //Unknown so far
+//                                        buffer.putInt(1);
+//                                        buffer.put(Protocol.CONNECT.getValue());
+//                                        buffer.rewind();
+//                                        context.channel.write(buffer);
+//                                        buffer.clear();
+//                                        ((ConnectJob) context.task).setHaveSentCommand(true);
+//                                    }
+//                                    break;
+//                                default:
+//                                //Hoho? Anybody here?
+//                            }
+//                        }
+
+                        if (!jobQueue.isEmpty()) {
+                            AbstractJob queuedJob = jobQueue.poll();
+                            if(!queuedJob.update(context.channel, buffer)){
+                                jobQueue.offer(queuedJob);
                             }
+//                            if(queuedJob instanceof ConnectJob){
+//                                buffer.put(Main.ID); //Unknown so far
+//                                buffer.putInt(1);
+//                                buffer.put(Protocol.CONNECT.getValue());
+//                                buffer.rewind();
+//                                context.channel.write(buffer);
+//                                buffer.clear();
+//                                ((ConnectJob) queuedJob).setHaveSentCommand(true);
+//                            }
                         }
                     }
 
@@ -151,6 +186,13 @@ public class SlaveNode extends Thread {
                 LogTool.log(e, LogTool.CRITICAL);
             }
 
+        }
+    }
+    
+    public void createJob(String jobOwner, AbstractJob job){
+        if(jobOwner != null && job != null){
+            jobs.put(jobOwner, job);
+            jobQueue.add(job);
         }
     }
 

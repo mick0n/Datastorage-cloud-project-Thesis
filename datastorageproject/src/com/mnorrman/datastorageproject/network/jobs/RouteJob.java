@@ -4,6 +4,9 @@
  */
 package com.mnorrman.datastorageproject.network.jobs;
 
+import java.nio.ByteBuffer;
+import java.nio.channels.SocketChannel;
+
 /**
  *
  * @author Mikael
@@ -23,5 +26,11 @@ public class RouteJob extends AbstractJob{
 
     public byte[] getDestinationNode() {
         return destinationNode;
+    }
+
+    @Override
+    public boolean update(SocketChannel s, ByteBuffer buffer) {
+        setFinished(true);
+        return true;
     }
 }

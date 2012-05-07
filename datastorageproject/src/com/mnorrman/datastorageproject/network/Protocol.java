@@ -20,11 +20,11 @@ public enum Protocol {
         this.value = (byte)byteValue;
     }
     
-    protected byte getValue(){
+    public byte getValue(){
         return value;
     }
     
-    protected static Protocol getCommand(byte value){
+    public static Protocol getCommand(byte value){
         Protocol[] val = values();
         for(int b = 0; b < val.length; b++){
             if(val[b].getValue() == value)

@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.channels.SocketChannel;
 import java.util.zip.CRC32;
 
 /**
@@ -28,6 +29,12 @@ public class StoreDataJob extends AbstractJob{
         
         output = new FileOutputStream(udo.getTempFile()).getChannel();                
         crc = new CRC32();
+    }
+
+    @Override
+    public boolean update(SocketChannel s, ByteBuffer buffer) {
+        setFinished(true);
+        return true;
     }
     
     public void update(ByteBuffer data) throws IOException{

@@ -5,6 +5,7 @@ import com.mnorrman.datastorageproject.objects.IndexedDataObject;
 import com.mnorrman.datastorageproject.storage.BackStorage;
 import com.mnorrman.datastorageproject.storage.DataProcessor;
 import java.nio.ByteBuffer;
+import java.nio.channels.SocketChannel;
 
 /**
  *
@@ -55,5 +56,11 @@ public class GetDataJob extends AbstractJob{
         if(crntPos == ido.getLength()){
             setFinished(true);
         }
+    }
+
+    @Override
+    public boolean update(SocketChannel s, ByteBuffer buffer) {
+        setFinished(true);
+        return true;
     }
 }
