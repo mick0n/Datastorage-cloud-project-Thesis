@@ -2,13 +2,17 @@ package com.mnorrman.datastorageproject.network;
 
 import com.mnorrman.datastorageproject.LogTool;
 import com.mnorrman.datastorageproject.Main;
+import com.mnorrman.datastorageproject.network.jobs.ConnectJob;
 import com.mnorrman.datastorageproject.storage.BackStorage;
+import com.mnorrman.datastorageproject.tools.HexConverter;
+import com.mnorrman.datastorageproject.tools.IntConverter;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -18,12 +22,17 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public class MasterNode extends Thread {
 
+    public static final int NETWORK_BLOCK_SIZE = 8192;
+    
     private Main main;
     private MasterNodeListener listener;
     private Selector selector;
     private ConcurrentLinkedQueue<SocketChannel> channelQueue;
+    private HashMap<String, ConnectionContext> connections;
     private ByteBuffer buffer;
-    private int readBytes, writtenBytes;
+    private int readBytes;
+    
+    private int connectionCounter = 0;
     
     private boolean keepWorking = true;
     
@@ -42,6 +51,7 @@ public class MasterNode extends Thread {
             selector = Selector.open();
             listener = new MasterNodeListener(this);
             channelQueue = new ConcurrentLinkedQueue<SocketChannel>();
+            connections = new HashMap<String, ConnectionContext>();
         } catch (IOException e) {
             LogTool.log(e, LogTool.CRITICAL);
         }
@@ -73,7 +83,7 @@ public class MasterNode extends Thread {
                 LogTool.log(e, LogTool.CRITICAL);
                 break;
             }
-
+            
             //Since readyChannels may be zero, we check this first
             if (readyChannels > 0) {
 
@@ -83,12 +93,16 @@ public class MasterNode extends Thread {
 
                     //Remove key, otherwise it will stay in the list forever.
                     it.remove();
+                    
+                    //Remove the interest key for write.
+                    selKey.interestOps(selKey.interestOps() & ~SelectionKey.OP_WRITE);
 
                     try {
                         processSelectionKey(selKey);
                     } catch (IOException e) {
                         //Remove the channel from this selector
                         selKey.cancel();
+                        connections.remove(selKey.attachment().toString());
                         LogTool.log(e, LogTool.WARNING);
                     }
                 }
@@ -101,7 +115,16 @@ public class MasterNode extends Thread {
             if (!channelQueue.isEmpty()) {
                 try {
                     SocketChannel temp = channelQueue.poll();
-                    temp.register(selector, temp.validOps(), new ConnectionContext(Protocol.NULL));
+                    
+                    //Get a new ID for this connection
+                    byte[] newID = IntConverter.intToByteArray(getConnectionCounterValue());
+                    
+                    //Register this socketChannel, use ID as attachment
+                    temp.register(selector, SelectionKey.OP_READ, HexConverter.toHex(newID));
+                    
+                    //Add new client to our map
+                    connections.put(HexConverter.toHex(newID), new ConnectionContext(temp, Protocol.NULL, newID));
+                    
                     LogTool.log("Connection from " + temp.getRemoteAddress() + " was added to selector", LogTool.INFO);
                 } catch (NullPointerException e) {
                     LogTool.log(e, LogTool.CRITICAL);
@@ -121,67 +144,81 @@ public class MasterNode extends Thread {
      * @throws IOException
      */
     public void processSelectionKey(SelectionKey key) throws IOException {
-        if (key.isValid() && key.isConnectable()) {
+        if (key.isValid() && key.isReadable()) {
             SocketChannel sChannel = (SocketChannel) key.channel();
+            ConnectionContext context = connections.get(key.attachment().toString());
             
-            boolean success = sChannel.finishConnect();
-            if (!success) {
-                //An error occured, remove channel from selector
-                key.cancel();
-                LogTool.log("Connection from " + sChannel.getRemoteAddress() + " was removed", LogTool.INFO);
-            }
-        } else if (key.isValid() && key.isReadable()) {
-            SocketChannel sChannel = (SocketChannel) key.channel();
-
-            switch (((ConnectionContext) key.attachment()).command) {
-                case NULL:
-                    
-                    //Set limit to 1 since we want to read a command first.
+            if(context.command == Protocol.NULL){
+                //Set limit to 1 since we want to read a command first.
                     buffer.limit(1);
                     readBytes = sChannel.read(buffer);
-                    if (readBytes > 0) {
-                        buffer.flip();
-                        
-                        //Set new command in ConnectionContext
-                        ((ConnectionContext) key.attachment()).setCommand(Protocol.getCommand(buffer.get()));
+                    if(readBytes == -1){
+                        buffer.clear();
+                    }else{
+                        if (readBytes > 0) {
+                            buffer.flip();
+
+                            //Set new command in ConnectionContext
+                            context.setCommand(Protocol.getCommand(buffer.get()));
+                        }
+                        buffer.clear();
                     }
-                    break;
-                    
+            }
+            
+            //If we read -1 bytes then the connection is dead
+            if (readBytes == -1) {
+                connections.remove(key.attachment().toString());
+                key.cancel();
+                LogTool.log("Connection from " + sChannel.getRemoteAddress() + " was closed", LogTool.INFO);
+            }
+            
+            //Process command
+            switch (context.command) {
                 case CONNECT:
-                    System.out.println("We wish to connect");
+                    //We should tell the slave of his ID, therefore we set a
+                    //connectJob.
+                    System.out.println("Connection");
+                    context.setTask(new ConnectJob());
+                    keyWantsToWrite(key);
                     break;
                     
                 case GET:
                     //Perform get
                     break;
-
+                
+                case PING:
+                    //No job for this, we just know that we should reply later
+                    keyWantsToWrite(key);
+                    break;
                 default:
                     //I don't always go to default in a switch, but when I do
                     //I do it eternally. 
             }
-
-            //If we read -1 bytes then the connection is dead
-            if (readBytes == -1) {
-                key.cancel();
-                LogTool.log("Connection from " + sChannel.getRemoteAddress() + " was closed", LogTool.INFO);
-            }
-
-            //Always clean up, clear the buffer (This will also reset the limit
-            //of the buffer)
-            buffer.clear();
         } else if (key.isValid() && key.isWritable()) {
             SocketChannel sChannel = (SocketChannel) key.channel();
+            ConnectionContext context = connections.get(key.attachment().toString());
 
             if (key.attachment() != null) { //Probably unnecessary statement 
-                switch (((ConnectionContext) key.attachment()).command) {
+                switch (context.command) {
                     case GET:
+                        break;
+                    case CONNECT:
+                        if(context.task instanceof ConnectJob && !context.task.isFinished()){
+                            buffer.putInt(0x00000000);
+                            buffer.put(context.node.getId());
+                            buffer.flip();
+                            sChannel.write(buffer);
+                            buffer.clear();
+                            context.setCommand(Protocol.NULL);
+                            context.task = null;
+                        }
+                        break;
                     case PING:
+                        buffer.putInt(0x00000000);
                         buffer.put((byte) 0x01);
                         buffer.flip();
-                        writtenBytes = sChannel.write(buffer);
                         buffer.clear();
-                        ((ConnectionContext) key.attachment()).setCommand(Protocol.NULL);
-                        System.out.println("Written bytes= " + writtenBytes);
+                        context.setCommand(Protocol.NULL);
                         break;
 
                     case NULL:
@@ -193,7 +230,7 @@ public class MasterNode extends Thread {
             }
         }
     }
-
+    
     /**
      * Adds a SocketChannel to a queue which eventually will be registered to
      * a selector.
@@ -217,6 +254,22 @@ public class MasterNode extends Thread {
         listener.close();
         keepWorking = false;
         selector.wakeup();
+    }
+
+    public HashMap<String, ConnectionContext> getConnections() {
+        return connections;
+    }
+    
+    private SelectionKey keyWantsToWrite(SelectionKey key){
+        key.interestOps(key.interestOps() | SelectionKey.OP_WRITE);
+        return key;
+    }
+    
+    private int getConnectionCounterValue(){
+        if(connectionCounter == Integer.MAX_VALUE){
+            connectionCounter = 0;
+        }
+        return ++connectionCounter;
     }
     
     //For test purposes

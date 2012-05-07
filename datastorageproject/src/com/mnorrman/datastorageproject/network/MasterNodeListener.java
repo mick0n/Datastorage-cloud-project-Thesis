@@ -31,8 +31,8 @@ public class MasterNodeListener extends Thread{
         try{           
             ssc = ServerSocketChannel.open();
             ssc.configureBlocking(true);
-            //ssc.socket().bind(new InetSocketAddress(InetAddress.getByName(""), Integer.parseInt(Main.properties.getValue("port").toString())));
-             ssc.socket().bind(new InetSocketAddress(InetAddress.getByName(""), 9999));
+            ssc.socket().bind(new InetSocketAddress(InetAddress.getByName(""), Integer.parseInt(Main.properties.getValue("port").toString())));
+//             ssc.socket().bind(new InetSocketAddress(InetAddress.getByName(""), 9999));
             
             LogTool.log("MasterNodeListener started listening", LogTool.INFO);
             

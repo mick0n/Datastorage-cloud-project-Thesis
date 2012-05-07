@@ -8,6 +8,8 @@ public enum Protocol {
     
     NULL (0x00),
     CONNECT (0x01),
+    SYNC_LOCAL_INDEX (0x11),
+    SYNC_STATE (0x12),
     GET (0x04),
     PING (0x7F);
 
@@ -22,18 +24,12 @@ public enum Protocol {
     }
     
     protected static Protocol getCommand(byte value){
-        switch(value){
-            case 0x00:
-                return NULL;
-            case 0x01:
-                return CONNECT;
-            case 0x04:
-                return GET; 
-            case 0x7F:
-                return PING;
-            default:
-                return NULL;
+        Protocol[] val = values();
+        for(int b = 0; b < val.length; b++){
+            if(val[b].getValue() == value)
+                return val[b];
         }
+        return null;
     }
     
 }

@@ -6,6 +6,7 @@ import com.mnorrman.datastorageproject.index.IndexPersistence;
 import com.mnorrman.datastorageproject.index.IndexPersistenceGlobal;
 import com.mnorrman.datastorageproject.index.LocalIndex;
 import com.mnorrman.datastorageproject.network.MasterNode;
+import com.mnorrman.datastorageproject.network.SlaveNode;
 import com.mnorrman.datastorageproject.storage.BackStorage;
 import com.mnorrman.datastorageproject.storage.DataProcessor;
 import com.mnorrman.datastorageproject.storage.DataTicket;
@@ -33,6 +34,7 @@ public class Main {
     public static State state;
     public BackStorage storage;
     public MasterNode masterNode;
+    public SlaveNode slaveNode;
     public WebServer webServer;
     
     private File shutdownSafetyFile;
@@ -73,13 +75,19 @@ public class Main {
             LogTool.log(e, LogTool.CRITICAL);
         }
 
+        state = State.IDLE;
+        
         if (properties.getValue("master").toString().equalsIgnoreCase("127.0.0.1")) {
             masterNode = new MasterNode(this);
             masterNode.startMasterServer();
+        }else{
+            slaveNode = new SlaveNode(this);
+            slaveNode.startSlaveServer();
+            state = State.CONNECTING;
         }
-
-        state = State.IDLE;
-        //MasterNodeListener mdl = new MasterNodeListener();
+        
+        Thread sm = new Thread(new ServerMonitor(masterNode));
+        sm.start();
     }
 
     /**
@@ -123,6 +131,9 @@ public class Main {
         //Stop network mechanisms from receiving and sending more input data.
         if(masterNode != null)
             masterNode.close();
+        if(slaveNode != null){
+            slaveNode.close();
+        }
         if(webServer != null)
             webServer.close();
         
@@ -140,11 +151,11 @@ public class Main {
     public static void main(String[] args) {
         //Check if there's already an instance of this software running.
         //Only one instance is allowed at any given time.
-        SingleInstanceThread sit = new SingleInstanceThread();
-        if (!sit.tryInstance()) {
-            System.out.println("Other instance found.");
-            System.exit(0);
-        }
+//        SingleInstanceThread sit = new SingleInstanceThread();
+//        if (!sit.tryInstance()) {
+//            System.out.println("Other instance found.");
+//            System.exit(0);
+//        }
 
         LogTool.setLogLevel(LogTool.INFO);
 

@@ -1,6 +1,7 @@
 
 package com.mnorrman.datastorageproject.objects;
 
+import com.mnorrman.datastorageproject.State;
 import java.net.InetAddress;
 
 /**
@@ -11,14 +12,16 @@ public class ServerNode {
         
     private InetAddress ipaddress;
     private int port;
-    private String name;
+    private byte[] id;
+    private State state;
     
     private long storageLimit;
 
-    public ServerNode(InetAddress ipaddress, int port, String name) {
+    public ServerNode(InetAddress ipaddress, int port, byte[] id) {
         this.ipaddress = ipaddress;
         this.port = port;
-        this.name = name;
+        this.id = id;
+        this.state = State.NOTRUNNING;
     }
 
     public InetAddress getIpaddress() {
@@ -29,12 +32,12 @@ public class ServerNode {
         this.ipaddress = ipaddress;
     }
 
-    public String getName() {
-        return name;
+    public byte[] getId() {
+        return id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setId(byte[] id) {
+        this.id = id;
     }
 
     public int getPort() {
@@ -51,5 +54,13 @@ public class ServerNode {
 
     public void setStorageLimit(long storageLimit) {
         this.storageLimit = storageLimit;
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
+
+    public State getState() {
+        return state;
     }
 }

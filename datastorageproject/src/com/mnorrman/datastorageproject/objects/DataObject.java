@@ -23,8 +23,8 @@ public abstract class DataObject implements Serializable{
      * @param colname
      * @param rowname
      * @param owner
-     * @param length
-     * @param checksum 
+     * @param length in bytes
+     * @param checksum CRC32-value
      */
     public DataObject(String colname, String rowname, String owner, long length, long checksum) {
         this.colname = colname;
