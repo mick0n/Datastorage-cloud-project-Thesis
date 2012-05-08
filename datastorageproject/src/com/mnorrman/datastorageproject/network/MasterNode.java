@@ -2,10 +2,14 @@ package com.mnorrman.datastorageproject.network;
 
 import com.mnorrman.datastorageproject.LogTool;
 import com.mnorrman.datastorageproject.Main;
+import com.mnorrman.datastorageproject.ServerState;
 import com.mnorrman.datastorageproject.network.jobs.ConnectJob;
+import com.mnorrman.datastorageproject.network.jobs.SyncLocalIndexJob;
+import com.mnorrman.datastorageproject.objects.IndexedDataObject;
 import com.mnorrman.datastorageproject.storage.BackStorage;
 import com.mnorrman.datastorageproject.tools.HexConverter;
 import com.mnorrman.datastorageproject.tools.IntConverter;
+import com.mnorrman.datastorageproject.tools.MetaDataComposer;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.ClosedChannelException;
@@ -190,7 +194,28 @@ public class MasterNode extends Thread {
                     
                 case SYNC_STATE:
                     byte newState = buffer.get();
-                    context.getNode().setState(com.mnorrman.datastorageproject.ServerState.getState(newState));
+                    context.getNode().setState(ServerState.getState(newState));
+                    System.out.println("Check: " + context.getNode().getState().toString());
+                    context.setTask(null);
+                    context.setCommand(Protocol.NULL);
+                    break;
+                    
+                case SYNC_LOCAL_INDEX:
+                    ByteBuffer DOBuffer;
+                    int counter = 0;
+                    while(counter < 15){
+                        byte command = buffer.get();
+                        System.out.println("Command was 0x" + HexConverter.toHex(new byte[]{ command }));
+                        DOBuffer = buffer.slice();
+                        IndexedDataObject ido = MetaDataComposer.compose(DOBuffer);
+                        buffer.position(buffer.position() + 512);
+                        System.out.println("IDO: " + ido.toString());
+                        if(buffer.get() == SyncLocalIndexJob.LAST_INDEX)
+                            break;
+                        counter++;
+                    }
+                    context.setTask(null);
+                    context.setCommand(Protocol.NULL);
                     break;
                     
                 case GET:

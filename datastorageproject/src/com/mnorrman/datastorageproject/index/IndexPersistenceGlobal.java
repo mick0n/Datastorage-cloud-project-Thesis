@@ -2,7 +2,7 @@
 package com.mnorrman.datastorageproject.index;
 
 import com.mnorrman.datastorageproject.Main;
-import com.mnorrman.datastorageproject.objects.GlobalIndexedDataObject;
+import com.mnorrman.datastorageproject.objects.GloballyIndexedDataObject;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,13 +18,13 @@ import java.util.logging.Logger;
 public class IndexPersistenceGlobal implements Runnable{
 
     private String className;
-    private Collection<ArrayList<GlobalIndexedDataObject>> data;
+    private Collection<ArrayList<GloballyIndexedDataObject>> data;
 
     /**
      * Create new instance of IndexPersistenceGlobal
      * @param data The data that should be saved
      */
-    public IndexPersistenceGlobal(Collection<ArrayList<GlobalIndexedDataObject>> data) {
+    public IndexPersistenceGlobal(Collection<ArrayList<GloballyIndexedDataObject>> data) {
         this.className = "GlobalIndex";
         this.data = data;
     }
@@ -43,8 +43,8 @@ public class IndexPersistenceGlobal implements Runnable{
      * list will be returned.
      * @return List containing all indexdata.
      */
-    public List<GlobalIndexedDataObject> load(){
-        List<GlobalIndexedDataObject> l = new LinkedList<GlobalIndexedDataObject>();
+    public List<GloballyIndexedDataObject> load(){
+        List<GloballyIndexedDataObject> l = new LinkedList<GloballyIndexedDataObject>();
         File file = new File(Main.properties.getValue("dataPath") + File.separator + className + "_");
         
         //If the file exist, try to load the data
@@ -54,7 +54,7 @@ public class IndexPersistenceGlobal implements Runnable{
 
                 Object temp;
                 while((temp = ois.readObject()) != null){
-                    l.add((GlobalIndexedDataObject)temp);
+                    l.add((GloballyIndexedDataObject)temp);
                 }
                 Logger.getLogger("b-log").log(Level.FINEST, "{0} was loaded successfully", className);
             }catch(IOException e){
@@ -73,8 +73,8 @@ public class IndexPersistenceGlobal implements Runnable{
             File file = new File(Main.properties.getValue("dataPath") + File.separator + className + "_");
             ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file));
             
-            for(ArrayList<GlobalIndexedDataObject> al : data){
-                for(GlobalIndexedDataObject g : al){
+            for(ArrayList<GloballyIndexedDataObject> al : data){
+                for(GloballyIndexedDataObject g : al){
                     oos.writeObject(g);
                 }
             }

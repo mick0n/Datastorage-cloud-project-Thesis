@@ -22,7 +22,7 @@ public class SyncStateJob extends AbstractJob{
     
     @Override
     public boolean update(SocketChannel s, ByteBuffer buffer) throws IOException {
-        buffer.put(Main.ID); //Unknown so far
+        buffer.put(Main.ID);
         buffer.putInt(1);
         buffer.put(Protocol.SYNC_STATE.getValue());
         buffer.put(Main.state.getValue());

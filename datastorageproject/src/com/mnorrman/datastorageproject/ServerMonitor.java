@@ -51,13 +51,17 @@ public class ServerMonitor extends javax.swing.JFrame implements Runnable{
                 while(it.hasNext()){
                     ConnectionContext cc = it.next();
                     data[index][0] = HexConverter.toHex(cc.getNode().getId());
-                    data[index++][1] = cc.getNode().getState().toString();
+                    if(cc.getNode().getState() != null)
+                        data[index][1] = cc.getNode().getState().toString();
+                    else
+                        data[index][1] = "invalid";
                 }
+                index++;
                 painter.update(data);                
             }
             repaint();
             try{
-                Thread.sleep(5000);
+                Thread.sleep(1000);
             }catch(InterruptedException e){
                 LogTool.log(e, LogTool.CRITICAL);
             }

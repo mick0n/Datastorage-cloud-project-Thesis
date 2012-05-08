@@ -1,31 +1,25 @@
 
 package com.mnorrman.datastorageproject.objects;
 
-import java.io.Serializable;
-
 /**
  *
  * @author Mikael Norrman
  */
-public class GlobalIndexedDataObject extends DataObject implements Serializable{
+public class GloballyIndexedDataObject extends DataObject{
 
     private ServerNode indexOwner;
     private long version;
 
-    public GlobalIndexedDataObject(ServerNode indexOwner, String colname, String rowname, long version, String owner, long length, long checksum) {
+    public GloballyIndexedDataObject(ServerNode indexOwner, String colname, String rowname, long version, String owner, long length, long checksum) {
         super(colname, rowname, owner, length, checksum);
         this.indexOwner = indexOwner;
         this.version = version;
     }
     
-    public GlobalIndexedDataObject(IndexedDataObject ido, ServerNode sn){
+    public GloballyIndexedDataObject(IndexedDataObject ido, ServerNode sn){
+        super(ido.getColname(), ido.getRowname(), ido.getOwner(), ido.getLength(), ido.getChecksum());
         this.indexOwner = sn;
-        this.colname = ido.getColname();
-        this.rowname = ido.getRowname();
-        this.owner = ido.getOwner();
-        this.length = ido.getLength();
-        this.version = ido.getVersion();
-        this.checksum = ido.getChecksum();        
+        this.version = ido.getVersion();   
     }
 
     @Override

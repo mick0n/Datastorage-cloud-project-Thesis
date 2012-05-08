@@ -7,6 +7,7 @@ import com.mnorrman.datastorageproject.index.IndexPersistenceGlobal;
 import com.mnorrman.datastorageproject.index.LocalIndex;
 import com.mnorrman.datastorageproject.network.MasterNode;
 import com.mnorrman.datastorageproject.network.SlaveNode;
+import com.mnorrman.datastorageproject.network.jobs.SyncLocalIndexJob;
 import com.mnorrman.datastorageproject.storage.BackStorage;
 import com.mnorrman.datastorageproject.storage.DataProcessor;
 import com.mnorrman.datastorageproject.storage.DataTicket;
@@ -92,6 +93,13 @@ public class Main {
         
         Thread sm = new Thread(new ServerMonitor(masterNode));
         sm.start();
+        
+        try{
+            Thread.sleep(5000);
+            slaveNode.createJob(HexConverter.toHex(Main.ID), new SyncLocalIndexJob(HexConverter.toHex(Main.ID)));
+        }catch(InterruptedException e){
+            e.printStackTrace();
+        }
     }
 
     /**

@@ -9,6 +9,7 @@ import com.mnorrman.datastorageproject.Main;
 import com.mnorrman.datastorageproject.ServerState;
 import com.mnorrman.datastorageproject.network.jobs.AbstractJob;
 import com.mnorrman.datastorageproject.network.jobs.ConnectJob;
+import com.mnorrman.datastorageproject.network.jobs.SyncLocalIndexJob;
 import com.mnorrman.datastorageproject.tools.HexConverter;
 import com.mnorrman.datastorageproject.tools.IntConverter;
 import java.io.IOException;
@@ -75,94 +76,86 @@ public class SlaveNode extends Thread {
                             LogTool.log(e, LogTool.CRITICAL);
                         }
                     } else {
-                        context.channel.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE);
+                        context.channel.register(selector, SelectionKey.OP_READ);
                         ConnectJob conJob = new ConnectJob("00000000");
                         jobs.put("00000000", conJob);
                         jobQueue.add(conJob);
-//                        context.setCommand(Protocol.CONNECT);
-//                        context.setTask(new ConnectJob());
                     }
                 }
             } catch (IOException e) {
                 LogTool.log(e, LogTool.CRITICAL);
             }
-
+            
+            
+            int readyKeys = 0;
+            
             try {
-                if (selector.select() <= 0) {
-                    continue;
+                if(!jobQueue.isEmpty()){
+                    readyKeys = selector.selectNow();
+                }else{
+                    readyKeys = selector.select();
                 }
             } catch (IOException e) {
                 LogTool.log(e, LogTool.CRITICAL);
             }
+            
+            if(readyKeys > 0){
+                Iterator it = selector.selectedKeys().iterator();
 
-            Iterator it = selector.selectedKeys().iterator();
+                while (it.hasNext()) {
+                    SelectionKey key = (SelectionKey) it.next();
+                    it.remove();
 
-            while (it.hasNext()) {
-                SelectionKey key = (SelectionKey) it.next();
-                it.remove();
-
-                //key.interestOps(key.interestOps() & ~SelectionKey.OP_WRITE);
-
-                if (key.isValid()) {
-                    if (key.isReadable()) {
-                        System.out.println("Reading");
-                        while (buffer.position() != buffer.capacity()) {
-                            System.out.println("Didn't get enough");
-                            try {
-                                if (context.channel.read(buffer) == -1) {
-                                    //Connection has been terminated, cleanup.                                   
+                    if (key.isValid()) {
+                        if (key.isReadable()) {
+                            while (buffer.position() != buffer.capacity()) {
+                                try {
+                                    if (context.channel.read(buffer) == -1) {
+                                        //Connection has been terminated, cleanup.                                   
+                                        key.cancel();
+                                        LogTool.log("Connection to master was closed", LogTool.INFO);
+                                        buffer.clear();
+                                        return;
+                                    }
+                                } catch (IOException e) {
                                     key.cancel();
                                     LogTool.log("Connection to master was closed", LogTool.INFO);
                                     buffer.clear();
                                     return;
                                 }
-                            } catch (IOException e) {
-                                key.cancel();
-                                LogTool.log("Connection to master was closed", LogTool.INFO);
-                                buffer.clear();
-                                return;
+                            }
+                            buffer.flip();
+                            byte[] from = new byte[4];
+                            buffer.get(from);
+                            int length = buffer.getInt();
+
+                            System.out.println("From: 0x" + HexConverter.toHex(from) + " with len: " + length);
+
+                            if (jobs.containsKey(HexConverter.toHex(from))) {
+                                System.out.println("Contains!");
+                                AbstractJob job = jobs.get(HexConverter.toHex(from));
+                                if (job instanceof ConnectJob) {
+                                    Main.ID = IntConverter.intToByteArray(buffer.getInt());
+                                    System.out.println("My ID: 0x" + HexConverter.toHex(Main.ID));
+                                    jobs.remove(HexConverter.toHex(from));
+                                    Main.state = com.mnorrman.datastorageproject.ServerState.IDLE;
+                                }
+                            }else{
+                                Protocol command = Protocol.getCommand(buffer.get());
+
+                                switch(command){
+                                    case GET:
+
+                                        break;
+                                    case PING:
+
+                                        break;
+                                }
                             }
                         }
-                        buffer.flip();
-                        byte[] from = new byte[4];
-                        buffer.get(from);
-                        int length = buffer.getInt();
-
-                        System.out.println("From: 0x" + HexConverter.toHex(from) + " with len: " + length);
-
-                        System.out.println("Ok time to see");
-
-                        if (jobs.containsKey(HexConverter.toHex(from))) {
-                            System.out.println("Contains!");
-                            AbstractJob job = jobs.get(HexConverter.toHex(from));
-                            if (job instanceof ConnectJob) {
-                                Main.ID = IntConverter.intToByteArray(buffer.getInt());
-                                System.out.println("My ID: 0x" + HexConverter.toHex(Main.ID));
-                                jobs.remove(HexConverter.toHex(from));
-                                Main.state = com.mnorrman.datastorageproject.ServerState.IDLE;
-                            }
-                        }
-
-//                            if (context.command == Protocol.NULL) {
-//                                context.setCommand(Protocol.getCommand(buffer.get()));
-//                            }
-//
-//                            switch (context.command) {
-//                                case CONNECT:
-//                                    if (((ConnectJob) context.task).getHaveSentCommand()) {
-//
-//                                        Main.ID = IntConverter.intToByteArray(buffer.getInt());
-//                                        System.out.println("My ID: 0x" + HexConverter.toHex(Main.ID));
-//                                        context.setCommand(Protocol.NULL);
-//                                        context.setTask(null);
-//                                    }
-//                                    break;
-//                                default:
-//                                //Hello?! Is there anybody out there?!
-//                            }
                     }
+                    selector.selectedKeys().clear();
                 }
-                selector.selectedKeys().clear();
             }
             try {
                 if (!jobQueue.isEmpty()) {
@@ -188,10 +181,12 @@ public class SlaveNode extends Thread {
     }
 
     public void createJob(String jobOwner, AbstractJob job) {
-        if(Main.state == ServerState.IDLE || Main.state == ServerState.RUNNING)
-        if (jobOwner != null && job != null) {
-            jobs.put(jobOwner, job);
-            jobQueue.add(job);
+        if(Main.state == ServerState.IDLE || Main.state == ServerState.RUNNING){
+            if (jobOwner != null && job != null) {
+                jobs.put(jobOwner, job);
+                jobQueue.add(job);
+                selector.wakeup();
+            }
         }
     }
 

@@ -167,4 +167,19 @@ public class LocalIndex extends Index<IndexedDataObject> {
         
         return list;
     }
+    
+    public LinkedList<ArrayList<IndexedDataObject>> cloneData(){
+        LinkedList<ArrayList<IndexedDataObject>> list = new LinkedList<ArrayList<IndexedDataObject>>();
+        
+        Iterator<ArrayList<IndexedDataObject>> it1 = table.values().iterator();
+        while(it1.hasNext()){
+            Iterator<IndexedDataObject> it2 = it1.next().iterator();
+            list.addLast(new ArrayList<IndexedDataObject>());
+            while(it2.hasNext()){
+                list.getLast().add(it2.next().cloneMe());
+            }
+        }
+        
+        return list;
+    }
 }

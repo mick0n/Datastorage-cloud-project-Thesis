@@ -14,9 +14,10 @@ public enum ServerState {
     CONNECTING (0x31),
     CHKINTEG (0x32),
     CLEANING (0x33),
-    INDEXING (0x34),
-    RUNNING (0x35),
-    IDLE (0x36),
+    SYNCHRONIZING (0x34),
+    INDEXING (0x35),
+    RUNNING (0x36),
+    IDLE (0x37),
     CLOSING (0x3F);
     
     private final byte value;

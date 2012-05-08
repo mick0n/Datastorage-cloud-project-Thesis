@@ -68,6 +68,10 @@ public final class IndexedDataObject extends DataObject implements Serializable{
     public void markForCleanup(){
         cleanupFlag = true;
     }
+    
+    public IndexedDataObject cloneMe(){
+        return new IndexedDataObject(colname, rowname, owner, offset, length, version, checksum, cleanupFlag);
+    }
 
     @Override
     public String getClearText() {

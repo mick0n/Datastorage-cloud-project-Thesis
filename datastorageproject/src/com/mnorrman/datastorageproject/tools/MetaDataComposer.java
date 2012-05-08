@@ -1,9 +1,7 @@
 
 package com.mnorrman.datastorageproject.tools;
 
-import com.mnorrman.datastorageproject.objects.DataObject;
-import com.mnorrman.datastorageproject.objects.IndexedDataObject;
-import com.mnorrman.datastorageproject.objects.UnindexedDataObject;
+import com.mnorrman.datastorageproject.objects.*;
 import java.nio.ByteBuffer;
 
 /**
@@ -24,6 +22,37 @@ public class MetaDataComposer {
     private static final byte[] VOID_BYTES_WITHOUT_OFFSET = new byte[96];
     
     private MetaDataComposer(){ } //Prohibit instantiation
+    
+    public static GloballyIndexedDataObject compose(ByteBuffer bb, ServerNode sn){
+        if(bb == null || bb.capacity() <= 0)
+            return null;
+        if(bb.position() != 0)
+            bb.rewind();
+        
+        byte[] temp;
+        String colname, rowname, owner;
+        long version, len, checksum;
+
+        temp = new byte[128];
+        bb.get(temp);
+        colname = new String(temp).trim();
+
+        temp = new byte[128];
+        bb.get(temp);
+        rowname = new String(temp).trim();
+        
+        version = bb.getLong();
+
+        len = bb.getLong();
+
+        checksum = bb.getLong();
+
+        temp = new byte[128];
+        bb.get(temp);
+        owner = new String(temp).trim();
+
+        return new GloballyIndexedDataObject(sn, colname, rowname, version, owner, len, checksum);
+    }
     
     /**
      * Compose an indexDataObject from specified ByteBuffer and specify offset
