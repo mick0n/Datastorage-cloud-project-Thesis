@@ -6,7 +6,6 @@ import com.mnorrman.datastorageproject.ServerState;
 import com.mnorrman.datastorageproject.network.jobs.ConnectJob;
 import com.mnorrman.datastorageproject.network.jobs.SyncLocalIndexJob;
 import com.mnorrman.datastorageproject.objects.IndexedDataObject;
-import com.mnorrman.datastorageproject.storage.BackStorage;
 import com.mnorrman.datastorageproject.tools.HexConverter;
 import com.mnorrman.datastorageproject.tools.IntConverter;
 import com.mnorrman.datastorageproject.tools.MetaDataComposer;
@@ -39,6 +38,8 @@ public class MasterNode extends Thread {
     private int connectionCounter = 0;
     
     private boolean keepWorking = true;
+    
+    private int messageCount = 0;
     
     /**
      * Creates new instance of MasterNode class.
@@ -162,7 +163,11 @@ public class MasterNode extends Thread {
                     buffer.clear();
                     return;
                 }
+                System.out.println("Readbytes: " + readBytes);
             }
+            System.out.println("Reading done, buffer is at pos: " + buffer.position());
+            
+            
             buffer.flip();
             byte[] from = new byte[4];
             buffer.get(from);
@@ -188,7 +193,7 @@ public class MasterNode extends Thread {
                     //We should tell the slave of his ID, therefore we set a
                     //connectJob.
                     System.out.println("Connection");
-                    context.setTask(new ConnectJob(""));
+                    context.setTask(new ConnectJob("", true));
                     keyWantsToWrite(key);
                     break;
                     
@@ -201,7 +206,7 @@ public class MasterNode extends Thread {
                     break;
                     
                 case SYNC_LOCAL_INDEX:
-                    ByteBuffer DOBuffer;
+                    ByteBuffer DOBuffer; //Special dataobject-buffer
                     int counter = 0;
                     while(counter < 15){
                         byte command = buffer.get();
@@ -229,6 +234,8 @@ public class MasterNode extends Thread {
                 default:
                     //I don't always go to default in a switch, but when I do
                     //I do it eternally. 
+                    messageCount++;
+                    System.out.println("Messages = " + messageCount);
             }
             buffer.clear();
         } else if (key.isValid() && key.isWritable()) {

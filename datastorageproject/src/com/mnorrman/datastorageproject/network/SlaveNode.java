@@ -66,22 +66,52 @@ public class SlaveNode extends Thread {
 
         while (keepWorking) {
             try {
-                while (keepWorking && !context.channel.isConnected()) {
+                if(keepWorking && !context.channel.isConnected()){
                     context.channel.connect(new InetSocketAddress(InetAddress.getByName(Main.properties.getValue("master").toString()), Integer.parseInt(Main.properties.getValue("port").toString())));
-                    if (!context.channel.finishConnect()) {
-                        LogTool.log("Could not connect to master node, trying again in 10 seconds", LogTool.WARNING);
+                    while(!context.channel.finishConnect()){
+                        LogTool.log("Could not connect to master node, trying again in 5 seconds", LogTool.WARNING);
                         try {
-                            sleep(10000);
+                            sleep(5000);
                         } catch (InterruptedException e) {
                             LogTool.log(e, LogTool.CRITICAL);
                         }
-                    } else {
-                        context.channel.register(selector, SelectionKey.OP_READ);
-                        ConnectJob conJob = new ConnectJob("00000000");
-                        jobs.put("00000000", conJob);
-                        jobQueue.add(conJob);
                     }
+                    context.channel.register(selector, SelectionKey.OP_READ);
+                    ConnectJob conJob = new ConnectJob("00000000", false);
+                    jobs.put("00000000", conJob);
+                    jobQueue.add(conJob);
                 }
+//                while (keepWorking && !context.channel.isConnected()) {
+//                    System.out.println("Is connected0? " + context.channel.isConnected());
+//                    context.channel.connect(new InetSocketAddress(InetAddress.getByName(Main.properties.getValue("master").toString()), Integer.parseInt(Main.properties.getValue("port").toString())));
+//                    System.out.println("Is pending? " + context.channel.isConnectionPending());
+//                    System.out.println("Is connected0? " + context.channel.isConnected());
+//                    long start = System.currentTimeMillis();
+//                    while(context.channel.isConnectionPending()){
+//                        if(System.currentTimeMillis()-start > 2000)
+//                            break;
+//                        System.out.println(System.currentTimeMillis()-start + "ms");
+//                        System.out.println("Is connected1? " + context.channel.isConnected());
+//                    }
+//                    while(!context.channel.finishConnect()){
+//                        System.out.println("SHIIIIT");
+//                    }
+//                    if (!context.channel.finishConnect()) {
+//                        System.out.println("Is connected2? " + context.channel.isConnected());
+//                        LogTool.log("Could not connect to master node, trying again in 10 seconds", LogTool.WARNING);
+//                        try {
+//                            sleep(10000);
+//                        } catch (InterruptedException e) {
+//                            LogTool.log(e, LogTool.CRITICAL);
+//                        }
+//                    } else {
+//                        context.channel.register(selector, SelectionKey.OP_READ);
+//                        ConnectJob conJob = new ConnectJob("00000000", false);
+//                        jobs.put("00000000", conJob);
+//                        jobQueue.add(conJob);                        
+//                    }
+//                    System.out.println("Is connected3? " + context.channel.isConnected());
+//                }
             } catch (IOException e) {
                 LogTool.log(e, LogTool.CRITICAL);
             }
@@ -111,13 +141,10 @@ public class SlaveNode extends Thread {
                             while (buffer.position() != buffer.capacity()) {
                                 try {
                                     if (context.channel.read(buffer) == -1) {
-                                        //Connection has been terminated, cleanup.                                   
-                                        key.cancel();
-                                        LogTool.log("Connection to master was closed", LogTool.INFO);
-                                        buffer.clear();
-                                        return;
+                                        throw new IOException();
                                     }
                                 } catch (IOException e) {
+                                    Main.state = ServerState.NOTRUNNING;
                                     key.cancel();
                                     LogTool.log("Connection to master was closed", LogTool.INFO);
                                     buffer.clear();
@@ -139,6 +166,7 @@ public class SlaveNode extends Thread {
                                     System.out.println("My ID: 0x" + HexConverter.toHex(Main.ID));
                                     jobs.remove(HexConverter.toHex(from));
                                     Main.state = com.mnorrman.datastorageproject.ServerState.IDLE;
+                                    createJob(HexConverter.toHex(Main.ID), new SyncLocalIndexJob(HexConverter.toHex(Main.ID)));
                                 }
                             }else{
                                 Protocol command = Protocol.getCommand(buffer.get());

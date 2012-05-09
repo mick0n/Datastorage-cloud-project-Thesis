@@ -5,6 +5,7 @@
 package com.mnorrman.datastorageproject.network.jobs;
 
 import com.mnorrman.datastorageproject.Main;
+import com.mnorrman.datastorageproject.network.MasterNode;
 import com.mnorrman.datastorageproject.network.Protocol;
 import com.mnorrman.datastorageproject.objects.IndexedDataObject;
 import com.mnorrman.datastorageproject.tools.MetaDataComposer;
@@ -49,7 +50,7 @@ public class SyncLocalIndexJob extends AbstractJob{
 
     @Override
     public boolean update(SocketChannel s, ByteBuffer buffer) throws IOException {
-        System.out.println("Updating");
+        buffer.clear();
         if(ido != null){
             buffer.put(Main.ID);
             buffer.putInt(514);
@@ -79,7 +80,6 @@ public class SyncLocalIndexJob extends AbstractJob{
                 if(outerIndex == localIndexCopy.size()){
                     buffer.put(LAST_INDEX);
                     setFinished(true);
-                    System.out.println("Done");
                     break;
                 }
                 counter--;
@@ -90,9 +90,11 @@ public class SyncLocalIndexJob extends AbstractJob{
                     buffer.put(NOT_LAST_INDEX);
                 }
             }
-            System.out.println("Buffer pos: " + buffer.position());
             buffer.rewind();
-            s.write(buffer);
+            int writtenBytes = 0;
+            while(writtenBytes < MasterNode.NETWORK_BLOCK_SIZE){
+                writtenBytes += s.write(buffer);
+            }
             buffer.clear();
             if(isFinished())
                 return true;
