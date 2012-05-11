@@ -24,7 +24,7 @@ public class StoreDataJob extends AbstractJob{
     private DataProcessor dataProcessor;
     
     public StoreDataJob(UnindexedDataObject udo, DataProcessor dp) throws IOException{
-        super(null);
+        super();
         this.udo = udo;
         this.dataProcessor = dp;
         
@@ -33,7 +33,12 @@ public class StoreDataJob extends AbstractJob{
     }
 
     @Override
-    public boolean update(SocketChannel s, ByteBuffer buffer) {
+    public boolean readOperation(ByteBuffer buffer) throws IOException {
+        return false;
+    }
+    
+    @Override
+    public boolean writeOperation(SocketChannel s, ByteBuffer buffer) {
         setFinished(true);
         return true;
     }

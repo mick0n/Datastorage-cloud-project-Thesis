@@ -4,6 +4,7 @@
  */
 package com.mnorrman.datastorageproject.network.jobs;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
@@ -16,7 +17,7 @@ public class RouteJob extends AbstractJob{
     byte[] destinationNode, client;
     
     public RouteJob(byte[] destinationNode, byte[] client){
-        super(null);
+        super();
         this.destinationNode = destinationNode;
         this.client = client;
     }
@@ -30,7 +31,12 @@ public class RouteJob extends AbstractJob{
     }
 
     @Override
-    public boolean update(SocketChannel s, ByteBuffer buffer) {
+    public boolean readOperation(ByteBuffer buffer) throws IOException {
+        return false;
+    }
+
+    @Override
+    public boolean writeOperation(SocketChannel s, ByteBuffer buffer) {
         setFinished(true);
         return true;
     }

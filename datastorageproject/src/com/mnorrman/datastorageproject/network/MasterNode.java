@@ -3,12 +3,12 @@ package com.mnorrman.datastorageproject.network;
 import com.mnorrman.datastorageproject.LogTool;
 import com.mnorrman.datastorageproject.Main;
 import com.mnorrman.datastorageproject.ServerState;
-import com.mnorrman.datastorageproject.network.jobs.ConnectJob;
+import com.mnorrman.datastorageproject.network.jobs.AbstractJob;
+import com.mnorrman.datastorageproject.network.jobs.MasterConnectJob;
 import com.mnorrman.datastorageproject.network.jobs.SyncLocalIndexJob;
-import com.mnorrman.datastorageproject.objects.IndexedDataObject;
+import com.mnorrman.datastorageproject.network.jobs.SyncStateJob;
 import com.mnorrman.datastorageproject.tools.HexConverter;
 import com.mnorrman.datastorageproject.tools.IntConverter;
-import com.mnorrman.datastorageproject.tools.MetaDataComposer;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.ClosedChannelException;
@@ -17,6 +17,9 @@ import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
@@ -35,11 +38,12 @@ public class MasterNode extends Thread {
     private ByteBuffer buffer;
     private int readBytes;
     
+    private HashMap<String, AbstractJob> jobs;
+    private Queue<AbstractJob> jobQueue;
+    
     private int connectionCounter = 0;
     
     private boolean keepWorking = true;
-    
-    private int messageCount = 0;
     
     /**
      * Creates new instance of MasterNode class.
@@ -57,6 +61,8 @@ public class MasterNode extends Thread {
             listener = new MasterNodeListener(this);
             channelQueue = new ConcurrentLinkedQueue<SocketChannel>();
             connections = new HashMap<String, ConnectionContext>();
+            jobs = new HashMap<String, AbstractJob>();
+            jobQueue = new LinkedList<AbstractJob>();
         } catch (IOException e) {
             LogTool.log(e, LogTool.CRITICAL);
         }
@@ -77,16 +83,17 @@ public class MasterNode extends Thread {
         //quite big, it can be used for small amounts of data by setting
         //the limit to appropriate sizes.
         buffer = ByteBuffer.allocateDirect(NETWORK_BLOCK_SIZE);
-        int readyChannels;
+        int readyChannels = 0;
 
         while (keepWorking) {
             try {
-                //Block until theres a minimum of one channel with a ready
-                //action
-                readyChannels = selector.select();
+                if (!jobQueue.isEmpty()) {
+                    readyChannels = selector.selectNow();
+                } else {
+                    readyChannels = selector.select();
+                }
             } catch (IOException e) {
                 LogTool.log(e, LogTool.CRITICAL);
-                break;
             }
             
             //Since readyChannels may be zero, we check this first
@@ -98,9 +105,6 @@ public class MasterNode extends Thread {
 
                     //Remove key, otherwise it will stay in the list forever.
                     it.remove();
-                    
-                    //Remove the interest key for write.
-                    selKey.interestOps(selKey.interestOps() & ~SelectionKey.OP_WRITE);
 
                     try {
                         processSelectionKey(selKey);
@@ -111,7 +115,27 @@ public class MasterNode extends Thread {
                         LogTool.log(e, LogTool.WARNING);
                     }
                 }
+            }
+            
+            try {
+                if (!jobQueue.isEmpty()) {
+                    AbstractJob queuedJob = jobQueue.poll();
+                    if (!queuedJob.writeOperation(connections.get(queuedJob.getOwner()).channel, buffer)) {
+                        jobQueue.offer(queuedJob);
+                    } else {
+                        if (queuedJob.isFinished()) {
+                            jobs.remove(queuedJob.getJobID());
+                        }
+                    }
+                }
+            } catch (IOException e) {
+                LogTool.log(e, LogTool.CRITICAL);
+            }
 
+            if (jobs.isEmpty() && jobQueue.isEmpty() && Main.state.getValue() > ServerState.INDEXING.getValue()) {
+                Main.state = ServerState.IDLE;
+            } else if (Main.state.getValue() > ServerState.INDEXING.getValue()) {
+                Main.state = ServerState.RUNNING;
             }
 
             //After checking all keys we check if there are any channels waiting
@@ -123,13 +147,13 @@ public class MasterNode extends Thread {
                     SocketChannel temp = channelQueue.poll();
                     
                     //Get a new ID for this connection
-                    byte[] newID = IntConverter.intToByteArray(getConnectionCounterValue());
+                    String newID = HexConverter.toHex(IntConverter.intToByteArray(getConnectionCounterValue()));
                     
                     //Register this socketChannel, use ID as attachment
-                    temp.register(selector, SelectionKey.OP_READ, HexConverter.toHex(newID));
+                    temp.register(selector, SelectionKey.OP_READ, newID);
                     
                     //Add new client to our map
-                    connections.put(HexConverter.toHex(newID), new ConnectionContext(temp, Protocol.NULL, newID));
+                    connections.put(newID, new ConnectionContext(temp, newID));
                     
                     LogTool.log("Connection from " + temp.getRemoteAddress() + " was added to selector", LogTool.INFO);
                 } catch (NullPointerException e) {
@@ -163,117 +187,74 @@ public class MasterNode extends Thread {
                     buffer.clear();
                     return;
                 }
-                System.out.println("Readbytes: " + readBytes);
-            }
-            System.out.println("Reading done, buffer is at pos: " + buffer.position());
-            
+            }            
             
             buffer.flip();
-            byte[] from = new byte[4];
-            buffer.get(from);
+            
+            //Get the sender ID
+            byte[] fromBytes = new byte[4];
+            buffer.get(fromBytes);
+            String from = HexConverter.toHex(fromBytes);
+            
+            //Get the length of the data
             int length = buffer.getInt();
-            
-            System.out.println("From: 0x" + HexConverter.toHex(from) + " with len: " + length);
-            
-            if(context.command == Protocol.NULL){
-                context.setCommand(Protocol.getCommand(buffer.get()));
-            }
-            
-            //If we read -1 bytes then the connection is dead
-//            if (readBytes == -1) {
-//                connections.remove(key.attachment().toString());
-//                key.cancel();
-//                LogTool.log("Connection from " + sChannel.getRemoteAddress() + " was closed", LogTool.INFO);
-//                return;
-//            }
-            
-            //Process command
-            switch (context.command) {
-                case CONNECT:
-                    //We should tell the slave of his ID, therefore we set a
-                    //connectJob.
-                    System.out.println("Connection");
-                    context.setTask(new ConnectJob("", true));
-                    keyWantsToWrite(key);
-                    break;
-                    
-                case SYNC_STATE:
-                    byte newState = buffer.get();
-                    context.getNode().setState(ServerState.getState(newState));
-                    System.out.println("Check: " + context.getNode().getState().toString());
-                    context.setTask(null);
-                    context.setCommand(Protocol.NULL);
-                    break;
-                    
-                case SYNC_LOCAL_INDEX:
-                    ByteBuffer DOBuffer; //Special dataobject-buffer
-                    int counter = 0;
-                    while(counter < 15){
-                        byte command = buffer.get();
-                        System.out.println("Command was 0x" + HexConverter.toHex(new byte[]{ command }));
-                        DOBuffer = buffer.slice();
-                        IndexedDataObject ido = MetaDataComposer.compose(DOBuffer);
-                        buffer.position(buffer.position() + 512);
-                        System.out.println("IDO: " + ido.toString());
-                        if(buffer.get() == SyncLocalIndexJob.LAST_INDEX)
-                            break;
-                        counter++;
-                    }
-                    context.setTask(null);
-                    context.setCommand(Protocol.NULL);
-                    break;
-                    
-                case GET:
-                    //Perform get
-                    break;
-                
-                case PING:
-                    //No job for this, we just know that we should reply later
-                    keyWantsToWrite(key);
-                    break;
-                default:
-                    //I don't always go to default in a switch, but when I do
-                    //I do it eternally. 
-                    messageCount++;
-                    System.out.println("Messages = " + messageCount);
-            }
-            buffer.clear();
-        } else if (key.isValid() && key.isWritable()) {
-            SocketChannel sChannel = (SocketChannel) key.channel();
-            ConnectionContext context = connections.get(key.attachment().toString());
 
-            if (key.attachment() != null) { //Probably unnecessary statement 
-                switch (context.command) {
-                    case GET:
-                        break;
+            //Get the jobID and transform into hexstring.
+            byte[] jobIDBytes = new byte[4];
+            buffer.get(jobIDBytes);
+            String jobID = HexConverter.toHex(jobIDBytes);
+            
+            if (!jobs.containsKey(jobID) || jobID.equals("00000000")) {
+                Protocol command = Protocol.getCommand(buffer.get());
+
+                switch (command) {
                     case CONNECT:
-                        if(context.task instanceof ConnectJob && !context.task.isFinished()){
-                            buffer.putInt(0x00000000); //From ID
-                            buffer.putInt(1); //length
-                            buffer.put(context.node.getId());
-                            buffer.rewind();
-                            sChannel.write(buffer);
-                            buffer.clear();
-                            context.setCommand(Protocol.NULL);
-                            context.task = null;
-                        }
+                        MasterConnectJob mcj = new MasterConnectJob(jobID, from, key.attachment().toString(), this);
+                        jobs.put(mcj.getJobID(), mcj);
+//                        jobQueue.add(mcj);
+                        break;
+                    case SYNC_STATE:
+                        SyncStateJob ssj = new SyncStateJob(jobID, from);
+                        jobs.put(ssj.getJobID(), ssj);
+                        break;
+                    case SYNC_LOCAL_INDEX:
+                        System.out.println("Sync local index acknowledged");
+                        SyncLocalIndexJob slij = new SyncLocalIndexJob(jobID, context.node);
+                        jobs.put(slij.getJobID(), slij);
+                        break;
+                    case GET:
+
                         break;
                     case PING:
-                        buffer.putInt(0x00000000);
-                        buffer.putInt(1);
-                        buffer.put((byte) 0x01);
-                        buffer.rewind();
-                        sChannel.write(buffer);
-                        buffer.clear();
-                        context.setCommand(Protocol.NULL);
+
                         break;
-
-                    case NULL:
-                    default:
-                        //I don't always go to default in a switch, but when I do
-                        //I do it eternally.
                 }
-
+            }
+            
+            //Perform the job
+            AbstractJob job = jobs.get(jobID);
+            try {
+                if (job.readOperation(buffer)) {
+                    //If the readOperation returns true it
+                    //means it has something to write.
+                    jobQueue.offer(job);
+                }
+            } catch (IOException e) {
+                LogTool.log(e, LogTool.CRITICAL);
+            }
+            if (job.isFinished()) {
+                jobs.remove(job.getJobID());
+            }
+            buffer.clear();
+        }
+    }
+    
+    public void createJob(String jobOwner, AbstractJob job) {
+        if (Main.state == ServerState.IDLE || Main.state == ServerState.RUNNING) {
+            if (jobOwner != null && job != null) {
+                jobs.put(jobOwner, job);
+                jobQueue.add(job);
+                selector.wakeup();
             }
         }
     }
@@ -313,7 +294,7 @@ public class MasterNode extends Thread {
     }
     
     private int getConnectionCounterValue(){
-        if(connectionCounter == Integer.MAX_VALUE){
+        if(connectionCounter == Integer.MAX_VALUE/2){
             connectionCounter = 0;
         }
         return ++connectionCounter;

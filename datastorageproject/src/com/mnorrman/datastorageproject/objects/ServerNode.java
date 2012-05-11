@@ -2,6 +2,7 @@
 package com.mnorrman.datastorageproject.objects;
 
 import com.mnorrman.datastorageproject.ServerState;
+import com.mnorrman.datastorageproject.tools.HexConverter;
 import java.net.InetAddress;
 
 /**
@@ -12,12 +13,12 @@ public class ServerNode {
         
     private InetAddress ipaddress;
     private int port;
-    private byte[] id;
+    private String id;
     private ServerState state;
     
     private long storageLimit;
 
-    public ServerNode(InetAddress ipaddress, int port, byte[] id) {
+    public ServerNode(InetAddress ipaddress, int port, String id) {
         this.ipaddress = ipaddress;
         this.port = port;
         this.id = id;
@@ -32,11 +33,11 @@ public class ServerNode {
         this.ipaddress = ipaddress;
     }
 
-    public byte[] getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(byte[] id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -62,5 +63,10 @@ public class ServerNode {
 
     public ServerState getState() {
         return state;
+    }
+
+    @Override
+    public String toString() {
+        return ipaddress.getHostAddress() + "," + port + "," + id;
     }
 }

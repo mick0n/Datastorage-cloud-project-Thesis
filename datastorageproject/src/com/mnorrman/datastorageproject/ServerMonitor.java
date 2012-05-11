@@ -50,7 +50,7 @@ public class ServerMonitor extends javax.swing.JFrame implements Runnable{
                 int index = 0;
                 while(it.hasNext()){
                     ConnectionContext cc = it.next();
-                    data[index][0] = HexConverter.toHex(cc.getNode().getId());
+                    data[index][0] = cc.getNode().getId();
                     if(cc.getNode().getState() != null)
                         data[index][1] = cc.getNode().getState().toString();
                     else

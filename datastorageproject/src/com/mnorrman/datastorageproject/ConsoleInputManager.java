@@ -3,12 +3,11 @@ package com.mnorrman.datastorageproject;
 
 import com.mnorrman.datastorageproject.network.jobs.GetDataJob;
 import com.mnorrman.datastorageproject.network.jobs.StoreDataJob;
+import com.mnorrman.datastorageproject.objects.GloballyIndexedDataObject;
 import com.mnorrman.datastorageproject.objects.IndexedDataObject;
 import com.mnorrman.datastorageproject.objects.UnindexedDataObject;
 import com.mnorrman.datastorageproject.storage.BackStorage;
 import com.mnorrman.datastorageproject.storage.DataProcessor;
-import com.mnorrman.datastorageproject.tools.MetaDataComposer;
-import com.mnorrman.datastorageproject.tools.RawMetaDataPrinter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -176,6 +175,14 @@ public class ConsoleInputManager extends Thread {
                 for(ArrayList<IndexedDataObject> al : Main.localIndex.getData()){
                     for(IndexedDataObject ido : al){
                         System.out.println(ido);
+                    }
+                }
+                
+                
+            }else if(command.toLowerCase().equals("pg")){
+                for(ArrayList<GloballyIndexedDataObject> al : Main.globalIndex.getData()){
+                    for(GloballyIndexedDataObject gido : al){
+                        System.out.println(gido);
                     }
                 }
                 

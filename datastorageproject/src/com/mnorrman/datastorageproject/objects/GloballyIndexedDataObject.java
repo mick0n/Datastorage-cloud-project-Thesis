@@ -1,6 +1,8 @@
 
 package com.mnorrman.datastorageproject.objects;
 
+import com.mnorrman.datastorageproject.tools.HexConverter;
+
 /**
  *
  * @author Mikael Norrman
@@ -29,7 +31,7 @@ public class GloballyIndexedDataObject extends DataObject{
     
     @Override
     public String toString() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return indexOwner.getIpaddress().toString() + ":" + indexOwner.getPort() + "(" + indexOwner.getId() + ") >>> Colname: " + colname + ", Rowname: " + rowname + ", Owner: " + owner + ", Version: " + version + ", Length: " + length + ", Checksum: " + checksum;
     }
     
     public ServerNode getServerNode(){

@@ -6,8 +6,8 @@ import com.mnorrman.datastorageproject.index.IndexPersistence;
 import com.mnorrman.datastorageproject.index.IndexPersistenceGlobal;
 import com.mnorrman.datastorageproject.index.LocalIndex;
 import com.mnorrman.datastorageproject.network.MasterNode;
+import com.mnorrman.datastorageproject.network.MasterNodeSlaveList;
 import com.mnorrman.datastorageproject.network.SlaveNode;
-import com.mnorrman.datastorageproject.network.jobs.SyncLocalIndexJob;
 import com.mnorrman.datastorageproject.storage.BackStorage;
 import com.mnorrman.datastorageproject.storage.DataProcessor;
 import com.mnorrman.datastorageproject.storage.DataTicket;
@@ -29,12 +29,13 @@ import java.util.concurrent.TimeUnit;
 public class Main {
 
     public static GlobalIndex globalIndex;
+    public static MasterNodeSlaveList slaveList;
     public static LocalIndex localIndex;
     public static ExecutorService pool;
     public static Timer timer;
     public static PropertiesManager properties;
     public static ServerState state;
-    public static byte[] ID;
+    public static String ID;
     public BackStorage storage;
     public MasterNode masterNode;
     public SlaveNode slaveNode;
@@ -83,12 +84,18 @@ public class Main {
         if (properties.getValue("master").toString().equalsIgnoreCase("127.0.0.1")) {
             masterNode = new MasterNode(this);
             masterNode.startMasterServer();
-            ID = new byte[]{ 0, 0, 0, 0 };
+            ID = "00000000";
         }else{
             slaveNode = new SlaveNode(this);
             slaveNode.startSlaveServer();
             state = ServerState.CONNECTING;
-            ID = new byte[]{ -128, 0, 0, 0 };
+            if(!properties.getValue("serverID").toString().equals("")){
+                ID = properties.getValue("serverID").toString();
+            }else{
+                //When we use this ID, that means we have not connected this slave to a master yet.
+                ID = "FFFFFFFF";
+            }
+            System.out.println("ID= " + ID);
         }
         
         Thread sm = new Thread(new ServerMonitor(masterNode));
@@ -186,6 +193,8 @@ public class Main {
         //global index as well.
         if (properties.getValue("master").toString().equalsIgnoreCase("127.0.0.1")) {
             //Start global index
+            globalIndex = new GlobalIndex();
+            slaveList = new MasterNodeSlaveList();
         }
         //always start localIndex.
         localIndex = new LocalIndex();

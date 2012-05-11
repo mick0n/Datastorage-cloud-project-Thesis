@@ -5,6 +5,7 @@
 package com.mnorrman.datastorageproject.network;
 
 import com.mnorrman.datastorageproject.Main;
+import com.mnorrman.datastorageproject.ServerState;
 import com.mnorrman.datastorageproject.network.jobs.SyncStateJob;
 import com.mnorrman.datastorageproject.tools.HexConverter;
 import java.util.TimerTask;
@@ -23,6 +24,9 @@ public class SyncStateTimerTask extends TimerTask{
     
     @Override
     public void run() {
-        owner.createJob(HexConverter.toHex(Main.ID), new SyncStateJob(HexConverter.toHex(Main.ID)));
+        if(Main.state.getValue() > ServerState.INDEXING.getValue()){
+            SyncStateJob ssj = new SyncStateJob();
+            owner.createJob(ssj.getJobID(), ssj);
+        }
     }    
 }

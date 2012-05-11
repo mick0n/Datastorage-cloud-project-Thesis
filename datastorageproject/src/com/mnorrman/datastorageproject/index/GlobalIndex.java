@@ -22,8 +22,8 @@ public class GlobalIndex extends Index<GloballyIndexedDataObject> {
         insertAll(ip.load());
 
         //Add a scheduled task for automatically saving this index
-        long delay = Long.parseLong(Main.properties.getValue("indexInterval").toString()) * 1000L;
-        Main.timer.scheduleAtFixedRate(new IndexPersistenceTimerTask(this), delay, delay);
+//        long delay = Long.parseLong(Main.properties.getValue("indexInterval").toString()) * 1000L;
+//        Main.timer.scheduleAtFixedRate(new IndexPersistenceGlobalTimerTask(this), delay, delay);
     }
 
     public void clear() {

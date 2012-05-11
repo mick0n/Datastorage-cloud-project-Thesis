@@ -8,9 +8,10 @@ public enum Protocol {
     
     NULL (0x00),
     CONNECT (0x01),
+    GET (0x04),
+    PUT (0x05),
     SYNC_LOCAL_INDEX (0x11),
     SYNC_STATE (0x12),
-    GET (0x04),
     DISCONNECT (0x7E),
     PING (0x7F);
 

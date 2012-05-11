@@ -12,49 +12,27 @@ import java.nio.channels.SocketChannel;
  */
 public class ConnectionContext {
     
-    protected Protocol command;
-    
-    protected AbstractJob task;
-    
     protected ServerNode node;
     
     protected SocketChannel channel;
     
     /**
      * Creates new instance of ConnectionContext.
-     * @param command Starting command. Should always be Protocol.NULL.
+     * 
      */
-    public ConnectionContext(SocketChannel channel, Protocol command){
+    public ConnectionContext(SocketChannel channel){
         this.channel = channel;
-        this.command = command;
     }
     
     /**
      * Creates new instance of ConnectionContext.
-     * @param command Starting command. Should always be Protocol.NULL.
+     * 
      */
-    public ConnectionContext(SocketChannel channel, Protocol command, byte[] id){
+    public ConnectionContext(SocketChannel channel, String id){
         this.channel = channel;
-        this.command = command;
         this.node = new ServerNode(channel.socket().getInetAddress(), channel.socket().getPort(), id);
     }
-    
-    /**
-     * Set a new command.
-     * @param command 
-     */
-    public void setCommand(Protocol command){
-        this.command = command;
-    }
-    
-    /**
-     * Set current task.
-     * @param aj 
-     */
-    public void setTask(AbstractJob aj){
-        this.task = aj;
-    }
-    
+
     /**
      * Set the serverNode of this context object
      */
@@ -62,6 +40,10 @@ public class ConnectionContext {
         this.node = node;
     }
 
+    /**
+     * Get the node that represents this connection.
+     * @return Servernode
+     */
     public ServerNode getNode() {
         return node;
     }
