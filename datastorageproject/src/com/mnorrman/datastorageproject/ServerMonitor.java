@@ -6,7 +6,7 @@ package com.mnorrman.datastorageproject;
 
 import com.mnorrman.datastorageproject.network.ConnectionContext;
 import com.mnorrman.datastorageproject.network.MasterNode;
-import com.mnorrman.datastorageproject.tools.HexConverter;
+import com.mnorrman.datastorageproject.objects.ServerNode;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -44,20 +44,21 @@ public class ServerMonitor extends javax.swing.JFrame implements Runnable{
         while(true){
             if(mn != null){
                 String[][] data;
-                Collection<ConnectionContext> co = mn.getConnections().values();
-                data = new String[co.size()][2];
-                Iterator<ConnectionContext> it = co.iterator();
+                Collection<ServerNode> co = Main.slaveList.getAllData();
+                data = new String[co.size()][3];
+                Iterator<ServerNode> it = co.iterator();
                 int index = 0;
                 while(it.hasNext()){
-                    ConnectionContext cc = it.next();
-                    data[index][0] = cc.getNode().getId();
-                    if(cc.getNode().getState() != null)
-                        data[index][1] = cc.getNode().getState().toString();
+                    ServerNode sn = it.next();
+                    data[index][0] = sn.getId();
+                    if(sn.getState() != null)
+                        data[index][1] = sn.getState().toString();
                     else
                         data[index][1] = "invalid";
+                    data[index][2] = sn.getDataSize() + " bytes";
+                    index++;
                 }
-                index++;
-                painter.update(data);                
+                painter.update(data);
             }
             repaint();
             try{
@@ -90,7 +91,7 @@ public class ServerMonitor extends javax.swing.JFrame implements Runnable{
             g.drawString(0x000000 + " - " + Main.state, 5, 20);
             if(nodes != null)
                 for(int a = 0; a < nodes.length; a++){
-                    g.drawString("0x" + nodes[a][0] + " - " + nodes[a][1], 5, 40+(20*a));
+                    g.drawString("0x" + nodes[a][0] + " - " + nodes[a][1] + ", " + nodes[a][2], 5, 40+(20*a));
                 }
         }
         

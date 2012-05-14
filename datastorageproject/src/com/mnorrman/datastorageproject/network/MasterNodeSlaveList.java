@@ -6,10 +6,11 @@ package com.mnorrman.datastorageproject.network;
 
 import com.mnorrman.datastorageproject.LogTool;
 import com.mnorrman.datastorageproject.Main;
+import com.mnorrman.datastorageproject.ServerState;
 import com.mnorrman.datastorageproject.objects.ServerNode;
-import com.mnorrman.datastorageproject.tools.HexConverter;
 import java.io.*;
 import java.net.InetAddress;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.StringTokenizer;
 
@@ -26,7 +27,27 @@ public class MasterNodeSlaveList {
         loadData();
     }
     
-    public void put(ServerNode sn){
+    public synchronized boolean hasActiveSlaves(){
+        for(ServerNode sn : slaves.values()){
+            if(sn.getState().getValue() > ServerState.INDEXING.getValue()){
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public synchronized String getActiveSlaveID(){
+        String id = null;
+        for(ServerNode sn : slaves.values()){
+            if(sn.getState().getValue() > ServerState.INDEXING.getValue()){
+                if(id == null || sn.getDataSize() < get(id).getDataSize())
+                    id = sn.getId();
+            }
+        }
+        return id;
+    }
+    
+    public synchronized void put(ServerNode sn){
         if(slaves.containsKey(sn.getId())){
             slaves.get(sn.getId()).setIpaddress(sn.getIpaddress());
             slaves.get(sn.getId()).setPort(sn.getPort());
@@ -36,13 +57,17 @@ public class MasterNodeSlaveList {
         storeData();
     }
     
-    public void remove(String key){
+    public synchronized void remove(String key){
         slaves.remove(key);
         storeData();
     }
     
-    public ServerNode get(String key){
+    public synchronized ServerNode get(String key){
         return slaves.get(key);
+    }
+    
+    public synchronized Collection<ServerNode> getAllData(){
+        return slaves.values();
     }
     
     private void storeData(){

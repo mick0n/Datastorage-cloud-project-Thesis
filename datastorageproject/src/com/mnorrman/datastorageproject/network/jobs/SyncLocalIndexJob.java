@@ -93,10 +93,12 @@ public class SyncLocalIndexJob extends AbstractJob{
             buffer.put(MetaDataComposer.decompose(ido));
             buffer.put(LAST_INDEX);
             buffer.rewind();
-            s.write(buffer);
+            while(buffer.hasRemaining())
+                s.write(buffer);
             buffer.clear();
             setFinished(true);
             Main.state = ServerState.IDLE;
+            buffer.clear();
             return true;
         }else{
             if(localIndexCopy.isEmpty()){
@@ -133,10 +135,8 @@ public class SyncLocalIndexJob extends AbstractJob{
                 }
             }
             buffer.rewind();
-            int writtenBytes = 0;
-            while(writtenBytes < MasterNode.NETWORK_BLOCK_SIZE){
-                writtenBytes += s.write(buffer);
-            }
+            while(buffer.hasRemaining())
+                s.write(buffer);
             buffer.clear();
             if(isFinished())
                 return true;

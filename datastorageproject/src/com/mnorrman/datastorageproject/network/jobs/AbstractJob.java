@@ -17,7 +17,7 @@ public abstract class AbstractJob {
     
     private boolean finished = false;
     private String jobID;
-    private String owner;
+    private String fromConnection;
 
     /**
      * Main constructor. Should be used when creating a new job.
@@ -45,16 +45,16 @@ public abstract class AbstractJob {
      * belongs to.
      * @param owner 4-byte value determing the ID of the owner.
      */
-    public void setOwner(String owner){
-        this.owner = owner;
+    public void setFromConnection(String fromConnection){
+        this.fromConnection = fromConnection;
     }
 
     /**
      * Get the owner ID of this job.
      * @return 4-byte owner ID value.
      */
-    public String getOwner() {
-        return owner;
+    public String getFromConnection() {
+        return fromConnection;
     }   
     
     /**
@@ -79,6 +79,10 @@ public abstract class AbstractJob {
      */
     public String getJobID() {
         return jobID;
+    }
+    
+    public void setJobID(String newJobID){
+        this.jobID = newJobID;
     }
     
     /**

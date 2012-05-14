@@ -3,10 +3,8 @@ package com.mnorrman.datastorageproject.storage;
 import com.mnorrman.datastorageproject.LogTool;
 import com.mnorrman.datastorageproject.Main;
 import com.mnorrman.datastorageproject.ServerState;
-import com.mnorrman.datastorageproject.index.IndexPersistence;
 import com.mnorrman.datastorageproject.objects.IndexedDataObject;
 import com.mnorrman.datastorageproject.tools.MetaDataComposer;
-import com.mnorrman.datastorageproject.tools.RawMetaDataPrinter;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -50,12 +48,15 @@ public class BackStorage {
 
         /**
          * "r" Open for reading only. Invoking any of the write methods of the
-         * resulting object will cause an IOException to be thrown. "rw" Open
+         * resulting object will cause an IOException to be thrown.
+         * "rw" Open
          * for reading and writing. If the file does not already exist then an
-         * attempt will be made to create it. "rws" Open for reading and
+         * attempt will be made to create it.
+         * "rws" Open for reading and
          * writing, as with "rw", and also require that every update to the
          * file's content or metadata be written synchronously to the underlying
-         * storage device. "rwd" Open for reading and writing, as with "rw", and
+         * storage device.
+         * "rwd" Open for reading and writing, as with "rw", and
          * also require that every update to the file's content be written
          * synchronously to the underlying storage device.
          */
@@ -295,6 +296,10 @@ public class BackStorage {
         }
     }
 
+    public long getCurrentDataSize() throws IOException{
+        return fileConnection.length();
+    }
+    
     /**
      * Get a new FileChannel from this RandomAccessFile-object.
      *

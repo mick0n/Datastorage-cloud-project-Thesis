@@ -81,6 +81,11 @@ public class PropertiesManager {
         pw.println("autoclean = " + props.getProperty("autoclean"));
         pw.println("");
         pw.println("");
+        pw.println("#storagelimit - The maximum amount of kilobytes that this");
+        pw.println("#node should be able to store. Amount is in kilobytes.");
+        pw.println("storagelimit = " + props.getProperty("storagelimit"));
+        pw.println("");
+        pw.println("");
         pw.println("#serverID - The identifier of this server");
         pw.println("#!!Do NOT change this value unless you are absolutely");
         pw.println("#sure about what you are doing!!");
@@ -142,6 +147,11 @@ public class PropertiesManager {
             pw.println("#cleaning when errors are found and false if it has to be");
             pw.println("#run manually.");
             pw.println("autoclean = true");
+            pw.println("");
+            pw.println("");
+            pw.println("#storagelimit - The maximum amount of kilobytes that this");
+            pw.println("#node should be able to store. Amount is in kilobytes.");
+            pw.println("storagelimit = 5000000");
             pw.println("");
             pw.println("");
             pw.println("#ServerID - The identifier of this server");

@@ -6,6 +6,7 @@ package com.mnorrman.datastorageproject.network.jobs;
 
 import com.mnorrman.datastorageproject.Main;
 import com.mnorrman.datastorageproject.ServerState;
+import com.mnorrman.datastorageproject.network.MasterNode;
 import com.mnorrman.datastorageproject.network.Protocol;
 import com.mnorrman.datastorageproject.tools.HexConverter;
 import java.io.IOException;
@@ -18,18 +19,23 @@ import java.nio.channels.SocketChannel;
  */
 public class SyncStateJob extends AbstractJob{
 
-    public SyncStateJob() {
+    private Main main;
+    
+    public SyncStateJob(Main main) {
         super();
+        this.main = main;
     }
     
     public SyncStateJob(String jobID, String owner){
         super(jobID);
-        setOwner(owner);
+        setFromConnection(owner);
     }
 
     @Override
     public boolean readOperation(ByteBuffer buffer) throws IOException {
-        System.out.println("Received state change from 0x" + getOwner() + ": " + ServerState.getState(buffer.get()).toString());
+        //System.out.println("Received state change from 0x" + getFromConnection() + ": " + ServerState.getState(buffer.get()).toString());
+        Main.slaveList.get(getFromConnection()).setState(ServerState.getState(buffer.get()));
+        Main.slaveList.get(getFromConnection()).setDataSize(buffer.getLong());
         setFinished(true);
         buffer.clear();
 //        context.getNode().setState(ServerState.getState(newState));
@@ -46,8 +52,12 @@ public class SyncStateJob extends AbstractJob{
         buffer.put(HexConverter.toByte(getJobID()));
         buffer.put(Protocol.SYNC_STATE.getValue());
         buffer.put(Main.state.getValue());
+        buffer.putLong(main.getCurrentDataSize());
         buffer.rewind();
-        s.write(buffer);
+        int writtenBytes = 0;
+        while(writtenBytes < MasterNode.NETWORK_BLOCK_SIZE){
+            writtenBytes += s.write(buffer);
+        }
         buffer.clear(); //Always clear buffer
         setFinished(true);
         return true;

@@ -2,7 +2,6 @@
 package com.mnorrman.datastorageproject.objects;
 
 import com.mnorrman.datastorageproject.ServerState;
-import com.mnorrman.datastorageproject.tools.HexConverter;
 import java.net.InetAddress;
 
 /**
@@ -16,6 +15,7 @@ public class ServerNode {
     private String id;
     private ServerState state;
     
+    private long dataSize;
     private long storageLimit;
 
     public ServerNode(InetAddress ipaddress, int port, String id) {
@@ -57,6 +57,14 @@ public class ServerNode {
         this.storageLimit = storageLimit;
     }
 
+    public long getDataSize() {
+        return dataSize;
+    }
+
+    public void setDataSize(long dataSize) {
+        this.dataSize = dataSize;
+    }
+    
     public void setState(ServerState state) {
         this.state = state;
     }

@@ -6,11 +6,9 @@ package com.mnorrman.datastorageproject.network.jobs;
 
 import com.mnorrman.datastorageproject.Main;
 import com.mnorrman.datastorageproject.ServerState;
-import com.mnorrman.datastorageproject.network.MasterNode;
 import com.mnorrman.datastorageproject.network.Protocol;
 import com.mnorrman.datastorageproject.network.SlaveNode;
 import com.mnorrman.datastorageproject.tools.HexConverter;
-import com.mnorrman.datastorageproject.tools.IntConverter;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
@@ -51,15 +49,19 @@ public class SlaveConnectJob extends AbstractJob{
 
     @Override
     public boolean writeOperation(SocketChannel s, ByteBuffer buffer) throws IOException {
+        buffer.limit(8181);
+        
+        //Since we are considered a client, we put this first.
+        buffer.put(Protocol.CONNECT.getValue());
+        
         buffer.put(HexConverter.toByte(Main.ID));
         buffer.putInt(1);
         buffer.put(HexConverter.toByte(getJobID()));
         buffer.put(Protocol.CONNECT.getValue());
+        buffer.putLong(Long.parseLong(Main.properties.getValue("storagelimit").toString()) * 1000);
         buffer.rewind();
-        int writtenBytes = 0;
-        while(writtenBytes < MasterNode.NETWORK_BLOCK_SIZE){
-            writtenBytes += s.write(buffer);
-        }
+        while(buffer.hasRemaining())
+            s.write(buffer);
         buffer.clear(); //Always clear buffer
         return true;
     }

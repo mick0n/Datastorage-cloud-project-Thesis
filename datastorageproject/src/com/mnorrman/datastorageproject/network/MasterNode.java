@@ -3,10 +3,7 @@ package com.mnorrman.datastorageproject.network;
 import com.mnorrman.datastorageproject.LogTool;
 import com.mnorrman.datastorageproject.Main;
 import com.mnorrman.datastorageproject.ServerState;
-import com.mnorrman.datastorageproject.network.jobs.AbstractJob;
-import com.mnorrman.datastorageproject.network.jobs.MasterConnectJob;
-import com.mnorrman.datastorageproject.network.jobs.SyncLocalIndexJob;
-import com.mnorrman.datastorageproject.network.jobs.SyncStateJob;
+import com.mnorrman.datastorageproject.network.jobs.*;
 import com.mnorrman.datastorageproject.tools.HexConverter;
 import com.mnorrman.datastorageproject.tools.IntConverter;
 import java.io.IOException;
@@ -18,7 +15,6 @@ import java.nio.channels.SocketChannel;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -29,7 +25,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class MasterNode extends Thread {
 
     public static final int NETWORK_BLOCK_SIZE = 8192;
-    
     private Main main;
     private MasterNodeListener listener;
     private Selector selector;
@@ -37,19 +32,16 @@ public class MasterNode extends Thread {
     private HashMap<String, ConnectionContext> connections;
     private ByteBuffer buffer;
     private int readBytes;
-    
     private HashMap<String, AbstractJob> jobs;
     private Queue<AbstractJob> jobQueue;
-    
     private int connectionCounter = 0;
-    
     private boolean keepWorking = true;
-    
+
     /**
      * Creates new instance of MasterNode class.
      *
      * TODO: Alot of work left on this one!
-     * 
+     *
      * @param main
      */
     public MasterNode(Main main) {
@@ -60,8 +52,8 @@ public class MasterNode extends Thread {
             selector = Selector.open();
             listener = new MasterNodeListener(this);
             channelQueue = new ConcurrentLinkedQueue<SocketChannel>();
-            connections = new HashMap<String, ConnectionContext>();
-            jobs = new HashMap<String, AbstractJob>();
+            connections = new HashMap<String, ConnectionContext>(1024);
+            jobs = new HashMap<String, AbstractJob>(1024);
             jobQueue = new LinkedList<AbstractJob>();
         } catch (IOException e) {
             LogTool.log(e, LogTool.CRITICAL);
@@ -95,7 +87,7 @@ public class MasterNode extends Thread {
             } catch (IOException e) {
                 LogTool.log(e, LogTool.CRITICAL);
             }
-            
+
             //Since readyChannels may be zero, we check this first
             if (readyChannels > 0) {
 
@@ -116,11 +108,11 @@ public class MasterNode extends Thread {
                     }
                 }
             }
-            
+
             try {
                 if (!jobQueue.isEmpty()) {
                     AbstractJob queuedJob = jobQueue.poll();
-                    if (!queuedJob.writeOperation(connections.get(queuedJob.getOwner()).channel, buffer)) {
+                    if (!queuedJob.writeOperation(connections.get(queuedJob.getFromConnection()).channel, buffer)) {
                         jobQueue.offer(queuedJob);
                     } else {
                         if (queuedJob.isFinished()) {
@@ -145,16 +137,16 @@ public class MasterNode extends Thread {
             if (!channelQueue.isEmpty()) {
                 try {
                     SocketChannel temp = channelQueue.poll();
-                    
+
                     //Get a new ID for this connection
                     String newID = HexConverter.toHex(IntConverter.intToByteArray(getConnectionCounterValue()));
-                    
+
                     //Register this socketChannel, use ID as attachment
                     temp.register(selector, SelectionKey.OP_READ, newID);
-                    
+
                     //Add new client to our map
                     connections.put(newID, new ConnectionContext(temp, newID));
-                    
+
                     LogTool.log("Connection from " + temp.getRemoteAddress() + " was added to selector", LogTool.INFO);
                 } catch (NullPointerException e) {
                     LogTool.log(e, LogTool.CRITICAL);
@@ -177,62 +169,142 @@ public class MasterNode extends Thread {
         if (key.isValid() && key.isReadable()) {
             SocketChannel sChannel = (SocketChannel) key.channel();
             ConnectionContext context = connections.get(key.attachment().toString());
+
+            if(context == null){
+                System.out.println("No attachment @ 0x" + key.attachment().toString());
+            }
             
-            while(buffer.position() != buffer.capacity()){
-                if((readBytes = sChannel.read(buffer)) == -1){
-                    //Connection has been terminated, cleanup.
-                    connections.remove(key.attachment().toString());
-                    key.cancel();
-                    LogTool.log("Connection from " + sChannel.getRemoteAddress() + " was closed", LogTool.INFO);
-                    buffer.clear();
-                    return;
+            if (context.isClient()) {
+                if(context.jobID == null)
+                    buffer.limit(1);
+                else
+                    buffer.limit(8180); //8192 - 12
+            }
+
+//            while (buffer.hasRemaining()) {
+//                try {
+//                    if ((readBytes = sChannel.read(buffer)) == -1) {
+//                        throw new IOException();
+//                    }
+//                } catch (IOException e) {
+//                    connections.remove(key.attachment().toString());
+//                    key.cancel();
+//                    LogTool.log("Connection from " + sChannel.getRemoteAddress() + " was closed", LogTool.INFO);
+//                    if (buffer.position() == 0) { //If there was no data
+//                        buffer.clear();
+//                        return;
+//                    } else {
+//                        break;
+//                    }
+//                }
+//            }
+            boolean connectionStillOpen = readToBuffer(buffer, sChannel, key);
+            if(!connectionStillOpen)
+                return;
+            buffer.rewind();
+            
+            ClusterMessageVariables cmv = null;
+
+            if (context.isClient()) {
+                cmv = new ClusterMessageVariables();
+                //cmv.setFrom(key.attachment().toString());
+                cmv.setFrom(context.node.getId());
+                
+                if(context.jobID == null){
+                    Protocol command = Protocol.getCommand(buffer.get());
+                    switch(command){
+                        case CONNECT:
+                            MasterConnectJob mcj = new MasterConnectJob(cmv.getFrom(), this, key);
+                            jobs.put(mcj.getJobID(), mcj);
+                            context.setJobID(mcj.getJobID());
+                            buffer.clear();
+                            return;
+                        case PUT:
+                            if(Main.slaveList.hasActiveSlaves()){
+                                System.out.println("Active slave is: " + Main.slaveList.getActiveSlaveID());
+                                
+                                //Since we know it is put, we are expecting more data, so fill
+                                //up the buffer to full. If no data is received, return.
+                                buffer.limit(8180);
+                                if(!readToBuffer(buffer, sChannel, key)){
+                                    return;
+                                }
+                                
+                                RoutePutJob rpj = new RoutePutJob(Main.slaveList.getActiveSlaveID(), key.attachment().toString(), this);
+//                                RouteJob rj = new RouteJob(Main.slaveList.getActiveSlaveID(), key.attachment().toString(), this, command);
+//                                rj.setRemoteJobID(rj.getJobID());
+                                context.setJobID(rpj.getJobID());
+                                jobs.put(rpj.getJobID(), rpj);
+                                cmv.setJobID(rpj.getJobID());
+                                
+                            }else{
+                                System.out.println("No active slave");
+                                
+                                //Since we know it is put, we are expecting more data, so fill
+                                //up the buffer to full. If no data is received, return.
+                                buffer.limit(8180);
+                                if(!readToBuffer(buffer, sChannel, key)){
+                                    return;
+                                }
+                                
+                                PutJob pj = new PutJob(key.attachment().toString(), main.getNewDataProcessor());
+                                jobs.put(pj.getJobID(), pj);
+                                context.setJobID(pj.getJobID());
+                                cmv.setJobID(pj.getJobID());
+                            }
+                            buffer.rewind();
+                            break;
+                        default:
+                            //Y U NO Specify command?
+                            return;
+                    }
+                }else{
+                    cmv.setLength(buffer.limit());
+                    cmv.setJobID(context.jobID);
                 }
-            }            
-            
-            buffer.flip();
-            
-            //Get the sender ID
-            byte[] fromBytes = new byte[4];
-            buffer.get(fromBytes);
-            String from = HexConverter.toHex(fromBytes);
-            
-            //Get the length of the data
-            int length = buffer.getInt();
+            } else {
 
-            //Get the jobID and transform into hexstring.
-            byte[] jobIDBytes = new byte[4];
-            buffer.get(jobIDBytes);
-            String jobID = HexConverter.toHex(jobIDBytes);
-            
-            if (!jobs.containsKey(jobID) || jobID.equals("00000000")) {
-                Protocol command = Protocol.getCommand(buffer.get());
+                cmv = new ClusterMessageVariables(buffer);
+                
+                //Update key.attachment() if the ID have changed. (Should happen
+                //if a new slave has connected).
+                if(!key.attachment().toString().equals(cmv.getFrom())){
+                    key.attach(cmv.getFrom());
+                }
 
-                switch (command) {
-                    case CONNECT:
-                        MasterConnectJob mcj = new MasterConnectJob(jobID, from, key.attachment().toString(), this);
-                        jobs.put(mcj.getJobID(), mcj);
-//                        jobQueue.add(mcj);
-                        break;
-                    case SYNC_STATE:
-                        SyncStateJob ssj = new SyncStateJob(jobID, from);
-                        jobs.put(ssj.getJobID(), ssj);
-                        break;
-                    case SYNC_LOCAL_INDEX:
-                        System.out.println("Sync local index acknowledged");
-                        SyncLocalIndexJob slij = new SyncLocalIndexJob(jobID, context.node);
-                        jobs.put(slij.getJobID(), slij);
-                        break;
-                    case GET:
+                if (!jobs.containsKey(cmv.getJobID()) || cmv.getJobID().equals("00000000")) {
+                    Protocol command = Protocol.getCommand(buffer.get());
 
-                        break;
-                    case PING:
+                    switch (command) {
+                        case CONNECT:
+                            MasterConnectJob mcj = new MasterConnectJob(cmv.getJobID(), cmv.getFrom(), key.attachment().toString(), this);
+                            jobs.put(mcj.getJobID(), mcj);
+                            //                        jobQueue.add(mcj);
+                            break;
+                        case SYNC_STATE:
+                            SyncStateJob ssj = new SyncStateJob(cmv.getJobID(), cmv.getFrom());
+                            jobs.put(ssj.getJobID(), ssj);
+                            break;
+                        case SYNC_LOCAL_INDEX:
+                            System.out.println("Sync local index acknowledged");
+                            SyncLocalIndexJob slij = new SyncLocalIndexJob(cmv.getJobID(), context.node);
+                            jobs.put(slij.getJobID(), slij);
+                            break;
+                        case PUT:
+                            //Put file
+                            break;
+                        case GET:
 
-                        break;
+                            break;
+                        case PING:
+
+                            break;
+                    }
                 }
             }
             
             //Perform the job
-            AbstractJob job = jobs.get(jobID);
+            AbstractJob job = jobs.get(cmv.getJobID());
             try {
                 if (job.readOperation(buffer)) {
                     //If the readOperation returns true it
@@ -244,11 +316,33 @@ public class MasterNode extends Thread {
             }
             if (job.isFinished()) {
                 jobs.remove(job.getJobID());
+                context.setJobID(null);
             }
             buffer.clear();
         }
     }
     
+    private boolean readToBuffer(ByteBuffer buffer, SocketChannel sc, SelectionKey key) throws IOException{
+        while (buffer.hasRemaining()) {
+            try {
+                if ((readBytes = sc.read(buffer)) == -1) {
+                    throw new IOException();
+                }
+            } catch (IOException e) {
+                connections.remove(key.attachment().toString());
+                key.cancel();
+                LogTool.log("Connection from " + sc.getRemoteAddress() + " was closed", LogTool.INFO);
+                if (buffer.position() == 0) { //If there was no data
+                    buffer.clear();
+                    return false;
+                }else{
+                    break;
+                }
+            }
+        }
+        return true;
+    }
+
     public void createJob(String jobOwner, AbstractJob job) {
         if (Main.state == ServerState.IDLE || Main.state == ServerState.RUNNING) {
             if (jobOwner != null && job != null) {
@@ -258,11 +352,12 @@ public class MasterNode extends Thread {
             }
         }
     }
-    
+
     /**
-     * Adds a SocketChannel to a queue which eventually will be registered to
-     * a selector.
-     * @param channel 
+     * Adds a SocketChannel to a queue which eventually will be registered to a
+     * selector.
+     *
+     * @param channel
      */
     public void addSocketChannel(SocketChannel channel) {
         this.channelQueue.add(channel);
@@ -271,14 +366,22 @@ public class MasterNode extends Thread {
 
     /**
      * Get the selector from this class.
-     * @deprecated 
-     * @return 
+     *
+     * @deprecated
+     * @return
      */
     public Selector getSelector() {
         return selector;
     }
 
-    public void close() throws IOException{
+    public void switchConnectionID(String oldID, String newID){
+        ConnectionContext cc = connections.get(oldID);
+        connections.remove(oldID);
+        cc.getNode().setId(newID);
+        connections.put(newID, cc);
+    }
+ 
+    public void close() throws IOException {
         listener.close();
         keepWorking = false;
         selector.wakeup();
@@ -288,18 +391,22 @@ public class MasterNode extends Thread {
         return connections;
     }
     
-    private SelectionKey keyWantsToWrite(SelectionKey key){
+    public HashMap<String, AbstractJob> getJobs(){
+        return jobs;
+    }
+
+    private SelectionKey keyWantsToWrite(SelectionKey key) {
         key.interestOps(key.interestOps() | SelectionKey.OP_WRITE);
         return key;
     }
-    
-    private int getConnectionCounterValue(){
-        if(connectionCounter == Integer.MAX_VALUE/2){
+
+    private int getConnectionCounterValue() {
+        if (connectionCounter == Integer.MAX_VALUE / 2) {
             connectionCounter = 0;
         }
         return ++connectionCounter;
     }
-    
+
     //For test purposes
     public static void main(String[] args) {
         MasterNode mn = new MasterNode(null);

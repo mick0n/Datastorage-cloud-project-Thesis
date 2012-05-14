@@ -8,6 +8,7 @@ import com.mnorrman.datastorageproject.LogTool;
 import com.mnorrman.datastorageproject.Main;
 import com.mnorrman.datastorageproject.ServerState;
 import com.mnorrman.datastorageproject.network.jobs.AbstractJob;
+import com.mnorrman.datastorageproject.network.jobs.PutJob;
 import com.mnorrman.datastorageproject.network.jobs.SlaveConnectJob;
 import com.mnorrman.datastorageproject.tools.HexConverter;
 import java.io.IOException;
@@ -19,7 +20,8 @@ import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.PriorityQueue;
+import java.util.LinkedList;
+import java.util.Queue;
 
 /**
  *
@@ -34,7 +36,7 @@ public class SlaveNode extends Thread {
     private ByteBuffer buffer;
     private boolean keepWorking = true;
     private HashMap<String, AbstractJob> jobs;
-    private PriorityQueue<AbstractJob> jobQueue;
+    private Queue<AbstractJob> jobQueue;
 
     public SlaveNode(Main main) {
         this.main = main;
@@ -43,7 +45,7 @@ public class SlaveNode extends Thread {
             context = new ConnectionContext(SocketChannel.open());
             context.channel.configureBlocking(false);
             jobs = new HashMap<String, AbstractJob>();
-            jobQueue = new PriorityQueue<AbstractJob>();
+            jobQueue = new LinkedList<AbstractJob>();
         } catch (IOException e) {
             LogTool.log(e, LogTool.CRITICAL);
         }
@@ -51,7 +53,7 @@ public class SlaveNode extends Thread {
 
     public void startSlaveServer() {
         this.start();
-        Main.timer.scheduleAtFixedRate(new SyncStateTimerTask(this), 5000, 5000);
+        Main.timer.scheduleAtFixedRate(new SyncStateTimerTask(this, main), 1500, 1500);
     }
 
     @Override
@@ -120,39 +122,19 @@ public class SlaveNode extends Thread {
                         }
                         buffer.flip();
 
-                        //Get the sender ID
-                        byte[] from = new byte[4];
-                        buffer.get(from);
-
-                        //Get the length of the data
-                        int length = buffer.getInt();
-
-                        //Get the jobID and transform into hexstring.
-                        byte[] jobIDBytes = new byte[4];
-                        buffer.get(jobIDBytes);
-                        String jobID = HexConverter.toHex(jobIDBytes);
-
+                        ClusterMessageVariables cmv = new ClusterMessageVariables(buffer);
+                        
                         //If the job exists
-                        if (!jobID.equals("00000000") && jobs.containsKey(jobID)) {
-                            AbstractJob job = jobs.get(jobID);
-                            try {
-                                if (job.readOperation(buffer)) {
-                                    //If the readOperation returns true it
-                                    //means it has something to write.
-                                    jobQueue.offer(job);
-                                }
-                            } catch (IOException e) {
-                                LogTool.log(e, LogTool.CRITICAL);
-                            }
-                            if (job.isFinished()) {
-                                jobs.remove(jobID);
-                            }
-
+                        if (cmv.getJobID().equals("00000000") || !jobs.containsKey(cmv.getJobID())) {
                             //If no such job exist
-                        } else {
                             Protocol command = Protocol.getCommand(buffer.get());
 
                             switch (command) {
+                                case PUT:
+                                    PutJob pj = new PutJob(cmv.getJobID(), Main.ID, main.getNewDataProcessor());
+                                    jobs.put(pj.getJobID(), pj);
+                                    //context.setJobID(pj.getJobID());
+                                    break;
                                 case GET:
 
                                     break;
@@ -160,6 +142,20 @@ public class SlaveNode extends Thread {
 
                                     break;
                             }
+                        }
+                        
+                        AbstractJob job = jobs.get(cmv.getJobID());
+                        try {
+                            if (job.readOperation(buffer)) {
+                                //If the readOperation returns true it
+                                //means it has something to write.
+                                jobQueue.offer(job);
+                            }
+                        } catch (IOException e) {
+                            LogTool.log(e, LogTool.CRITICAL);
+                        }
+                        if (job.isFinished()) {
+                            jobs.remove(job.getJobID());
                         }
                     }
                     selector.selectedKeys().clear();

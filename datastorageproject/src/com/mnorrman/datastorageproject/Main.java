@@ -122,6 +122,10 @@ public class Main {
             return null;
     }
 
+    public long getCurrentDataSize() throws IOException{
+        return storage.getCurrentDataSize();
+    }
+    
     /**
      * Method used to try and gracefully shut down this server instance.
      * @throws InterruptedException

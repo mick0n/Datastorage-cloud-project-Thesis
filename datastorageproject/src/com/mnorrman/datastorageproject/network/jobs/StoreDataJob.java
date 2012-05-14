@@ -34,11 +34,43 @@ public class StoreDataJob extends AbstractJob{
 
     @Override
     public boolean readOperation(ByteBuffer buffer) throws IOException {
+        int currPos = buffer.position();
+        buffer.position(4);
+        int len = buffer.getInt();
+        buffer.position(currPos);
+        
+        if(len > 0){
+            output.write(buffer);
+            crc.update(buffer.array(), currPos, len);
+        }
+        
+        if(output.size() == udo.getLength()){
+            output.close();
+            udo.setChecksum(crc.getValue());
+            Main.localIndex.insert(dataProcessor.storeData(udo));
+            setFinished(true);           
+        }else{
+            System.out.println("Ärror");
+            setFinished(true);
+        }
         return false;
     }
     
     @Override
-    public boolean writeOperation(SocketChannel s, ByteBuffer buffer) {
+    public boolean writeOperation(SocketChannel s, ByteBuffer buffer) throws IOException{
+        if(buffer.position() != 0)
+            buffer.flip();
+        output.write(buffer);
+        crc.update(buffer.array(), 0, buffer.limit());
+        
+        if(output.size() == udo.getLength()){
+            setFinished(true);
+            udo.setChecksum(crc.getValue());
+            output.close();
+            Main.localIndex.insert(dataProcessor.storeData(udo));
+        }else if(output.size() > udo.getLength()){
+            System.out.println("Huge error occured, too much data!");
+        }
         setFinished(true);
         return true;
     }
