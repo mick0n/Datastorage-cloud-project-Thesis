@@ -1,17 +1,14 @@
 
 package com.mnorrman.datastorageproject;
 
-import com.mnorrman.datastorageproject.index.GlobalIndex;
 import com.mnorrman.datastorageproject.index.IndexPersistence;
-import com.mnorrman.datastorageproject.index.IndexPersistenceGlobal;
 import com.mnorrman.datastorageproject.index.LocalIndex;
-import com.mnorrman.datastorageproject.network.MasterNode;
-import com.mnorrman.datastorageproject.network.MasterNodeSlaveList;
-import com.mnorrman.datastorageproject.network.SlaveNode;
+import com.mnorrman.datastorageproject.network.ClusterChildList;
+import com.mnorrman.datastorageproject.network.DualClusterListener;
+import com.mnorrman.datastorageproject.network.InternalTrafficHandler;
 import com.mnorrman.datastorageproject.storage.BackStorage;
 import com.mnorrman.datastorageproject.storage.DataProcessor;
 import com.mnorrman.datastorageproject.storage.DataTicket;
-import com.mnorrman.datastorageproject.tools.HexConverter;
 import com.mnorrman.datastorageproject.web.*;
 import java.io.File;
 import java.io.IOException;
@@ -28,8 +25,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class Main {
 
-    public static GlobalIndex globalIndex;
-    public static MasterNodeSlaveList slaveList;
+    public static ClusterChildList slaveList;
     public static LocalIndex localIndex;
     public static ExecutorService pool;
     public static Timer timer;
@@ -37,8 +33,11 @@ public class Main {
     public static ServerState state;
     public static String ID;
     public BackStorage storage;
-    public MasterNode masterNode;
-    public SlaveNode slaveNode;
+//    public MasterNode masterNode;
+//    public SlaveNode slaveNode;
+//    public ClusterNode clusterNode;
+    public DualClusterListener listener;
+    public InternalTrafficHandler internalTrafficHandler;
     public WebServer webServer;
     
     private File shutdownSafetyFile;
@@ -56,6 +55,7 @@ public class Main {
             //shutdown. If not then see if the data is allright!
             shutdownSafetyFile = new File(properties.getValue("dataPath") + File.separator + "safeCheck_");
             if(shutdownSafetyFile.exists()){
+                LogTool.log("Uncorrect shutdown detected. Verifying data integrity...", LogTool.WARNING);
                 if(!storage.performIntegrityCheck()){
                     LogTool.log("Backstorage integrity check return with errors", LogTool.CRITICAL);
                     if(Boolean.parseBoolean(properties.getValue("autoclean").toString())){
@@ -65,6 +65,7 @@ public class Main {
                     }
                 }
                 localIndex.clear().insertAll(storage.reindexData());
+                pool.submit(new IndexPersistence(localIndex.getData()));
             }else{
                 shutdownSafetyFile.createNewFile();
             }
@@ -78,35 +79,47 @@ public class Main {
         } catch (IOException e) {
             LogTool.log(e, LogTool.CRITICAL);
         }
-
-        state = ServerState.IDLE;
         
-        if (properties.getValue("master").toString().equalsIgnoreCase("127.0.0.1")) {
-            masterNode = new MasterNode(this);
-            masterNode.startMasterServer();
+        internalTrafficHandler = new InternalTrafficHandler(this);
+        internalTrafficHandler.startup();
+        
+        listener = new DualClusterListener(internalTrafficHandler);
+        listener.start();
+        
+//        clusterNode = new ClusterNode(this);
+//        clusterNode.startup();
+        if (properties.getValue("master").toString().equalsIgnoreCase("127.0.0.1") || properties.getValue("master").toString().equalsIgnoreCase("")) {
             ID = "00000000";
+            state = ServerState.IDLE;
         }else{
-            slaveNode = new SlaveNode(this);
-            slaveNode.startSlaveServer();
-            state = ServerState.CONNECTING;
             if(!properties.getValue("serverID").toString().equals("")){
                 ID = properties.getValue("serverID").toString();
             }else{
-                //When we use this ID, that means we have not connected this slave to a master yet.
+                //When we use this ID, that means we have not connected this child to a master yet.
                 ID = "FFFFFFFF";
             }
-            System.out.println("ID= " + ID);
+//            System.out.println("Time to connect");
+//            pool.submit(new ConnectToMasterJob("00000000", clusterNode));
         }
-        
-        Thread sm = new Thread(new ServerMonitor(masterNode));
-        sm.start();
-        
-//        try{
-//            Thread.sleep(5000);
-//            slaveNode.createJob(HexConverter.toHex(Main.ID), new SyncLocalIndexJob(HexConverter.toHex(Main.ID)));
-//        }catch(InterruptedException e){
-//            e.printStackTrace();
+//        if (properties.getValue("master").toString().equalsIgnoreCase("127.0.0.1")) {
+//            masterNode = new MasterNode(this);
+//            masterNode.startup();
+//            ID = "00000000";
+//        }else{
+//            slaveNode = new SlaveNode(this);
+//            slaveNode.startSlaveServer();
+//            state = ServerState.CONNECTING;
+//            if(!properties.getValue("serverID").toString().equals("")){
+//                ID = properties.getValue("serverID").toString();
+//            }else{
+//                //When we use this ID, that means we have not connected this slave to a master yet.
+//                ID = "FFFFFFFF";
+//            }
+//            System.out.println("ID= " + ID);
 //        }
+        
+//        Thread sm = new Thread(new ServerMonitor(masterNode));
+//        sm.start();
     }
 
     /**
@@ -136,8 +149,6 @@ public class Main {
         timer.cancel();
         
         //Save indexes
-        if(globalIndex != null)
-            pool.submit(new IndexPersistenceGlobal(globalIndex.getData()));
         pool.submit(new IndexPersistence(localIndex.getData()));
         
         //Close the backstorage
@@ -152,11 +163,17 @@ public class Main {
         }
 
         //Stop network mechanisms from receiving and sending more input data.
-        if(masterNode != null)
-            masterNode.close();
-        if(slaveNode != null){
-            slaveNode.close();
-        }
+//        if(masterNode != null)
+//            masterNode.close();
+//        if(slaveNode != null){
+//            slaveNode.close();
+//        }
+//        if(clusterNode != null)
+//            clusterNode.close();
+        if(listener != null)
+            listener.close();
+        if(internalTrafficHandler != null)
+            internalTrafficHandler.close();
         if(webServer != null)
             webServer.close();
         
@@ -193,14 +210,10 @@ public class Main {
         pool = Executors.newFixedThreadPool(5, Executors.defaultThreadFactory());
         timer = new Timer("TimerThread");
 
-        //Initiate indexes. Check if this server is the master and if so, start
-        //global index as well.
-        if (properties.getValue("master").toString().equalsIgnoreCase("127.0.0.1")) {
-            //Start global index
-            globalIndex = new GlobalIndex();
-            slaveList = new MasterNodeSlaveList();
-        }
-        //always start localIndex.
+        //Start the childList
+        slaveList = new ClusterChildList();
+
+        //Start localIndex.
         localIndex = new LocalIndex();
         
         /******Done initiating static variables*********/

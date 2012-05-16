@@ -8,8 +8,8 @@ import com.mnorrman.datastorageproject.LogTool;
 import com.mnorrman.datastorageproject.Main;
 import com.mnorrman.datastorageproject.ServerState;
 import com.mnorrman.datastorageproject.network.jobs.AbstractJob;
+import com.mnorrman.datastorageproject.network.jobs.ChildConnectJob;
 import com.mnorrman.datastorageproject.network.jobs.PutJob;
-import com.mnorrman.datastorageproject.network.jobs.SlaveConnectJob;
 import com.mnorrman.datastorageproject.tools.HexConverter;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -53,7 +53,7 @@ public class SlaveNode extends Thread {
 
     public void startSlaveServer() {
         this.start();
-        Main.timer.scheduleAtFixedRate(new SyncStateTimerTask(this, main), 1500, 1500);
+//        Main.timer.scheduleAtFixedRate(new SyncStateTimerTask(this, main), 1500, 1500);
     }
 
     @Override
@@ -74,7 +74,7 @@ public class SlaveNode extends Thread {
                         }
                     }
                     context.channel.register(selector, SelectionKey.OP_READ);
-                    SlaveConnectJob scj = new SlaveConnectJob(this);
+                    ChildConnectJob scj = new ChildConnectJob();
                     jobs.put(scj.getJobID(), scj);
                     jobQueue.add(scj);
                 }

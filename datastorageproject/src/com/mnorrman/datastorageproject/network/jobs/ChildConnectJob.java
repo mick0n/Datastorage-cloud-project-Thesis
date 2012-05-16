@@ -17,13 +17,10 @@ import java.nio.channels.SocketChannel;
  *
  * @author Mikael
  */
-public class SlaveConnectJob extends AbstractJob{
-    
-    private SlaveNode sn;
+public class ChildConnectJob extends AbstractJob{
 
-    public SlaveConnectJob(SlaveNode sn){
+    public ChildConnectJob(){
         super();
-        this.sn = sn;
     }
     
     @Override
@@ -39,9 +36,6 @@ public class SlaveConnectJob extends AbstractJob{
         System.out.println("ID: 0x" + Main.ID);
         Main.state = ServerState.IDLE;
 
-        //Initiate full localIndex-sync
-        SyncLocalIndexJob slij = new SyncLocalIndexJob();
-        sn.createJob(slij.getJobID(), slij);
         setFinished(true);
         buffer.clear();
         return false;
@@ -49,11 +43,20 @@ public class SlaveConnectJob extends AbstractJob{
 
     @Override
     public boolean writeOperation(SocketChannel s, ByteBuffer buffer) throws IOException {
-        buffer.limit(8181);
+        //First send our connect command. At this point we are considered
+        //to be a client at the master.
+        //Directly after we send our ID.
+        buffer.limit(5);
         
-        //Since we are considered a client, we put this first.
         buffer.put(Protocol.CONNECT.getValue());
+        buffer.put(HexConverter.toByte(Main.ID));
+        buffer.flip();
+        while(buffer.hasRemaining())
+            s.write(buffer);
+        buffer.clear(); //Always clear buffer
+        System.out.println("First write");
         
+        //The put the ordinary connect data
         buffer.put(HexConverter.toByte(Main.ID));
         buffer.putInt(1);
         buffer.put(HexConverter.toByte(getJobID()));

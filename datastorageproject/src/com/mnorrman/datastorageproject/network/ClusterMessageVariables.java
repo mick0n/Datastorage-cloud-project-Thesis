@@ -22,17 +22,13 @@ public class ClusterMessageVariables {
     
     public ClusterMessageVariables(ByteBuffer buffer){
         //Get the sender ID
-        byte[] fromBytes = new byte[4];
-        buffer.get(fromBytes);
-        from = HexConverter.toHex(fromBytes);
+        from = HexConverter.toHex(buffer.getInt());
 
         //Get the length of the data
         length = buffer.getInt();
 
         //Get the jobID and transform into hexstring.
-        byte[] jobIDBytes = new byte[4];
-        buffer.get(jobIDBytes);
-        jobID = HexConverter.toHex(jobIDBytes);
+        jobID = HexConverter.toHex(buffer.getInt());
     }
 
     public String getFrom() {

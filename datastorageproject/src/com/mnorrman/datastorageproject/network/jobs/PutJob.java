@@ -5,6 +5,7 @@
 package com.mnorrman.datastorageproject.network.jobs;
 
 import com.mnorrman.datastorageproject.Main;
+import com.mnorrman.datastorageproject.objects.Pair;
 import com.mnorrman.datastorageproject.objects.UnindexedDataObject;
 import com.mnorrman.datastorageproject.storage.DataProcessor;
 import com.mnorrman.datastorageproject.tools.HexConverter;
@@ -30,7 +31,7 @@ public class PutJob extends AbstractJob{
     
     public PutJob(String fromConnection, DataProcessor dp){
         super();
-        setFromConnection(fromConnection);
+//        setFromConnection(fromConnection);
         
         this.dataProcessor = dp;
         crc = new CRC32();
@@ -38,7 +39,7 @@ public class PutJob extends AbstractJob{
     
     public PutJob(String jobID, String fromConnection, DataProcessor dp){
         super(jobID);
-        setFromConnection(fromConnection);
+//        setFromConnection(fromConnection);
         
         this.dataProcessor = dp;
         crc = new CRC32();

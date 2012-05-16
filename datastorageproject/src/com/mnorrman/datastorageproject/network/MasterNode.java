@@ -109,20 +109,20 @@ public class MasterNode extends Thread {
                 }
             }
 
-            try {
-                if (!jobQueue.isEmpty()) {
-                    AbstractJob queuedJob = jobQueue.poll();
-                    if (!queuedJob.writeOperation(connections.get(queuedJob.getFromConnection()).channel, buffer)) {
-                        jobQueue.offer(queuedJob);
-                    } else {
-                        if (queuedJob.isFinished()) {
-                            jobs.remove(queuedJob.getJobID());
-                        }
-                    }
-                }
-            } catch (IOException e) {
-                LogTool.log(e, LogTool.CRITICAL);
-            }
+//            try {
+//                if (!jobQueue.isEmpty()) {
+//                    AbstractJob queuedJob = jobQueue.poll();
+//                    if (!queuedJob.writeOperation(connections.get(queuedJob.getFromConnection()).channel, buffer)) {
+//                        jobQueue.offer(queuedJob);
+//                    } else {
+//                        if (queuedJob.isFinished()) {
+//                            jobs.remove(queuedJob.getJobID());
+//                        }
+//                    }
+//                }
+//            } catch (IOException e) {
+//                LogTool.log(e, LogTool.CRITICAL);
+//            }
 
             if (jobs.isEmpty() && jobQueue.isEmpty() && Main.state.getValue() > ServerState.INDEXING.getValue()) {
                 Main.state = ServerState.IDLE;
@@ -214,11 +214,11 @@ public class MasterNode extends Thread {
                     Protocol command = Protocol.getCommand(buffer.get());
                     switch(command){
                         case CONNECT:
-                            MasterConnectJob mcj = new MasterConnectJob(cmv.getFrom(), this, key);
-                            jobs.put(mcj.getJobID(), mcj);
-                            context.setJobID(mcj.getJobID());
-                            buffer.clear();
-                            return;
+//                            MasterConnectJob mcj = new MasterConnectJob(cmv.getFrom(), this, key);
+//                            jobs.put(mcj.getJobID(), mcj);
+//                            context.setJobID(mcj.getJobID());
+//                            buffer.clear();
+//                            return;
                         case PUT:
                             if(Main.slaveList.hasActiveSlaves()){
                                 System.out.println("Active slave is: " + Main.slaveList.getActiveSlaveID());
@@ -230,12 +230,12 @@ public class MasterNode extends Thread {
                                     return;
                                 }
                                 
-                                RoutePutJob rpj = new RoutePutJob(Main.slaveList.getActiveSlaveID(), key.attachment().toString(), this);
-//                                RouteJob rj = new RouteJob(Main.slaveList.getActiveSlaveID(), key.attachment().toString(), this, command);
-//                                rj.setRemoteJobID(rj.getJobID());
-                                context.setJobID(rpj.getJobID());
-                                jobs.put(rpj.getJobID(), rpj);
-                                cmv.setJobID(rpj.getJobID());
+//                                RoutePutJob rpj = new RoutePutJob(Main.slaveList.getActiveSlaveID(), key.attachment().toString(), this);
+////                                RouteJob rj = new RouteJob(Main.slaveList.getActiveSlaveID(), key.attachment().toString(), this, command);
+////                                rj.setRemoteJobID(rj.getJobID());
+//                                context.setJobID(rpj.getJobID());
+//                                jobs.put(rpj.getJobID(), rpj);
+//                                cmv.setJobID(rpj.getJobID());
                                 
                             }else{
                                 System.out.println("No active slave");
@@ -277,8 +277,8 @@ public class MasterNode extends Thread {
 
                     switch (command) {
                         case CONNECT:
-                            MasterConnectJob mcj = new MasterConnectJob(cmv.getJobID(), cmv.getFrom(), key.attachment().toString(), this);
-                            jobs.put(mcj.getJobID(), mcj);
+//                            MasterConnectJob mcj = new MasterConnectJob(cmv.getJobID(), cmv.getFrom(), key.attachment().toString(), this);
+//                            jobs.put(mcj.getJobID(), mcj);
                             //                        jobQueue.add(mcj);
                             break;
                         case SYNC_STATE:

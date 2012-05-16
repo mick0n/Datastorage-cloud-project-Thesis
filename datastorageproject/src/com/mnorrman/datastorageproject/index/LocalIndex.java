@@ -10,7 +10,7 @@ import java.util.*;
  *
  * @author Mikael Norrman
  */
-public class LocalIndex extends Index<IndexedDataObject> {
+public final class LocalIndex extends Index<IndexedDataObject> {
     
     private HashMap<String, ArrayList<IndexedDataObject>> table;
     
@@ -104,9 +104,6 @@ public class LocalIndex extends Index<IndexedDataObject> {
         while(iterator.hasNext()){
             insert(iterator.next());
         }
-        
-        //When inserting many values, save to local file also. 
-        Main.pool.submit(new IndexPersistence(table.values()));
     }
 
     @Override

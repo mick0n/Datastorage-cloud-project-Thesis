@@ -7,12 +7,13 @@ package com.mnorrman.datastorageproject.network;
 public enum Protocol {
     
     NULL (0x00),
-    CONNECT (0x01),
     GET (0x04),
     PUT (0x05),
-    SYNC_LOCAL_INDEX (0x11),
-    SYNC_STATE (0x12),
-    DISCONNECT (0x7E),
+    ROUTE (0x06),
+    CONNECT (0x10),
+    SYNC_STATE (0x11),
+    SYNC_LOCAL_INDEX (0x12),
+    DISCONNECT (0x1F),
     PING (0x7F);
 
     private final byte value;

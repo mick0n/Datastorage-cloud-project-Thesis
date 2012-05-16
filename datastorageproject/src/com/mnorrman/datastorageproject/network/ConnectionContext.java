@@ -69,4 +69,9 @@ public class ConnectionContext {
     public boolean isClient(){
         return IntConverter.byteToInt(HexConverter.toByte(node.getId())) <= Integer.MAX_VALUE/2;
     }
+
+    @Override
+    public String toString() {
+        return node.toString() + ", isClient? " + isClient();
+    }
 }

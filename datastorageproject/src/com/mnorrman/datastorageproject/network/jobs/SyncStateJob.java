@@ -28,14 +28,14 @@ public class SyncStateJob extends AbstractJob{
     
     public SyncStateJob(String jobID, String owner){
         super(jobID);
-        setFromConnection(owner);
+//        setFromConnection(owner);
     }
 
     @Override
     public boolean readOperation(ByteBuffer buffer) throws IOException {
         //System.out.println("Received state change from 0x" + getFromConnection() + ": " + ServerState.getState(buffer.get()).toString());
-        Main.slaveList.get(getFromConnection()).setState(ServerState.getState(buffer.get()));
-        Main.slaveList.get(getFromConnection()).setDataSize(buffer.getLong());
+//        Main.slaveList.get(getFromConnection()).setState(ServerState.getState(buffer.get()));
+//        Main.slaveList.get(getFromConnection()).setDataSize(buffer.getLong());
         setFinished(true);
         buffer.clear();
 //        context.getNode().setState(ServerState.getState(newState));

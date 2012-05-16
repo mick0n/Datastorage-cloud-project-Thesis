@@ -1,0 +1,87 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.mnorrman.datastorageproject.network;
+
+import com.mnorrman.datastorageproject.LogTool;
+import com.mnorrman.datastorageproject.Main;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
+import java.nio.channels.ServerSocketChannel;
+import java.nio.channels.SocketChannel;
+import java.util.Iterator;
+
+/**
+ *
+ * @author Mikael
+ */
+public class DualClusterListener extends Thread{
+    
+    private InternalTrafficHandler ith;
+    private Selector selector;
+    
+    public DualClusterListener(InternalTrafficHandler ith){
+        this.ith = ith;
+        this.setDaemon(true);
+    }
+
+    @Override
+    public void run() {
+        try{
+            selector = Selector.open();
+            
+            ServerSocketChannel clientServerSocket;
+            ServerSocketChannel childServerSocket;
+            
+            clientServerSocket = ServerSocketChannel.open();
+            clientServerSocket.configureBlocking(false);
+            clientServerSocket.socket().bind(new InetSocketAddress(Integer.parseInt(Main.properties.getValue("externalport").toString())));
+            
+            childServerSocket = ServerSocketChannel.open();
+            childServerSocket.configureBlocking(false);
+            childServerSocket.socket().bind(new InetSocketAddress(Integer.parseInt(Main.properties.getValue("internalport").toString())));
+            
+            clientServerSocket.register(selector, SelectionKey.OP_ACCEPT);
+            childServerSocket.register(selector, SelectionKey.OP_ACCEPT);
+            
+            while(selector.isOpen()){
+                selector.select();
+                
+                if(!selector.isOpen())
+                    break;
+                
+                Iterator<SelectionKey> it = selector.selectedKeys().iterator();
+                
+                while(it.hasNext()){
+                    SelectionKey key = it.next();
+                    it.remove();
+                    
+                    if(key.isValid() && key.isAcceptable()){
+                        ServerSocketChannel ssc = (ServerSocketChannel)key.channel();
+                        boolean isClient = ssc.socket().getLocalPort() == Integer.parseInt(Main.properties.getValue("externalport").toString());
+                        
+                        SocketChannel sc = ssc.accept();
+                        sc.configureBlocking(false);
+                        if(isClient){
+                            
+                        }else{
+                            ith.addSocketChannel(sc);
+                        }
+                    }
+                }
+            }
+        }catch(IOException e){
+            LogTool.log(e, LogTool.CRITICAL);
+        }
+    }
+    
+    /**
+     * Close this ServerSocketChannel
+     */
+    public void close() throws IOException{
+        selector.close();
+    }
+}

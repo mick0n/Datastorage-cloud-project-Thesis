@@ -18,11 +18,12 @@ import java.util.StringTokenizer;
  *
  * @author Mikael
  */
-public class MasterNodeSlaveList {
+public class ClusterChildList {
     
     private LinkedHashMap<String, ServerNode> slaves;
+    private ServerNode master;
     
-    public MasterNodeSlaveList(){
+    public ClusterChildList(){
         slaves = new LinkedHashMap<String, ServerNode>();
         loadData();
     }

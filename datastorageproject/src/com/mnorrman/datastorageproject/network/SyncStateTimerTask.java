@@ -15,10 +15,10 @@ import java.util.TimerTask;
  */
 public class SyncStateTimerTask extends TimerTask{
 
-    private SlaveNode owner;
+    private ClusterNode owner;
     private Main main;
     
-    public SyncStateTimerTask(SlaveNode owner, Main main){
+    public SyncStateTimerTask(ClusterNode owner, Main main){
         this.owner = owner;
         this.main = main;
     }

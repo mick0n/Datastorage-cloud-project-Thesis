@@ -6,7 +6,6 @@ package com.mnorrman.datastorageproject.network.jobs;
 
 import com.mnorrman.datastorageproject.Main;
 import com.mnorrman.datastorageproject.ServerState;
-import com.mnorrman.datastorageproject.network.MasterNode;
 import com.mnorrman.datastorageproject.network.Protocol;
 import com.mnorrman.datastorageproject.objects.GloballyIndexedDataObject;
 import com.mnorrman.datastorageproject.objects.IndexedDataObject;
@@ -68,7 +67,7 @@ public class SyncLocalIndexJob extends AbstractJob{
             System.out.println("Command was 0x" + HexConverter.toHex(new byte[]{ command }));
             DOBuffer = buffer.slice();
             IndexedDataObject ido = MetaDataComposer.compose(DOBuffer);
-            Main.globalIndex.insert(new GloballyIndexedDataObject(ido, from));
+//            Main.globalIndex.insert(new GloballyIndexedDataObject(ido, from));
             buffer.position(buffer.position() + 512);
             System.out.println("IDO: " + ido.toString());
             if(buffer.get() == SyncLocalIndexJob.LAST_INDEX)

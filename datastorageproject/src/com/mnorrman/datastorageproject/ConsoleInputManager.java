@@ -179,15 +179,7 @@ public class ConsoleInputManager extends Thread {
                 }
                 
                 
-            }else if(command.toLowerCase().equals("pg")){
-                for(ArrayList<GloballyIndexedDataObject> al : Main.globalIndex.getData()){
-                    for(GloballyIndexedDataObject gido : al){
-                        System.out.println(gido);
-                    }
-                }
-                
-                
-            } else {
+            }else {
                 print("Unknown command. Type help for help.");
             }
         } while (!command.toLowerCase().equals("shutdown"));
