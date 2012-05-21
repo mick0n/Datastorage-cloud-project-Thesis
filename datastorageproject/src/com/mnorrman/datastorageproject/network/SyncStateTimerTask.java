@@ -15,19 +15,19 @@ import java.util.TimerTask;
  */
 public class SyncStateTimerTask extends TimerTask{
 
-    private ClusterNode owner;
+    private InternalTrafficHandler ith;
     private Main main;
     
-    public SyncStateTimerTask(ClusterNode owner, Main main){
-        this.owner = owner;
+    public SyncStateTimerTask(InternalTrafficHandler ith, Main main){
+        this.ith = ith;
         this.main = main;
     }
     
     @Override
     public void run() {
         if(Main.state.getValue() > ServerState.INDEXING.getValue()){
-            SyncStateJob ssj = new SyncStateJob(main);
-            owner.createJob(ssj.getJobID(), ssj);
+            SyncStateJob ssj = new SyncStateJob(ith.getMasterContext(), main, ith);
+            ith.createJob(ssj.getJobID(), ssj);
         }
     }    
 }

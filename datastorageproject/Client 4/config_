@@ -1,0 +1,50 @@
+#Config-file
+#Updated Sun May 20 21:56:43 CEST 2012
+#
+#Warning! Editing this file can lead to malfunction of
+#this software. Make changes with caution!
+
+#dataPath - The absolute path to where all files are stored.
+#This does not have to be the same location as the runnable
+#file.
+dataPath = D:\Skola\Exjobb\Datastorage-cloud-project-Thesis\datastorageproject\Client 4
+
+
+#indexInterval - the amount of time (in seconds) between each
+#save of the index.
+#A recommended amount is 900 seconds (15 minutes) on small to medium workload.
+indexInterval = 900
+
+
+#master - IP-address or hostname of the master server
+#If this server is the master, use 127.0.0.1
+master = 127.0.0.1
+
+
+#externalport - port number used by clients to contact this server.
+#Always make sure that this port is opened in your firewall.
+externalport = 8999
+
+
+#internalport - port number used by the cluster.
+#Always make sure that this port is opened in your firewall.
+internalport = 8989
+
+
+#autoclean - True if the server should be able to initiate
+#cleaning when errors are found and false if it has to be
+#run manually.
+autoclean = true
+
+
+#storagelimit - The maximum amount of kilobytes that this
+#node should be able to store. Amount is in kilobytes.
+storagelimit = 5000000
+
+
+#serverID - The identifier of this server
+#!!Do NOT change this value unless you are absolutely
+#sure about what you are doing!!
+serverID = 6BCC8AAA
+
+

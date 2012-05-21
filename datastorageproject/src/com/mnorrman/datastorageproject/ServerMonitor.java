@@ -4,9 +4,10 @@
  */
 package com.mnorrman.datastorageproject;
 
-import com.mnorrman.datastorageproject.network.ConnectionContext;
+import com.mnorrman.datastorageproject.network.InternalTrafficHandler;
 import com.mnorrman.datastorageproject.network.MasterNode;
 import com.mnorrman.datastorageproject.objects.ServerNode;
+import com.mnorrman.datastorageproject.objects.TreeNode;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -20,7 +21,7 @@ import javax.swing.JPanel;
  */
 public class ServerMonitor extends javax.swing.JFrame implements Runnable{
 
-    private MasterNode mn;
+    private InternalTrafficHandler ith;
     private Painter painter;
     
     /**
@@ -31,8 +32,8 @@ public class ServerMonitor extends javax.swing.JFrame implements Runnable{
         setVisible(true);
     }
     
-    public ServerMonitor(MasterNode mn) {
-        this.mn = mn;
+    public ServerMonitor(InternalTrafficHandler ith) {
+        this.ith = ith;
         initComponents();
         painter = new Painter();
         add(painter);
@@ -42,21 +43,28 @@ public class ServerMonitor extends javax.swing.JFrame implements Runnable{
 
     public void run() {
         while(true){
-            if(mn != null){
-                String[][] data;
-                Collection<ServerNode> co = Main.slaveList.getAllData();
-                data = new String[co.size()][3];
-                Iterator<ServerNode> it = co.iterator();
+            if(ith != null){
+                String[] data;
+                Collection<TreeNode> co= ith.getMasterProperties().getTree().getFlatNodes();
+                data = new String[co.size()];
+                Iterator<TreeNode> it = co.iterator();
                 int index = 0;
                 while(it.hasNext()){
-                    ServerNode sn = it.next();
-                    data[index][0] = sn.getId();
-                    if(sn.getState() != null)
-                        data[index][1] = sn.getState().toString();
+                    TreeNode tn = it.next();
+                    if(tn.getParentNode() == null)
+                        data[index] = "null      : 0x" + tn.getServerNode().getId() + ", " + tn.getServerNode().getIpaddress().getHostAddress() + ", " + tn.getServerNode().getPort() + ", " + tn.getServerNode().getDataSize() + ", " + tn.getServerNode().getState().toString();
                     else
-                        data[index][1] = "invalid";
-                    data[index][2] = sn.getDataSize() + " bytes";
+                        data[index] = "0x" + tn.getParentNode().getServerNode().getId() + ""
+                            + ": 0x" + tn.getServerNode().getId() + ", " + tn.getServerNode().getIpaddress().getHostAddress() + ", " + tn.getServerNode().getPort() + ", " + tn.getServerNode().getDataSize() + ", " + tn.getServerNode().getState().toString();
                     index++;
+                    
+//                    data[index][0] = sn.getId();
+//                    if(sn.getState() != null)
+//                        data[index][1] = sn.getState().toString();
+//                    else
+//                        data[index][1] = "invalid";
+//                    data[index][2] = sn.getDataSize() + " bytes";
+//                    index++;
                 }
                 painter.update(data);
             }
@@ -71,27 +79,27 @@ public class ServerMonitor extends javax.swing.JFrame implements Runnable{
  
     private class Painter extends JPanel{
         
-        private String[][] nodes;
+        private String[] nodes;
         
         public Painter(){
             super();
-            setPreferredSize(new Dimension(400, 500));
+            setPreferredSize(new Dimension(500, 500));
             setVisible(true);
         }
 
-        public void update(String[][] newNodes){
+        public void update(String[] newNodes){
             this.nodes = newNodes;
         }
         
         @Override
         protected void paintComponent(Graphics g) {
             g.setColor(Color.WHITE);
-            g.fillRect(0, 0, 400, 500);
+            g.fillRect(0, 0, 500, 500);
             g.setColor(Color.BLACK);
             g.drawString(0x000000 + " - " + Main.state, 5, 20);
             if(nodes != null)
                 for(int a = 0; a < nodes.length; a++){
-                    g.drawString("0x" + nodes[a][0] + " - " + nodes[a][1] + ", " + nodes[a][2], 5, 40+(20*a));
+                    g.drawString(nodes[a], 5, 40+(20*a));
                 }
         }
         

@@ -5,7 +5,10 @@
 package com.mnorrman.datastorageproject.network.jobs;
 
 import com.mnorrman.datastorageproject.Main;
-import com.mnorrman.datastorageproject.objects.Pair;
+import com.mnorrman.datastorageproject.network.ExternalTrafficContext;
+import com.mnorrman.datastorageproject.network.ExternalTrafficHandler;
+import com.mnorrman.datastorageproject.network.Protocol;
+import com.mnorrman.datastorageproject.objects.ServerNode;
 import com.mnorrman.datastorageproject.objects.UnindexedDataObject;
 import com.mnorrman.datastorageproject.storage.DataProcessor;
 import com.mnorrman.datastorageproject.tools.HexConverter;
@@ -21,28 +24,22 @@ import java.util.zip.CRC32;
  *
  * @author Mikael
  */
-public class PutJob extends AbstractJob{
+public class PutJob extends ExternalJob{
 
+    private ExternalTrafficHandler eth;
     private FileChannel output;
     private UnindexedDataObject udo;
     private CRC32 crc;
+    private boolean gotUdo;
     
     private DataProcessor dataProcessor;
     
-    public PutJob(String fromConnection, DataProcessor dp){
-        super();
-//        setFromConnection(fromConnection);
-        
+    public PutJob(ExternalTrafficContext etc, ExternalTrafficHandler eth, DataProcessor dp){
+        super(etc);
+        this.eth = eth;
         this.dataProcessor = dp;
         crc = new CRC32();
-    }
-    
-    public PutJob(String jobID, String fromConnection, DataProcessor dp){
-        super(jobID);
-//        setFromConnection(fromConnection);
-        
-        this.dataProcessor = dp;
-        crc = new CRC32();
+        this.gotUdo = false;
     }
     
     @Override
@@ -65,6 +62,10 @@ public class PutJob extends AbstractJob{
             udo = new UnindexedDataObject(new File("putjob" + Math.random()), column, row, owner, length);
             System.out.println("udo: " + udo.toString());
             output = new FileOutputStream(udo.getTempFile()).getChannel();
+            
+            gotUdo = true;
+            buffer.clear();
+            return true;
         }
         
         int currPos = buffer.position();
@@ -97,7 +98,35 @@ public class PutJob extends AbstractJob{
 
     @Override
     public boolean writeOperation(SocketChannel s, ByteBuffer buffer) throws IOException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if(udo != null){
+            long hashValue = HexConverter.toLong(HexConverter.toHex(udo.getColname().hashCode()));
+            System.out.println("hashvalue: " + hashValue);
+            if(eth.getInternalTrafficHandler().isMaster()){
+                ServerNode rangeOwner = eth.getInternalTrafficHandler().getMasterProperties().getTree().findRange(hashValue);
+                System.out.println("Rangeowner: " + rangeOwner.toString());
+                if(rangeOwner.getId().equals(eth.getInternalTrafficHandler().getMasterProperties().getTree().getRoot().getServerNode().getId())){
+                    buffer.put(Protocol.OK.getValue());
+                    buffer.flip();
+                    s.write(buffer);
+                }else{
+                    buffer.put(Protocol.REDIRECT_CLIENT.getValue());
+                    buffer.put(rangeOwner.getIpaddress().getAddress());
+                    //buffer.putInt(rangeOwner.getPort());
+                    buffer.putInt(8999);
+                    buffer.flip();
+                    s.write(buffer);
+                }
+            }else{
+                buffer.put(Protocol.OK.getValue());
+                buffer.flip();
+                s.write(buffer);
+            }
+        }
+        buffer.clear();
+        return true;
     }
     
+    public boolean gotUdo(){
+        return gotUdo;
+    }
 }

@@ -44,5 +44,13 @@ public class InternalTrafficContext {
 
     public SocketChannel getChannel() {
         return channel;
-    }    
+    }
+
+    public void setChannel(SocketChannel channel) {
+        this.channel = channel;
+    }
+
+    public void setNode(ServerNode node) {
+        this.node = node;
+    }
 }

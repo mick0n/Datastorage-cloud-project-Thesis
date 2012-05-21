@@ -38,8 +38,8 @@ public class PropertiesManager {
             br.close();
             propertiesFileString = propertiesFileString.replace("\\", "\\\\");
             /****** END OF FIX ******/
-            
-            props.load(new StringReader(propertiesFileString));
+            ByteArrayInputStream bais = new ByteArrayInputStream(propertiesFileString.getBytes());
+            props.load(bais);
         }catch(IOException e){
             Logger.getLogger("b-log").log(Level.SEVERE, "Error when initializing properties", e);
         }

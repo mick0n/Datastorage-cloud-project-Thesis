@@ -4,16 +4,16 @@
  */
 package com.mnorrman.datastorageproject.network.jobs;
 
-import com.mnorrman.datastorageproject.LogTool;
 import com.mnorrman.datastorageproject.Main;
 import com.mnorrman.datastorageproject.ServerState;
-import com.mnorrman.datastorageproject.network.ClusterNode;
 import com.mnorrman.datastorageproject.network.InternalTrafficContext;
 import com.mnorrman.datastorageproject.network.InternalTrafficHandler;
 import com.mnorrman.datastorageproject.network.Protocol;
+import com.mnorrman.datastorageproject.objects.Range;
+import com.mnorrman.datastorageproject.objects.ServerNode;
 import com.mnorrman.datastorageproject.tools.HexConverter;
 import java.io.IOException;
-import java.net.InetSocketAddress;
+import java.net.InetAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
@@ -32,12 +32,36 @@ public class ConnectToMasterJob extends InternalJob{
 
     @Override
     public boolean readOperation(ByteBuffer buffer) throws IOException {
+        Protocol command = Protocol.getCommand(buffer.get());
         if(Main.ID.equals("FFFFFFFF")){
             System.out.println("Fixing new id");
             Main.ID = HexConverter.toHex(buffer.getInt());
+            ith.getChildProperties().getThisNode().setId(Main.ID);
             Main.properties.setProperty("serverID", Main.ID);
             Main.properties.saveProperties();
+        }else{ buffer.getInt(); } //Just ignore the ID
+        
+        if(command == Protocol.REDIRECT){
+            byte[] IPBytes = new byte[4];
+            buffer.get(IPBytes);
+            InetAddress IPAddress = InetAddress.getByAddress(IPBytes);
+            int port = buffer.getInt();
+            String newMasterID = HexConverter.toHex(buffer.getInt());
+//            ith.getMasterContext().getChannel().close();
+            ith.getMasterContext().setChannel(SocketChannel.open());
+            ith.getMasterContext().getChannel().configureBlocking(false);
+            ith.getMasterContext().setNode(new ServerNode(IPAddress, port, newMasterID));
+            ith.getMasterContext().setIdentifier(newMasterID);
+            
+            System.out.println("Redirection in progress. Redirecting to master: 0x" + newMasterID);
+            System.out.println("IP: " + IPAddress.getHostAddress());
+            System.out.println("port: " + port);
+        }else{
+            long startRange = buffer.getLong();
+            long endRange = buffer.getLong();
+            ith.getChildProperties().getThisNode().setRange(new Range(startRange, endRange));
         }
+        
         System.out.println("ID: 0x" + Main.ID);
         Main.state = ServerState.IDLE;
 
@@ -49,10 +73,10 @@ public class ConnectToMasterJob extends InternalJob{
     @Override
     public boolean writeOperation(SocketChannel s, ByteBuffer buffer) throws IOException {
         buffer.put(HexConverter.toByte(Main.ID));
-        buffer.putInt(13);
+        buffer.putInt(9);
         buffer.put(HexConverter.toByte(getJobID()));
         buffer.put(Protocol.CONNECT.getValue());
-        buffer.putLong(Long.parseLong(Main.properties.getValue("storagelimit").toString()) * 1000);
+        buffer.putInt(Integer.parseInt(Main.properties.getValue("internalport").toString()));
         buffer.flip();
         while(buffer.hasRemaining())
             s.write(buffer);

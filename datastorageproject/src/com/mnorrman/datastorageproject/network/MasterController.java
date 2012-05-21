@@ -7,7 +7,7 @@ package com.mnorrman.datastorageproject.network;
 import com.mnorrman.datastorageproject.LogTool;
 import com.mnorrman.datastorageproject.Main;
 import com.mnorrman.datastorageproject.objects.ServerNode;
-import com.mnorrman.datastorageproject.objects.TreeNode;
+import com.mnorrman.datastorageproject.objects.Tree;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -18,10 +18,10 @@ import java.io.PrintWriter;
  */
 public class MasterController {
     
-    private TreeNode clusterTree;
+    private Tree clusterTree;
     
     public MasterController(){
-        clusterTree = new TreeNode(null); // The root element so to say
+        clusterTree = new Tree(null); // The root element so to say
     }
     
     public void SaveClusterTreeToFile(){

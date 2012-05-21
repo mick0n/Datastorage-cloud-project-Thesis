@@ -247,10 +247,10 @@ public class MasterNode extends Thread {
                                     return;
                                 }
                                 
-                                PutJob pj = new PutJob(key.attachment().toString(), main.getNewDataProcessor());
-                                jobs.put(pj.getJobID(), pj);
-                                context.setJobID(pj.getJobID());
-                                cmv.setJobID(pj.getJobID());
+//                                PutJob pj = new PutJob(key.attachment().toString(), main.getNewDataProcessor());
+//                                jobs.put(pj.getJobID(), pj);
+//                                context.setJobID(pj.getJobID());
+//                                cmv.setJobID(pj.getJobID());
                             }
                             buffer.rewind();
                             break;
@@ -281,15 +281,15 @@ public class MasterNode extends Thread {
 //                            jobs.put(mcj.getJobID(), mcj);
                             //                        jobQueue.add(mcj);
                             break;
-                        case SYNC_STATE:
-                            SyncStateJob ssj = new SyncStateJob(cmv.getJobID(), cmv.getFrom());
-                            jobs.put(ssj.getJobID(), ssj);
-                            break;
-                        case SYNC_LOCAL_INDEX:
-                            System.out.println("Sync local index acknowledged");
-                            SyncLocalIndexJob slij = new SyncLocalIndexJob(cmv.getJobID(), context.node);
-                            jobs.put(slij.getJobID(), slij);
-                            break;
+//                        case SYNC_STATE:
+//                            SyncStateJob ssj = new SyncStateJob(cmv.getJobID(), cmv.getFrom());
+//                            jobs.put(ssj.getJobID(), ssj);
+//                            break;
+//                        case SYNC_LOCAL_INDEX:
+//                            System.out.println("Sync local index acknowledged");
+//                            SyncLocalIndexJob slij = new SyncLocalIndexJob(cmv.getJobID(), context.node);
+//                            jobs.put(slij.getJobID(), slij);
+//                            break;
                         case PUT:
                             //Put file
                             break;

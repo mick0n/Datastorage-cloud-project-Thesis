@@ -1,0 +1,26 @@
+Sun May 20 21:24:52 CEST 2012: INFO: Backstorage initialized
+Sun May 20 21:24:52 CEST 2012: INFO: InternalTrafficHandlerMasterProperties set up properly
+Sun May 20 21:27:20 CEST 2012: INFO: Backstorage initialized
+Sun May 20 21:27:20 CEST 2012: WARNING: Uncorrect shutdown detected. Verifying data integrity...
+Sun May 20 21:27:20 CEST 2012: INFO: Starting integrity check
+Sun May 20 21:27:20 CEST 2012: INFO: Begin reindex of data
+Sun May 20 21:27:20 CEST 2012: WARNING: No data in file, jumping out
+Sun May 20 21:27:20 CEST 2012: INFO: LocalIndex was saved to persistent storage successfully
+Sun May 20 21:27:20 CEST 2012: INFO: InternalTrafficHandlerChildProperties set up properly
+Sun May 20 21:37:45 CEST 2012: INFO: Local index was loaded successfully
+Sun May 20 21:37:45 CEST 2012: INFO: Backstorage initialized
+Sun May 20 21:37:45 CEST 2012: WARNING: Uncorrect shutdown detected. Verifying data integrity...
+Sun May 20 21:37:45 CEST 2012: INFO: Starting integrity check
+Sun May 20 21:37:45 CEST 2012: INFO: Begin reindex of data
+Sun May 20 21:37:45 CEST 2012: WARNING: No data in file, jumping out
+Sun May 20 21:37:45 CEST 2012: INFO: LocalIndex was saved to persistent storage successfully
+Sun May 20 21:37:45 CEST 2012: INFO: InternalTrafficHandlerChildProperties set up properly
+Sun May 20 21:43:42 CEST 2012: INFO: Local index was loaded successfully
+Sun May 20 21:43:42 CEST 2012: INFO: Backstorage initialized
+Sun May 20 21:43:42 CEST 2012: WARNING: Uncorrect shutdown detected. Verifying data integrity...
+Sun May 20 21:43:42 CEST 2012: INFO: Starting integrity check
+Sun May 20 21:43:42 CEST 2012: INFO: Begin reindex of data
+Sun May 20 21:43:42 CEST 2012: WARNING: No data in file, jumping out
+Sun May 20 21:43:42 CEST 2012: INFO: LocalIndex was saved to persistent storage successfully
+Sun May 20 21:43:42 CEST 2012: INFO: InternalTrafficHandlerChildProperties set up properly
+Sun May 20 21:46:37 CEST 2012: INFO: LocalIndex was saved to persistent storage successfully

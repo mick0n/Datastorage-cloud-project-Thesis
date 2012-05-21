@@ -5,11 +5,11 @@ import com.mnorrman.datastorageproject.index.IndexPersistence;
 import com.mnorrman.datastorageproject.index.LocalIndex;
 import com.mnorrman.datastorageproject.network.ClusterChildList;
 import com.mnorrman.datastorageproject.network.DualClusterListener;
+import com.mnorrman.datastorageproject.network.ExternalTrafficHandler;
 import com.mnorrman.datastorageproject.network.InternalTrafficHandler;
 import com.mnorrman.datastorageproject.storage.BackStorage;
 import com.mnorrman.datastorageproject.storage.DataProcessor;
 import com.mnorrman.datastorageproject.storage.DataTicket;
-import com.mnorrman.datastorageproject.web.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -38,7 +38,8 @@ public class Main {
 //    public ClusterNode clusterNode;
     public DualClusterListener listener;
     public InternalTrafficHandler internalTrafficHandler;
-    public WebServer webServer;
+    public ExternalTrafficHandler externalTrafficHandler;
+//    public WebServer webServer;
     
     private File shutdownSafetyFile;
 
@@ -70,24 +71,18 @@ public class Main {
                 shutdownSafetyFile.createNewFile();
             }
             
-            //Initiate webserver and add necessary roles
-            webServer = new WebServer(8429);
-            webServer.addWebRole("/", new MainWebRole());
-            webServer.addWebRole("/index", new PrintIndexWebRole());
-            webServer.addWebRole("/get", new SimpleGetWebRole(this));
-            webServer.addWebRole("/post", new SimplePostWebRole(this));
+//            if(System.getProperty("java.version").charAt(2) >= '6'){
+//                //Initiate webserver and add necessary roles
+//                webServer = new WebServer(8429);
+//                webServer.addWebRole("/", new MainWebRole());
+//                webServer.addWebRole("/index", new PrintIndexWebRole());
+//                webServer.addWebRole("/get", new SimpleGetWebRole(this));
+//                webServer.addWebRole("/post", new SimplePostWebRole(this));
+//            }
         } catch (IOException e) {
             LogTool.log(e, LogTool.CRITICAL);
         }
         
-        internalTrafficHandler = new InternalTrafficHandler(this);
-        internalTrafficHandler.startup();
-        
-        listener = new DualClusterListener(internalTrafficHandler);
-        listener.start();
-        
-//        clusterNode = new ClusterNode(this);
-//        clusterNode.startup();
         if (properties.getValue("master").toString().equalsIgnoreCase("127.0.0.1") || properties.getValue("master").toString().equalsIgnoreCase("")) {
             ID = "00000000";
             state = ServerState.IDLE;
@@ -101,6 +96,25 @@ public class Main {
 //            System.out.println("Time to connect");
 //            pool.submit(new ConnectToMasterJob("00000000", clusterNode));
         }
+        
+        
+        internalTrafficHandler = new InternalTrafficHandler(this);
+        internalTrafficHandler.startup();
+        
+        externalTrafficHandler = new ExternalTrafficHandler(this, internalTrafficHandler);
+        externalTrafficHandler.startup();
+        
+        listener = new DualClusterListener(internalTrafficHandler, externalTrafficHandler);
+        listener.start();
+        
+        
+//        if(internalTrafficHandler.isMaster()){
+//            Thread sm = new Thread(new ServerMonitor(internalTrafficHandler));
+//            sm.start();
+//        }
+//        clusterNode = new ClusterNode(this);
+//        clusterNode.startup();
+        
 //        if (properties.getValue("master").toString().equalsIgnoreCase("127.0.0.1")) {
 //            masterNode = new MasterNode(this);
 //            masterNode.startup();
@@ -174,8 +188,8 @@ public class Main {
             listener.close();
         if(internalTrafficHandler != null)
             internalTrafficHandler.close();
-        if(webServer != null)
-            webServer.close();
+//        if(webServer != null)
+//            webServer.close();
         
         //Remove the shutdownsafetyfile to tell us that it was a safe shutdown
         //next time we start. 

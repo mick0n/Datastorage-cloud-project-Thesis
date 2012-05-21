@@ -13,29 +13,34 @@ import java.util.Set;
  * @author Mikael
  */
 public class TreeNode {
-    
-    private Set<TreeNode> children;
-    private Pair<String, ServerNode> thisChild;
-    
-    public TreeNode(Pair<String, ServerNode> child){
+    protected TreeNode parentNode;
+    protected Set<TreeNode> children;
+    protected ServerNode serverNode;
+
+    public TreeNode(TreeNode parentNode, ServerNode serverNode) {
         children = new HashSet<TreeNode>();
-        this.thisChild = child;
+        this.parentNode = parentNode;
+        this.serverNode = serverNode;
     }
-    
-    public boolean addChild(TreeNode node){
+
+    public boolean addChild(TreeNode node) {
         return children.add(node);
     }
-    
-    public boolean removeChild(TreeNode node){
+
+    public boolean removeChild(TreeNode node) {
         return children.remove(node);
     }
-    
-    public Iterator<TreeNode> toIterator(){
+
+    public Iterator<TreeNode> toIterator() {
         return children.iterator();
     }
-    
-    public Pair<String, ServerNode> getThisChild(){
-        return thisChild;
+
+    public ServerNode getServerNode() {
+        return serverNode;
+    }
+
+    public TreeNode getParentNode() {
+        return parentNode;
     }
     
 }

@@ -13,8 +13,10 @@ public class ServerNode {
     private InetAddress ipaddress;
     private int port;
     private String id;
-    private ServerState state;
     
+    
+    private ServerState state;
+    private Range range;
     private long dataSize;
     private long storageLimit;
 
@@ -73,8 +75,19 @@ public class ServerNode {
         return state;
     }
 
+    public Range getRange() {
+        return range;
+    }
+
+    public void setRange(Range range) {
+        this.range = range;
+    }
+
     @Override
     public String toString() {
-        return ipaddress.getHostAddress() + "," + port + "," + id;
+        if(range == null)
+            return ipaddress.getHostAddress() + "," + port + "," + id;
+        else
+            return ipaddress.getHostAddress() + "," + port + "," + id + "," + range.startRange + "," + range.endRange;
     }
 }

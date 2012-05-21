@@ -131,8 +131,8 @@ public class SlaveNode extends Thread {
 
                             switch (command) {
                                 case PUT:
-                                    PutJob pj = new PutJob(cmv.getJobID(), Main.ID, main.getNewDataProcessor());
-                                    jobs.put(pj.getJobID(), pj);
+//                                    PutJob pj = new PutJob(cmv.getJobID(), Main.ID, main.getNewDataProcessor());
+//                                    jobs.put(pj.getJobID(), pj);
                                     //context.setJobID(pj.getJobID());
                                     break;
                                 case GET:

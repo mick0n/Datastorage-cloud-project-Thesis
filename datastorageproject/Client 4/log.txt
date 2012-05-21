@@ -1,0 +1,644 @@
+Sun May 20 21:25:29 CEST 2012: INFO: Backstorage initialized
+Sun May 20 21:25:29 CEST 2012: INFO: InternalTrafficHandlerMasterProperties set up properly
+Sun May 20 21:27:30 CEST 2012: INFO: Backstorage initialized
+Sun May 20 21:27:30 CEST 2012: WARNING: Uncorrect shutdown detected. Verifying data integrity...
+Sun May 20 21:27:30 CEST 2012: INFO: Starting integrity check
+Sun May 20 21:27:30 CEST 2012: INFO: Begin reindex of data
+Sun May 20 21:27:30 CEST 2012: WARNING: No data in file, jumping out
+Sun May 20 21:27:30 CEST 2012: INFO: LocalIndex was saved to persistent storage successfully
+Sun May 20 21:27:30 CEST 2012: INFO: InternalTrafficHandlerChildProperties set up properly
+Sun May 20 21:27:31 CEST 2012: CRITICAL: java.net.ConnectException: Connection refused: connect
+Sun May 20 21:27:31 CEST 2012: CRITICAL: 	at sun.nio.ch.Net.connect0(Native Method)
+Sun May 20 21:27:31 CEST 2012: CRITICAL: 	at sun.nio.ch.Net.connect(Unknown Source)
+Sun May 20 21:27:31 CEST 2012: CRITICAL: 	at sun.nio.ch.Net.connect(Unknown Source)
+Sun May 20 21:27:31 CEST 2012: CRITICAL: 	at sun.nio.ch.SocketChannelImpl.connect(Unknown Source)
+Sun May 20 21:27:31 CEST 2012: CRITICAL: 	at com.mnorrman.datastorageproject.network.InternalTrafficHandler.run(InternalTrafficHandler.java:106)
+Sun May 20 21:28:30 CEST 2012: CRITICAL: java.nio.channels.ClosedChannelException
+Sun May 20 21:28:30 CEST 2012: CRITICAL: 	at sun.nio.ch.SocketChannelImpl.ensureWriteOpen(Unknown Source)
+Sun May 20 21:28:30 CEST 2012: CRITICAL: 	at sun.nio.ch.SocketChannelImpl.write(Unknown Source)
+Sun May 20 21:28:30 CEST 2012: CRITICAL: 	at com.mnorrman.datastorageproject.network.jobs.SyncStateJob.writeOperation(SyncStateJob.java:77)
+Sun May 20 21:28:30 CEST 2012: CRITICAL: 	at com.mnorrman.datastorageproject.network.InternalTrafficHandler.run(InternalTrafficHandler.java:248)
+Sun May 20 21:28:30 CEST 2012: CRITICAL: java.nio.channels.ClosedChannelException
+Sun May 20 21:28:30 CEST 2012: CRITICAL: 	at sun.nio.ch.SocketChannelImpl.ensureOpenAndUnconnected(Unknown Source)
+Sun May 20 21:28:30 CEST 2012: CRITICAL: 	at sun.nio.ch.SocketChannelImpl.connect(Unknown Source)
+Sun May 20 21:28:30 CEST 2012: CRITICAL: 	at com.mnorrman.datastorageproject.network.InternalTrafficHandler.run(InternalTrafficHandler.java:106)
+Sun May 20 21:30:30 CEST 2012: CRITICAL: java.nio.channels.ClosedChannelException
+Sun May 20 21:30:30 CEST 2012: CRITICAL: 	at sun.nio.ch.SocketChannelImpl.ensureWriteOpen(Unknown Source)
+Sun May 20 21:30:30 CEST 2012: CRITICAL: 	at sun.nio.ch.SocketChannelImpl.write(Unknown Source)
+Sun May 20 21:30:30 CEST 2012: CRITICAL: 	at com.mnorrman.datastorageproject.network.jobs.SyncStateJob.writeOperation(SyncStateJob.java:77)
+Sun May 20 21:30:30 CEST 2012: CRITICAL: 	at com.mnorrman.datastorageproject.network.InternalTrafficHandler.run(InternalTrafficHandler.java:248)
+Sun May 20 21:30:30 CEST 2012: CRITICAL: java.nio.channels.ClosedChannelException
+Sun May 20 21:30:30 CEST 2012: CRITICAL: 	at sun.nio.ch.SocketChannelImpl.ensureOpenAndUnconnected(Unknown Source)
+Sun May 20 21:30:30 CEST 2012: CRITICAL: 	at sun.nio.ch.SocketChannelImpl.connect(Unknown Source)
+Sun May 20 21:30:30 CEST 2012: CRITICAL: 	at com.mnorrman.datastorageproject.network.InternalTrafficHandler.run(InternalTrafficHandler.java:106)
+Sun May 20 21:37:55 CEST 2012: INFO: Local index was loaded successfully
+Sun May 20 21:37:55 CEST 2012: INFO: Backstorage initialized
+Sun May 20 21:37:55 CEST 2012: WARNING: Uncorrect shutdown detected. Verifying data integrity...
+Sun May 20 21:37:55 CEST 2012: INFO: Starting integrity check
+Sun May 20 21:37:55 CEST 2012: INFO: Begin reindex of data
+Sun May 20 21:37:55 CEST 2012: WARNING: No data in file, jumping out
+Sun May 20 21:37:55 CEST 2012: INFO: LocalIndex was saved to persistent storage successfully
+Sun May 20 21:37:55 CEST 2012: INFO: InternalTrafficHandlerChildProperties set up properly
+Sun May 20 21:38:36 CEST 2012: INFO: Local index was loaded successfully
+Sun May 20 21:38:36 CEST 2012: INFO: Backstorage initialized
+Sun May 20 21:38:36 CEST 2012: WARNING: Uncorrect shutdown detected. Verifying data integrity...
+Sun May 20 21:38:36 CEST 2012: INFO: Starting integrity check
+Sun May 20 21:38:36 CEST 2012: INFO: Begin reindex of data
+Sun May 20 21:38:36 CEST 2012: WARNING: No data in file, jumping out
+Sun May 20 21:38:36 CEST 2012: INFO: LocalIndex was saved to persistent storage successfully
+Sun May 20 21:38:36 CEST 2012: INFO: InternalTrafficHandlerChildProperties set up properly
+Sun May 20 21:43:50 CEST 2012: INFO: Local index was loaded successfully
+Sun May 20 21:43:50 CEST 2012: INFO: Backstorage initialized
+Sun May 20 21:43:50 CEST 2012: WARNING: Uncorrect shutdown detected. Verifying data integrity...
+Sun May 20 21:43:50 CEST 2012: INFO: Starting integrity check
+Sun May 20 21:43:50 CEST 2012: INFO: Begin reindex of data
+Sun May 20 21:43:50 CEST 2012: WARNING: No data in file, jumping out
+Sun May 20 21:43:50 CEST 2012: INFO: LocalIndex was saved to persistent storage successfully
+Sun May 20 21:43:50 CEST 2012: INFO: InternalTrafficHandlerChildProperties set up properly
+Sun May 20 21:45:44 CEST 2012: INFO: LocalIndex was saved to persistent storage successfully
+Sun May 20 21:56:41 CEST 2012: INFO: Local index was loaded successfully
+Sun May 20 21:56:41 CEST 2012: INFO: Backstorage initialized
+Sun May 20 21:56:41 CEST 2012: INFO: InternalTrafficHandlerChildProperties set up properly
+Sun May 20 21:56:41 CEST 2012: WARNING: Could not connect to master, trying again in 2 seconds
+Sun May 20 21:56:43 CEST 2012: WARNING: Could not connect to master, trying again in 2 seconds
+Sun May 20 21:56:45 CEST 2012: CRITICAL: java.net.ConnectException: Connection refused: no further information
+Sun May 20 21:56:45 CEST 2012: CRITICAL: 	at sun.nio.ch.SocketChannelImpl.checkConnect(Native Method)
+Sun May 20 21:56:45 CEST 2012: CRITICAL: 	at sun.nio.ch.SocketChannelImpl.finishConnect(Unknown Source)
+Sun May 20 21:56:45 CEST 2012: CRITICAL: 	at com.mnorrman.datastorageproject.network.InternalTrafficHandler.run(InternalTrafficHandler.java:107)
+Sun May 20 21:57:41 CEST 2012: CRITICAL: java.nio.channels.ClosedChannelException
+Sun May 20 21:57:41 CEST 2012: CRITICAL: 	at sun.nio.ch.SocketChannelImpl.ensureWriteOpen(Unknown Source)
+Sun May 20 21:57:41 CEST 2012: CRITICAL: 	at sun.nio.ch.SocketChannelImpl.write(Unknown Source)
+Sun May 20 21:57:41 CEST 2012: CRITICAL: 	at com.mnorrman.datastorageproject.network.jobs.SyncStateJob.writeOperation(SyncStateJob.java:77)
+Sun May 20 21:57:41 CEST 2012: CRITICAL: 	at com.mnorrman.datastorageproject.network.InternalTrafficHandler.run(InternalTrafficHandler.java:248)
+Sun May 20 21:57:41 CEST 2012: CRITICAL: java.nio.channels.ClosedChannelException
+Sun May 20 21:57:41 CEST 2012: CRITICAL: 	at sun.nio.ch.SocketChannelImpl.ensureOpenAndUnconnected(Unknown Source)
+Sun May 20 21:57:41 CEST 2012: CRITICAL: 	at sun.nio.ch.SocketChannelImpl.connect(Unknown Source)
+Sun May 20 21:57:41 CEST 2012: CRITICAL: 	at com.mnorrman.datastorageproject.network.InternalTrafficHandler.run(InternalTrafficHandler.java:106)
+Sun May 20 21:58:53 CEST 2012: INFO: LocalIndex was saved to persistent storage successfully
+Mon May 21 00:58:04 CEST 2012: INFO: Local index was loaded successfully
+Mon May 21 00:58:04 CEST 2012: INFO: Backstorage initialized
+Mon May 21 00:58:04 CEST 2012: INFO: InternalTrafficHandlerMasterProperties set up properly
+Mon May 21 00:58:07 CEST 2012: INFO: Connection from 127.0.0.1:59679 was added to selector
+Mon May 21 00:58:11 CEST 2012: INFO: Connection from 127.0.0.1:59679 was closed
+Mon May 21 00:59:22 CEST 2012: INFO: Local index was loaded successfully
+Mon May 21 00:59:22 CEST 2012: INFO: Backstorage initialized
+Mon May 21 00:59:22 CEST 2012: WARNING: Uncorrect shutdown detected. Verifying data integrity...
+Mon May 21 00:59:22 CEST 2012: INFO: Starting integrity check
+Mon May 21 00:59:22 CEST 2012: INFO: Begin reindex of data
+Mon May 21 00:59:22 CEST 2012: WARNING: No data in file, jumping out
+Mon May 21 00:59:22 CEST 2012: INFO: LocalIndex was saved to persistent storage successfully
+Mon May 21 00:59:22 CEST 2012: INFO: InternalTrafficHandlerMasterProperties set up properly
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59686 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59686 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59687 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59687 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59688 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59688 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59689 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59689 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59690 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59690 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59691 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59691 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59692 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59692 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59693 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59693 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59694 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59694 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59695 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59695 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59696 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59696 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59697 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59697 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59698 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59698 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59699 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59699 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59700 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59700 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59701 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59701 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59702 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59702 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59703 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59703 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59704 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59704 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59705 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59705 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59706 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59706 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59707 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59707 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59708 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59708 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59709 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59709 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59710 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59710 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59711 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59711 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59712 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59712 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59713 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59713 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59714 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59714 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59715 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59715 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59716 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59716 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59717 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59717 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59718 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59718 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59719 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59719 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59720 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59720 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59721 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59721 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59722 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59722 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59723 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59723 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59724 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59724 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59725 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59725 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59726 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59726 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59727 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59727 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59728 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59728 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59729 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59729 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59730 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59730 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59731 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59731 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59732 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59732 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59733 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59733 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59734 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59734 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59735 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59735 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59736 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59736 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59737 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59737 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59738 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59738 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59739 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59739 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59740 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59740 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59741 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59741 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59742 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59742 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59743 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59743 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59744 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59744 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59745 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59745 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59746 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59746 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59747 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59747 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59748 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59748 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59749 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59749 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59750 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59750 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59751 was added to selector
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59751 was closed
+Mon May 21 00:59:26 CEST 2012: INFO: Connection from 127.0.0.1:59752 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59752 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59753 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59753 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59754 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59754 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59755 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59755 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59756 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59756 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59757 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59757 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59758 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59758 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59759 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59759 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59760 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59760 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59761 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59761 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59762 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59762 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59763 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59763 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59764 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59764 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59765 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59765 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59766 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59766 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59767 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59767 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59768 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59768 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59769 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59769 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59770 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59770 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59771 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59771 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59772 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59772 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59773 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59773 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59774 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59774 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59775 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59775 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59776 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59776 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59777 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59777 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59778 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59778 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59779 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59779 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59780 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59780 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59781 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59781 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59782 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59782 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59783 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59783 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59784 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59784 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59785 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59785 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59786 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59786 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59787 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59787 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59788 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59788 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59789 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59789 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59790 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59790 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59791 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59791 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59792 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59792 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59793 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59793 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59794 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59794 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59795 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59795 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59796 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59796 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59797 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59797 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59798 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59798 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59799 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59799 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59800 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59800 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59801 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59801 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59802 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59802 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59803 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59803 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59804 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59804 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59805 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59805 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59806 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59806 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59807 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59807 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59808 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59808 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59809 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59809 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59810 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59810 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59811 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59811 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59812 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59812 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59813 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59813 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59814 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59814 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59815 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59815 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59816 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59816 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59817 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59817 was closed
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59818 was added to selector
+Mon May 21 00:59:27 CEST 2012: INFO: Connection from 127.0.0.1:59818 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59819 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59819 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59820 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59820 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59821 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59821 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59822 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59822 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59823 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59823 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59824 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59824 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59825 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59825 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59826 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59826 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59827 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59827 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59828 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59828 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59829 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59829 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59830 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59830 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59831 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59831 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59832 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59832 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59833 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59833 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59834 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59834 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59835 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59835 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59836 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59836 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59837 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59837 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59838 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59838 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59839 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59839 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59840 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59840 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59841 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59841 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59842 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59842 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59843 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59843 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59844 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59844 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59845 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59845 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59846 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59846 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59847 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59847 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59848 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59848 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59849 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59849 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59850 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59850 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59851 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59851 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59852 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59852 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59853 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59853 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59854 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59854 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59855 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59855 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59856 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59856 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59857 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59857 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59858 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59858 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59859 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59859 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59860 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59860 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59861 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59861 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59862 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59862 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59863 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59863 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59864 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59864 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59865 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59865 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59866 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59866 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59867 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59867 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59868 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59868 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59869 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59869 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59870 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59870 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59871 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59871 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59872 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59872 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59873 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59873 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59874 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59874 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59875 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59875 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59876 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59876 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59877 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59877 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59878 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59878 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59879 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59879 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59880 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59880 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59881 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59881 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59882 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59882 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59883 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59883 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59884 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59884 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59885 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59885 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59886 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59886 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59887 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59887 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59888 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59888 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59889 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59889 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59890 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59890 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59891 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59891 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59892 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59892 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59893 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59893 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59894 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59894 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59895 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59895 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59896 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59896 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59897 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59897 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59898 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59898 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59899 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59899 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59900 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59900 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59901 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59901 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59902 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59902 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59903 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59903 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59904 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59904 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59905 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59905 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59906 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59906 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59907 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59907 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59908 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59908 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59909 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59909 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59910 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59910 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59911 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59911 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59912 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59912 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59913 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59913 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59914 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59914 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59915 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59915 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59916 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59916 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59917 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59917 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59918 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59918 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59919 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59919 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59920 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59920 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59921 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59921 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59922 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59922 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59923 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59923 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59924 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59924 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59925 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59925 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59926 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59926 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59927 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59927 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59928 was added to selector
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59928 was closed
+Mon May 21 00:59:28 CEST 2012: INFO: Connection from 127.0.0.1:59929 was added to selector
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59929 was closed
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59930 was added to selector
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59930 was closed
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59931 was added to selector
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59931 was closed
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59932 was added to selector
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59932 was closed
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59933 was added to selector
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59933 was closed
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59934 was added to selector
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59934 was closed
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59935 was added to selector
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59935 was closed
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59936 was added to selector
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59936 was closed
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59937 was added to selector
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59937 was closed
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59938 was added to selector
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59938 was closed
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59939 was added to selector
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59939 was closed
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59940 was added to selector
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59940 was closed
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59941 was added to selector
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59941 was closed
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59942 was added to selector
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59942 was closed
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59943 was added to selector
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59943 was closed
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59944 was added to selector
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59944 was closed
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59945 was added to selector
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59945 was closed
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59946 was added to selector
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59946 was closed
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59947 was added to selector
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59947 was closed
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59948 was added to selector
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59948 was closed
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59949 was added to selector
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59949 was closed
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59950 was added to selector
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59950 was closed
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59951 was added to selector
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59951 was closed
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59952 was added to selector
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59952 was closed
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59953 was added to selector
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59953 was closed
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59954 was added to selector
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59954 was closed
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59955 was added to selector
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59955 was closed
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59956 was added to selector
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59956 was closed
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59957 was added to selector
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59957 was closed
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59958 was added to selector
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59958 was closed
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59959 was added to selector
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59959 was closed
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59960 was added to selector
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59960 was closed
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59961 was added to selector
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59961 was closed
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59962 was added to selector
+Mon May 21 00:59:29 CEST 2012: INFO: Connection from 127.0.0.1:59962 was closed

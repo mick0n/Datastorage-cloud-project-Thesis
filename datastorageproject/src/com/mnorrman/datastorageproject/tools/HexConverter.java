@@ -20,6 +20,10 @@ public class HexConverter {
         return buff.toString();
     }
 
+    public static String toHex(long longValue){
+        return String.format("%8s", Long.toHexString(longValue).toUpperCase()).replace(' ', '0');
+    }
+    
     public static String toHex(int integer) {
         return String.format("%8s", Integer.toHexString(integer).toUpperCase()).replace(' ', '0');
     }
@@ -42,5 +46,9 @@ public class HexConverter {
     
     public static short toShort(String hex) {
         return (short) Integer.parseInt(hex, 16);
+    }
+    
+    public static long toLong(String hex){
+        return Long.parseLong(hex, 16);
     }
 }

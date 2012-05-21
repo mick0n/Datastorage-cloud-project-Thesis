@@ -87,7 +87,7 @@ public class SyncLocalIndexJob extends AbstractJob{
             buffer.put(HexConverter.toByte(Main.ID));
             buffer.putInt(514);
             buffer.put(HexConverter.toByte(getJobID()));
-            buffer.put(Protocol.SYNC_LOCAL_INDEX.getValue());
+//            buffer.put(Protocol.SYNC_LOCAL_INDEX.getValue());
             buffer.put(command);
             buffer.put(MetaDataComposer.decompose(ido));
             buffer.put(LAST_INDEX);
@@ -108,7 +108,7 @@ public class SyncLocalIndexJob extends AbstractJob{
             buffer.put(HexConverter.toByte(Main.ID));
             buffer.putInt(8176);
             buffer.put(HexConverter.toByte(getJobID()));
-            buffer.put(Protocol.SYNC_LOCAL_INDEX.getValue());
+//            buffer.put(Protocol.SYNC_LOCAL_INDEX.getValue());
             int counter = 15;
             while(counter > 0){
                 buffer.put(command);

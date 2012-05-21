@@ -6,7 +6,7 @@ import com.mnorrman.datastorageproject.ServerState;
 import com.mnorrman.datastorageproject.network.jobs.*;
 import com.mnorrman.datastorageproject.objects.Pair;
 import com.mnorrman.datastorageproject.objects.ServerNode;
-import com.mnorrman.datastorageproject.objects.TreeNode;
+import com.mnorrman.datastorageproject.objects.Tree;
 import com.mnorrman.datastorageproject.tools.HexConverter;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -30,7 +30,7 @@ public class ClusterNode extends Thread {
     private Main main;
     private DualClusterListener listener;
     private Selector selector;
-    private TreeNode root;
+    private Tree root;
     private ConcurrentLinkedQueue<Pair<SocketChannel, Boolean>> channelQueue;
     private HashMap<String, ConnectionContext> clientConn;
     private HashMap<String, ConnectionContext> childConn;
@@ -59,7 +59,7 @@ public class ClusterNode extends Thread {
         }
 
         this.main = main; //used for getting DataProcesses from BackStorage
-//        this.root = new TreeNode();
+//        this.root = new Tree();
 
         try {
             selector = Selector.open();
@@ -311,10 +311,10 @@ public class ClusterNode extends Thread {
                         return;
                     }
 
-                    PutJob pj = new PutJob(key.attachment().toString(), main.getNewDataProcessor());
-                    jobs.put(pj.getJobID(), pj);
-                    context.setJobID(pj.getJobID());
-                    cmv.setJobID(pj.getJobID());
+//                    PutJob pj = new PutJob(key.attachment().toString(), main.getNewDataProcessor());
+//                    jobs.put(pj.getJobID(), pj);
+//                    context.setJobID(pj.getJobID());
+//                    cmv.setJobID(pj.getJobID());
 
 //                    buffer.rewind();
                     break;
@@ -387,9 +387,9 @@ public class ClusterNode extends Thread {
                     //jobQueue.add(mcj);
                     break;
                 case SYNC_STATE:
-                    SyncStateJob ssj = new SyncStateJob(cmv.getJobID(), cmv.getFrom());
-                    jobs.put(ssj.getJobID(), ssj);
-                    cmv.setJobID(ssj.getJobID());
+//                    SyncStateJob ssj = new SyncStateJob(cmv.getJobID(), cmv.getFrom());
+//                    jobs.put(ssj.getJobID(), ssj);
+//                    cmv.setJobID(ssj.getJobID());
                     break;
             }
         }
