@@ -4,14 +4,7 @@
  */
 package com.mnorrman.datastorageproject.objects;
 
-import com.mnorrman.datastorageproject.ServerState;
-import com.mnorrman.datastorageproject.tools.HexConverter;
-import java.net.InetAddress;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
 
 /**
  *
@@ -80,11 +73,12 @@ public class Tree {
         if(flatNodes.containsKey(node.getId())){
             ServerNode existingNode = flatNodes.get(node.getId()).serverNode;
             existingNode.setIpaddress(node.getIpaddress());
-            existingNode.setPort(node.getPort());
+            existingNode.setInternalport(node.getInternalport());
+            existingNode.setExternalport(node.getExternalport());
             return;
         }
         
-        if(root.children.size() < 3){
+        if(root.children.size() < 4){
             TreeNode newNode = new TreeNode(root, node);
             root.addChild(newNode);
             flatNodes.put(node.getId(), newNode);

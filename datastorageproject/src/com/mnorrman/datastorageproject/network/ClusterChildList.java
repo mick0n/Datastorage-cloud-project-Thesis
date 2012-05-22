@@ -51,7 +51,7 @@ public class ClusterChildList {
     public synchronized void put(ServerNode sn){
         if(slaves.containsKey(sn.getId())){
             slaves.get(sn.getId()).setIpaddress(sn.getIpaddress());
-            slaves.get(sn.getId()).setPort(sn.getPort());
+//            slaves.get(sn.getId()).setPort(sn.getPort());
         }else{
             slaves.put(sn.getId(), sn);
         }

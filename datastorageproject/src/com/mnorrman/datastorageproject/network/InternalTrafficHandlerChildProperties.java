@@ -8,10 +8,10 @@ import com.mnorrman.datastorageproject.LogTool;
 import com.mnorrman.datastorageproject.Main;
 import com.mnorrman.datastorageproject.objects.Range;
 import com.mnorrman.datastorageproject.objects.ServerNode;
-import com.mnorrman.datastorageproject.objects.TreeNode;
 import java.io.*;
 import java.net.InetAddress;
-import java.util.*;
+import java.util.HashMap;
+import java.util.StringTokenizer;
 
 /**
  *
@@ -43,7 +43,8 @@ public class InternalTrafficHandlerChildProperties {
         if(children.containsKey(node.getId())){
             ServerNode existingNode = children.get(node.getId());
             existingNode.setIpaddress(node.getIpaddress());
-            existingNode.setPort(node.getPort());
+            existingNode.setInternalport(node.getInternalport());
+            existingNode.setExternalport(node.getExternalport());
             node.setRange(existingNode.getRange());
             return node;
         }

@@ -1,4 +1,3 @@
-
 package com.mnorrman.datastorageproject.objects;
 
 import java.io.File;
@@ -7,7 +6,7 @@ import java.io.File;
  *
  * @author Mikael Norrman
  */
-public class UnindexedDataObject extends DataObject{
+public class UnindexedDataObject extends DataObject {
 
     private File tempFile;
 
@@ -21,23 +20,25 @@ public class UnindexedDataObject extends DataObject{
 
     /**
      * Return the temporary file-object
-     * @return 
+     *
+     * @return
      */
-    public File getTempFile(){
+    public File getTempFile() {
         return tempFile;
     }
-    
+
     /**
      * Removes the "physical" file that is connected to this object
      */
-    public void removeTempFile(){
+    public void removeTempFile() {
         tempFile.delete();
         tempFile = null;
     }
 
     /**
      * Set the checksum
-     * @param checksum 
+     *
+     * @param checksum
      */
     public void setChecksum(long checksum) {
         this.checksum = checksum;
@@ -47,9 +48,9 @@ public class UnindexedDataObject extends DataObject{
     public String getClearText() {
         return "colname=" + colname + ",rowname=" + rowname + ",owner=" + owner + ",length=" + length + ",checksum=" + checksum;
     }
-    
+
     @Override
     public String toString() {
         return "UnindexedDataObject: colname=" + colname + ", rowname=" + rowname + ", owner=" + owner + ", length=" + length + ", checksum=" + checksum;
-    }    
+    }
 }

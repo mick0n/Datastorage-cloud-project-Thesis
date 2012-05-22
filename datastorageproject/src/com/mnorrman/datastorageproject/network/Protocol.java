@@ -9,6 +9,7 @@ public enum Protocol {
     NULL (0x00),
     REDIRECT_CLIENT (0x01),
     OK (0x02),
+    UNAVAILABLE (0x03),
     GET (0x04),
     PUT (0x05),
     ROUTE (0x06),

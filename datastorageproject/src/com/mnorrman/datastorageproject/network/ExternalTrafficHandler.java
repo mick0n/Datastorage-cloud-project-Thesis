@@ -133,12 +133,10 @@ public class ExternalTrafficHandler extends Thread {
 
                                 switch (command) {
                                     case GET:
-                                        System.out.println("Get");
                                         break;
                                     case PUT:
                                         PutJob pj = new PutJob(etc, this, main.getNewDataProcessor());
                                         jobs.put(pj.getContext().identifier, pj);
-                                        System.out.println("Put");
                                         break;
 //                                    case CONNECT:
 //                                        if (!master && cmv.getFrom().equals("00000000")) {
@@ -217,7 +215,7 @@ public class ExternalTrafficHandler extends Thread {
             //to be registered with this selector. Creates a new ID for each
             //connection and stores the id as an attachment while a 
             //connectionContext is stored in a hashmap.
-            if (!channelQueue.isEmpty()) {
+            if (!channelQueue.isEmpty() && connections.size() < 50) {
 
                 SocketChannel sc = channelQueue.poll();
 
@@ -251,7 +249,7 @@ public class ExternalTrafficHandler extends Thread {
             } else {
                 bufferLimit = MAXIMUM_NETWORK_BLOCK_SIZE;
 //                buffer.limit(MAXIMUM_NETWORK_BLOCK_SIZE);
-            }
+            }            
         }
     }
 

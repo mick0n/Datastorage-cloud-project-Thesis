@@ -103,7 +103,7 @@ public class InternalTrafficHandler extends Thread {
                     if (!childStuff.masterContext.channel.isConnected()) {
                         Main.state = ServerState.CONNECTING;
                         //childStuff.channelToMaster.connect(new InetSocketAddress(InetAddress.getByName(Main.properties.getValue("master").toString()), Integer.parseInt(Main.properties.getValue("internalport").toString())));
-                        childStuff.masterContext.channel.connect(new InetSocketAddress(childStuff.masterContext.node.getIpaddress(), childStuff.masterContext.node.getPort()));
+                        childStuff.masterContext.channel.connect(new InetSocketAddress(childStuff.masterContext.node.getIpaddress(), childStuff.masterContext.node.getInternalport()));
                         while (!childStuff.masterContext.channel.finishConnect()) {
                             LogTool.log("Could not connect to master, trying again in 2 seconds", LogTool.WARNING);
                             try {

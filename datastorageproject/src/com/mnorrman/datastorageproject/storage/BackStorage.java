@@ -11,6 +11,7 @@ import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.LinkedList;
+import java.util.concurrent.Semaphore;
 import java.util.zip.CRC32;
 
 /**
@@ -24,6 +25,7 @@ public class BackStorage {
      * transfers.
      */
     public static final int BlOCK_SIZE = 131072;
+    public static Semaphore fileEditSemaphore = new Semaphore(1);
     private RandomAccessFile fileConnection;
     protected LinkedList<DataTicket> activeProcesses;
 
@@ -158,29 +160,41 @@ public class BackStorage {
             do {
                 meta.clear();
                 channel.read(meta);
+                meta.flip();
                 temp = MetaDataComposer.compose(meta, position);
-
+                System.out.println("" + temp.toString());
                 //Jump past metadata and create new CRC32-object
                 channel.position(position + 512);
                 CRC32 crc = new CRC32();
 
-                int readBytes = 0;
+                int readBytes;
                 long totalBytes = temp.getLength();
-                ByteBuffer buffer = ByteBuffer.allocate(BlOCK_SIZE);
+                byte[] bufferArray = new byte[BlOCK_SIZE];
+                ByteBuffer buffer = ByteBuffer.wrap(bufferArray);
 
                 //Start reading the filedata
                 while (totalBytes > 0) {
                     buffer.clear();
+                    if(totalBytes <= BlOCK_SIZE)
+                        buffer.limit((int)totalBytes);
+                    else{
+                        buffer.limit(buffer.capacity());
+                    }
                     readBytes = channel.read(buffer);
                     buffer.flip();
 
                     //If remaining filesize is less than the read bytes then
                     //we must limit the number of bytes used in the crc32.
-                    if (readBytes >= totalBytes) {
-                        crc.update(buffer.array(), 0, (int) (totalBytes));
-                    } else {
-                        crc.update(buffer.array(), 0, readBytes);
-                    }
+                    crc.update(bufferArray, 0, readBytes);
+                    System.out.println("totalBytes: " + totalBytes + ", bufferarray len: " + bufferArray.length + " readbytees: " + readBytes);
+                    
+//                    if (readBytes >= totalBytes) {
+//                        crc.update(bufferArray, 0, (int) (totalBytes));
+//                        System.out.println("totalBytes: " + totalBytes + ", bufferarray len: " + bufferArray.length + " readbytees: " + readBytes);
+//                    } else {
+//                        System.out.println("totalBytes: " + totalBytes + ", bufferarray len: " + bufferArray.length + " readbytees: " + readBytes);
+//                        crc.update(bufferArray, 0, readBytes);
+//                    }
 
                     totalBytes -= readBytes;
 

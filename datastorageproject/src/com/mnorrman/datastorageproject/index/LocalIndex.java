@@ -32,28 +32,28 @@ public final class LocalIndex extends Index<IndexedDataObject> {
     /**
      * Clear the index
      */
-    public LocalIndex clear(){
+    public synchronized LocalIndex clear(){
         table.clear();
         return this;
     }
     
     @Override
-    public boolean contains(String hash) {
+    public synchronized boolean contains(String hash) {
         return table.containsKey(hash);
     }
 
     @Override
-    public boolean contains(String a, String b) {
+    public synchronized boolean contains(String a, String b) {
         return table.containsKey(Hash.get(a, b));
     }
 
     @Override
-    public IndexedDataObject get(String a, String b) {
+    public synchronized IndexedDataObject get(String a, String b) {
         return table.get(Hash.get(a, b)).get(0);
     }
 
     @Override
-    public IndexedDataObject get(String a, String b, int version) {
+    public synchronized IndexedDataObject get(String a, String b, int version) {
         if(table.get(Hash.get(a, b)).size() > version && version >= 0)
             return table.get(Hash.get(a, b)).get(version);
         else
@@ -61,12 +61,12 @@ public final class LocalIndex extends Index<IndexedDataObject> {
     }
 
     @Override
-    public IndexedDataObject get(String hash) {
+    public synchronized IndexedDataObject get(String hash) {
         return table.get(hash).get(0);
     }
 
     @Override
-    public IndexedDataObject get(String hash, int version) {
+    public synchronized IndexedDataObject get(String hash, int version) {
         if(table.get(hash).size() > version && version >= 0)
             return table.get(hash).get(version);
         else
@@ -74,7 +74,7 @@ public final class LocalIndex extends Index<IndexedDataObject> {
     }
 
     @Override
-    public void insert(IndexedDataObject dataObject) {
+    public synchronized void insert(IndexedDataObject dataObject) {
         String hash = dataObject.getHash();
         if(table.containsKey(hash)){
             ArrayList<IndexedDataObject> temp = table.get(hash);
@@ -99,7 +99,7 @@ public final class LocalIndex extends Index<IndexedDataObject> {
     }
 
     @Override
-    public void insertAll(List<IndexedDataObject> list) {
+    public synchronized void insertAll(List<IndexedDataObject> list) {
         Iterator<IndexedDataObject> iterator = list.iterator();
         while(iterator.hasNext()){
             insert(iterator.next());
@@ -107,42 +107,42 @@ public final class LocalIndex extends Index<IndexedDataObject> {
     }
 
     @Override
-    public void remove(String a, String b) {
+    public synchronized void remove(String a, String b) {
         table.remove(Hash.get(a, b));
     }
 
     @Override
-    public void remove(String hash) {
+    public synchronized void remove(String hash) {
         table.remove(hash);
     }
 
     @Override
-    public void remove(String a, String b, int version) {
+    public synchronized void remove(String a, String b, int version) {
         table.get(Hash.get(a, b)).remove(version);
     }
 
     @Override
-    public void remove(String hash, int version) {
+    public synchronized void remove(String hash, int version) {
         table.get(hash).remove(version);
     }
 
     @Override
-    public int versionCount(IndexedDataObject dataObject) {
+    public synchronized int versionCount(IndexedDataObject dataObject) {
         return table.get(Hash.get(dataObject.getColname(), dataObject.getRowname())).size();
     }
 
     @Override
-    public int versionCount(String a, String b) {
+    public synchronized int versionCount(String a, String b) {
         return table.get(Hash.get(a, b)).size();
     }
 
     @Override
-    public int versionCount(String hash) {
+    public synchronized int versionCount(String hash) {
         return table.get(hash).size();
     }
     
     @Override
-    public Collection<ArrayList<IndexedDataObject>> getData(){
+    public synchronized Collection<ArrayList<IndexedDataObject>> getData(){
         return table.values();
     }
     
@@ -150,7 +150,7 @@ public final class LocalIndex extends Index<IndexedDataObject> {
      * Populates a hashtable that uses only column as key, not hash(column + row)
      * @return 
      */
-    public HashMap<String, ArrayList<IndexedDataObject>> getDistinctData(){
+    public synchronized HashMap<String, ArrayList<IndexedDataObject>> getDistinctData(){
         HashMap<String, ArrayList<IndexedDataObject>> list = new HashMap<String, ArrayList<IndexedDataObject>>();
         
         for(ArrayList<IndexedDataObject> al : table.values()){
@@ -165,7 +165,7 @@ public final class LocalIndex extends Index<IndexedDataObject> {
         return list;
     }
     
-    public LinkedList<ArrayList<IndexedDataObject>> cloneData(){
+    public synchronized LinkedList<ArrayList<IndexedDataObject>> cloneData(){
         LinkedList<ArrayList<IndexedDataObject>> list = new LinkedList<ArrayList<IndexedDataObject>>();
         
         Iterator<ArrayList<IndexedDataObject>> it1 = table.values().iterator();

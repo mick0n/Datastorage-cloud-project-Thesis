@@ -5,8 +5,6 @@
 package com.mnorrman.datastorageproject;
 
 import com.mnorrman.datastorageproject.network.InternalTrafficHandler;
-import com.mnorrman.datastorageproject.network.MasterNode;
-import com.mnorrman.datastorageproject.objects.ServerNode;
 import com.mnorrman.datastorageproject.objects.TreeNode;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -52,10 +50,10 @@ public class ServerMonitor extends javax.swing.JFrame implements Runnable{
                 while(it.hasNext()){
                     TreeNode tn = it.next();
                     if(tn.getParentNode() == null)
-                        data[index] = "null      : 0x" + tn.getServerNode().getId() + ", " + tn.getServerNode().getIpaddress().getHostAddress() + ", " + tn.getServerNode().getPort() + ", " + tn.getServerNode().getDataSize() + ", " + tn.getServerNode().getState().toString();
+                        data[index] = "null      : 0x" + tn.getServerNode().getId() + ", " + tn.getServerNode().getIpaddress().getHostAddress() + ", i" + tn.getServerNode().getInternalport() + ", e" + tn.getServerNode().getExternalport() +  ", " + tn.getServerNode().getDataSize() + ", " + tn.getServerNode().getState().toString();
                     else
                         data[index] = "0x" + tn.getParentNode().getServerNode().getId() + ""
-                            + ": 0x" + tn.getServerNode().getId() + ", " + tn.getServerNode().getIpaddress().getHostAddress() + ", " + tn.getServerNode().getPort() + ", " + tn.getServerNode().getDataSize() + ", " + tn.getServerNode().getState().toString();
+                            + ": 0x" + tn.getServerNode().getId() + ", " + tn.getServerNode().getIpaddress().getHostAddress() + ", i" + tn.getServerNode().getInternalport() + ", e" + tn.getServerNode().getExternalport() + ", " + tn.getServerNode().getDataSize() + ", " + tn.getServerNode().getState().toString();
                     index++;
                     
 //                    data[index][0] = sn.getId();

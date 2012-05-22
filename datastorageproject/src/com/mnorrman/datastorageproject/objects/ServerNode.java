@@ -11,7 +11,7 @@ import java.net.InetAddress;
 public class ServerNode {
         
     private InetAddress ipaddress;
-    private int port;
+    private int internalport, externalport;
     private String id;
     
     
@@ -20,9 +20,9 @@ public class ServerNode {
     private long dataSize;
     private long storageLimit;
 
-    public ServerNode(InetAddress ipaddress, int port, String id) {
+    public ServerNode(InetAddress ipaddress, int internalport, String id) {
         this.ipaddress = ipaddress;
-        this.port = port;
+        this.internalport = internalport;
         this.id = id;
         this.state = ServerState.NOTRUNNING;
     }
@@ -43,12 +43,20 @@ public class ServerNode {
         this.id = id;
     }
 
-    public int getPort() {
-        return port;
+    public int getExternalport() {
+        return externalport;
     }
 
-    public void setPort(int port) {
-        this.port = port;
+    public void setExternalport(int externalport) {
+        this.externalport = externalport;
+    }
+
+    public int getInternalport() {
+        return internalport;
+    }
+
+    public void setInternalport(int internalport) {
+        this.internalport = internalport;
     }
 
     public long getStorageLimit() {
@@ -86,8 +94,8 @@ public class ServerNode {
     @Override
     public String toString() {
         if(range == null)
-            return ipaddress.getHostAddress() + "," + port + "," + id;
+            return ipaddress.getHostAddress() + "," + internalport + "," + id;
         else
-            return ipaddress.getHostAddress() + "," + port + "," + id + "," + range.startRange + "," + range.endRange;
+            return ipaddress.getHostAddress() + "," + internalport + "," + id + "," + range.startRange + "," + range.endRange;
     }
 }

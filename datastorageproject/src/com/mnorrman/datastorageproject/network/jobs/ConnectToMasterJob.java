@@ -73,10 +73,11 @@ public class ConnectToMasterJob extends InternalJob{
     @Override
     public boolean writeOperation(SocketChannel s, ByteBuffer buffer) throws IOException {
         buffer.put(HexConverter.toByte(Main.ID));
-        buffer.putInt(9);
+        buffer.putInt(13);
         buffer.put(HexConverter.toByte(getJobID()));
         buffer.put(Protocol.CONNECT.getValue());
         buffer.putInt(Integer.parseInt(Main.properties.getValue("internalport").toString()));
+        buffer.putInt(Integer.parseInt(Main.properties.getValue("externalport").toString()));
         buffer.flip();
         while(buffer.hasRemaining())
             s.write(buffer);

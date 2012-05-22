@@ -31,7 +31,7 @@ public class GloballyIndexedDataObject extends DataObject{
     
     @Override
     public String toString() {
-        return indexOwner.getIpaddress().toString() + ":" + indexOwner.getPort() + "(" + indexOwner.getId() + ") >>> Colname: " + colname + ", Rowname: " + rowname + ", Owner: " + owner + ", Version: " + version + ", Length: " + length + ", Checksum: " + checksum;
+        return indexOwner.getIpaddress().toString() + ":" + indexOwner.getInternalport() + "(" + indexOwner.getId() + ") >>> Colname: " + colname + ", Rowname: " + rowname + ", Owner: " + owner + ", Version: " + version + ", Length: " + length + ", Checksum: " + checksum;
     }
     
     public ServerNode getServerNode(){

@@ -44,12 +44,13 @@ public class InternalTrafficHandlerMasterProperties {
         if(children.containsKey(node.getId())){
             ServerNode existingNode = children.get(node.getId());
             existingNode.setIpaddress(node.getIpaddress());
-            existingNode.setPort(node.getPort());
+            existingNode.setInternalport(node.getInternalport());
+            existingNode.setExternalport(node.getExternalport());
             node.setRange(existingNode.getRange());
             return node;
         }
         
-        if(children.size() >= 3)
+        if(children.size() >= 4)
             throw new IndexOutOfBoundsException("To many elements");
 
         children.put(node.getId(), node);
@@ -74,12 +75,15 @@ public class InternalTrafficHandlerMasterProperties {
         //calculate range
         switch(newNodeIndex){
             case 0:
-                node.setRange(new Range(base.startRange + (step * 1) + 1, base.startRange + (step * 2)));
+                node.setRange(new Range(base.startRange + (step * 0), base.startRange + (step * 1)));
                 break;
             case 1:
-                node.setRange(new Range(base.startRange + (step * 2) + 1, base.startRange + (step * 3)));
+                node.setRange(new Range(base.startRange + (step * 1) + 1, base.startRange + (step * 2)));
                 break;
             case 2:
+                node.setRange(new Range(base.startRange + (step * 2) + 1, base.startRange + (step * 3)));
+                break;
+            case 3:
                 node.setRange(new Range(base.startRange + (step * 3) + 1, base.startRange + (step * 4) + remainder));
                 break;
         }

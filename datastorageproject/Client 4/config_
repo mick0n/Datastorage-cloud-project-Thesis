@@ -18,17 +18,17 @@ indexInterval = 900
 
 #master - IP-address or hostname of the master server
 #If this server is the master, use 127.0.0.1
-master = 127.0.0.1
+master = localhost
 
 
 #externalport - port number used by clients to contact this server.
 #Always make sure that this port is opened in your firewall.
-externalport = 8999
+externalport = 8995
 
 
 #internalport - port number used by the cluster.
 #Always make sure that this port is opened in your firewall.
-internalport = 8989
+internalport = 8985
 
 
 #autoclean - True if the server should be able to initiate

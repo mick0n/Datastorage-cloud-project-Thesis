@@ -10,7 +10,6 @@ import com.mnorrman.datastorageproject.network.InternalTrafficContext;
 import com.mnorrman.datastorageproject.network.InternalTrafficHandler;
 import com.mnorrman.datastorageproject.network.Protocol;
 import com.mnorrman.datastorageproject.objects.ServerNode;
-import com.mnorrman.datastorageproject.objects.TreeNode;
 import com.mnorrman.datastorageproject.tools.HexConverter;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -35,7 +34,8 @@ public class ReceiveConnectJob extends InternalJob{
         buffer.rewind();
         ClusterMessageVariables cmv = new ClusterMessageVariables(buffer);
         buffer.get();
-        int port = buffer.getInt();
+        int internalport = buffer.getInt();
+        int externalport = buffer.getInt();
         
         System.out.println("Got connect from 0x" + cmv.getFrom());
         
@@ -50,7 +50,8 @@ public class ReceiveConnectJob extends InternalJob{
         System.out.println("Switching connection from 0x" + getContext().getIdentifier() + " to 0x" + cmv.getFrom());
         ith.switchConnectionID(getContext().getIdentifier(), cmv.getFrom());
         
-        getContext().getNode().setPort(port);
+        getContext().getNode().setInternalport(internalport);
+        getContext().getNode().setExternalport(externalport);
         
         if(ith.isMaster()){
             //Add new node. If it exists in the tree the new ip and port will be updated.
@@ -115,7 +116,7 @@ public class ReceiveConnectJob extends InternalJob{
                 buffer.put(Protocol.REDIRECT.getValue());
                 buffer.put(HexConverter.toByte(getContext().getIdentifier()));
                 buffer.put(parentNode.getIpaddress().getAddress());
-                buffer.putInt(parentNode.getPort());
+                buffer.putInt(parentNode.getInternalport());
                 buffer.put(HexConverter.toByte(parentNode.getId()));
             }
         }else{
