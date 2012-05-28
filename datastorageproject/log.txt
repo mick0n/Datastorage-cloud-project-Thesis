@@ -1,0 +1,141 @@
+Wed May 23 23:06:30 CEST 2012: WARNING: Uncorrect shutdown detected. Verifying data integrity...
+Wed May 23 23:06:30 CEST 2012: WARNING: No data in file, jumping out
+Wed May 23 23:07:21 CEST 2012: WARNING: Integrity check failed @
+Wed May 23 23:07:21 CEST 2012: WARNING: colname=2,rowname=2.txt,owner=Client,offset=27514,length=284,version=1337807217271,checksum=3551638318
+Wed May 23 23:07:21 CEST 2012: WARNING: Reason: Checksums don't match: 3551638318 expected, got 1405270411
+Wed May 23 23:50:44 CEST 2012: WARNING: Uncorrect shutdown detected. Verifying data integrity...
+Thu May 24 00:36:41 CEST 2012: WARNING: Uncorrect shutdown detected. Verifying data integrity...
+Thu May 24 10:12:53 CEST 2012: WARNING: Uncorrect shutdown detected. Verifying data integrity...
+Mon May 28 10:28:07 CEST 2012: WARNING: Uncorrect shutdown detected. Verifying data integrity...
+Mon May 28 10:29:01 CEST 2012: WARNING: Uncorrect shutdown detected. Verifying data integrity...
+Mon May 28 11:54:26 CEST 2012: WARNING: Uncorrect shutdown detected. Verifying data integrity...
+Mon May 28 11:54:45 CEST 2012: CRITICAL: java.io.IOException: En etablerad anslutning avbröts av programvaran i värddatorn
+Mon May 28 11:54:45 CEST 2012: CRITICAL: 	at sun.nio.ch.SocketDispatcher.write0(Native Method)
+Mon May 28 11:54:45 CEST 2012: CRITICAL: 	at sun.nio.ch.SocketDispatcher.write(SocketDispatcher.java:51)
+Mon May 28 11:54:45 CEST 2012: CRITICAL: 	at sun.nio.ch.IOUtil.writeFromNativeBuffer(IOUtil.java:89)
+Mon May 28 11:54:45 CEST 2012: CRITICAL: 	at sun.nio.ch.IOUtil.write(IOUtil.java:46)
+Mon May 28 11:54:45 CEST 2012: CRITICAL: 	at sun.nio.ch.SocketChannelImpl.write(SocketChannelImpl.java:450)
+Mon May 28 11:54:45 CEST 2012: CRITICAL: 	at com.mnorrman.datastorageproject.network.jobs.GetJob.writeOperation(GetJob.java:98)
+Mon May 28 11:54:45 CEST 2012: CRITICAL: 	at com.mnorrman.datastorageproject.network.ExternalTrafficHandler.run(ExternalTrafficHandler.java:184)
+Mon May 28 11:58:18 CEST 2012: WARNING: Uncorrect shutdown detected. Verifying data integrity...
+Mon May 28 11:58:32 CEST 2012: CRITICAL: java.io.IOException: En etablerad anslutning avbröts av programvaran i värddatorn
+Mon May 28 11:58:32 CEST 2012: CRITICAL: 	at sun.nio.ch.SocketDispatcher.write0(Native Method)
+Mon May 28 11:58:32 CEST 2012: CRITICAL: 	at sun.nio.ch.SocketDispatcher.write(SocketDispatcher.java:51)
+Mon May 28 11:58:32 CEST 2012: CRITICAL: 	at sun.nio.ch.IOUtil.writeFromNativeBuffer(IOUtil.java:89)
+Mon May 28 11:58:32 CEST 2012: CRITICAL: 	at sun.nio.ch.IOUtil.write(IOUtil.java:46)
+Mon May 28 11:58:32 CEST 2012: CRITICAL: 	at sun.nio.ch.SocketChannelImpl.write(SocketChannelImpl.java:450)
+Mon May 28 11:58:32 CEST 2012: CRITICAL: 	at com.mnorrman.datastorageproject.network.jobs.GetJob.writeOperation(GetJob.java:98)
+Mon May 28 11:58:32 CEST 2012: CRITICAL: 	at com.mnorrman.datastorageproject.network.ExternalTrafficHandler.run(ExternalTrafficHandler.java:184)
+Mon May 28 12:02:05 CEST 2012: WARNING: Uncorrect shutdown detected. Verifying data integrity...
+Mon May 28 12:02:19 CEST 2012: CRITICAL: java.io.IOException: En etablerad anslutning avbröts av programvaran i värddatorn
+Mon May 28 12:02:19 CEST 2012: CRITICAL: 	at sun.nio.ch.SocketDispatcher.write0(Native Method)
+Mon May 28 12:02:19 CEST 2012: CRITICAL: 	at sun.nio.ch.SocketDispatcher.write(SocketDispatcher.java:51)
+Mon May 28 12:02:19 CEST 2012: CRITICAL: 	at sun.nio.ch.IOUtil.writeFromNativeBuffer(IOUtil.java:89)
+Mon May 28 12:02:19 CEST 2012: CRITICAL: 	at sun.nio.ch.IOUtil.write(IOUtil.java:46)
+Mon May 28 12:02:19 CEST 2012: CRITICAL: 	at sun.nio.ch.SocketChannelImpl.write(SocketChannelImpl.java:450)
+Mon May 28 12:02:19 CEST 2012: CRITICAL: 	at com.mnorrman.datastorageproject.network.jobs.GetJob.writeOperation(GetJob.java:102)
+Mon May 28 12:02:19 CEST 2012: CRITICAL: 	at com.mnorrman.datastorageproject.network.ExternalTrafficHandler.run(ExternalTrafficHandler.java:184)
+Mon May 28 12:06:14 CEST 2012: WARNING: Uncorrect shutdown detected. Verifying data integrity...
+Mon May 28 12:06:27 CEST 2012: CRITICAL: java.io.IOException: En etablerad anslutning avbröts av programvaran i värddatorn
+Mon May 28 12:06:27 CEST 2012: CRITICAL: 	at sun.nio.ch.SocketDispatcher.write0(Native Method)
+Mon May 28 12:06:27 CEST 2012: CRITICAL: 	at sun.nio.ch.SocketDispatcher.write(SocketDispatcher.java:51)
+Mon May 28 12:06:27 CEST 2012: CRITICAL: 	at sun.nio.ch.IOUtil.writeFromNativeBuffer(IOUtil.java:89)
+Mon May 28 12:06:27 CEST 2012: CRITICAL: 	at sun.nio.ch.IOUtil.write(IOUtil.java:46)
+Mon May 28 12:06:27 CEST 2012: CRITICAL: 	at sun.nio.ch.SocketChannelImpl.write(SocketChannelImpl.java:450)
+Mon May 28 12:06:27 CEST 2012: CRITICAL: 	at com.mnorrman.datastorageproject.network.jobs.GetJob.writeOperation(GetJob.java:105)
+Mon May 28 12:06:27 CEST 2012: CRITICAL: 	at com.mnorrman.datastorageproject.network.ExternalTrafficHandler.run(ExternalTrafficHandler.java:184)
+Mon May 28 12:08:19 CEST 2012: WARNING: Uncorrect shutdown detected. Verifying data integrity...
+Mon May 28 12:08:41 CEST 2012: CRITICAL: java.io.IOException: En etablerad anslutning avbröts av programvaran i värddatorn
+Mon May 28 12:08:41 CEST 2012: CRITICAL: 	at sun.nio.ch.SocketDispatcher.write0(Native Method)
+Mon May 28 12:08:41 CEST 2012: CRITICAL: 	at sun.nio.ch.SocketDispatcher.write(SocketDispatcher.java:51)
+Mon May 28 12:08:41 CEST 2012: CRITICAL: 	at sun.nio.ch.IOUtil.writeFromNativeBuffer(IOUtil.java:89)
+Mon May 28 12:08:41 CEST 2012: CRITICAL: 	at sun.nio.ch.IOUtil.write(IOUtil.java:46)
+Mon May 28 12:08:41 CEST 2012: CRITICAL: 	at sun.nio.ch.SocketChannelImpl.write(SocketChannelImpl.java:450)
+Mon May 28 12:08:41 CEST 2012: CRITICAL: 	at com.mnorrman.datastorageproject.network.jobs.GetJob.writeOperation(GetJob.java:105)
+Mon May 28 12:08:41 CEST 2012: CRITICAL: 	at com.mnorrman.datastorageproject.network.ExternalTrafficHandler.run(ExternalTrafficHandler.java:184)
+Mon May 28 12:09:30 CEST 2012: WARNING: Uncorrect shutdown detected. Verifying data integrity...
+Mon May 28 12:09:45 CEST 2012: CRITICAL: java.io.IOException: En etablerad anslutning avbröts av programvaran i värddatorn
+Mon May 28 12:09:45 CEST 2012: CRITICAL: 	at sun.nio.ch.SocketDispatcher.write0(Native Method)
+Mon May 28 12:09:45 CEST 2012: CRITICAL: 	at sun.nio.ch.SocketDispatcher.write(SocketDispatcher.java:51)
+Mon May 28 12:09:45 CEST 2012: CRITICAL: 	at sun.nio.ch.IOUtil.writeFromNativeBuffer(IOUtil.java:89)
+Mon May 28 12:09:45 CEST 2012: CRITICAL: 	at sun.nio.ch.IOUtil.write(IOUtil.java:46)
+Mon May 28 12:09:45 CEST 2012: CRITICAL: 	at sun.nio.ch.SocketChannelImpl.write(SocketChannelImpl.java:450)
+Mon May 28 12:09:45 CEST 2012: CRITICAL: 	at com.mnorrman.datastorageproject.network.jobs.GetJob.writeOperation(GetJob.java:106)
+Mon May 28 12:09:45 CEST 2012: CRITICAL: 	at com.mnorrman.datastorageproject.network.ExternalTrafficHandler.run(ExternalTrafficHandler.java:184)
+Mon May 28 12:11:34 CEST 2012: WARNING: Uncorrect shutdown detected. Verifying data integrity...
+Mon May 28 12:11:44 CEST 2012: CRITICAL: java.io.IOException: En etablerad anslutning avbröts av programvaran i värddatorn
+Mon May 28 12:11:44 CEST 2012: CRITICAL: 	at sun.nio.ch.SocketDispatcher.write0(Native Method)
+Mon May 28 12:11:44 CEST 2012: CRITICAL: 	at sun.nio.ch.SocketDispatcher.write(SocketDispatcher.java:51)
+Mon May 28 12:11:44 CEST 2012: CRITICAL: 	at sun.nio.ch.IOUtil.writeFromNativeBuffer(IOUtil.java:89)
+Mon May 28 12:11:44 CEST 2012: CRITICAL: 	at sun.nio.ch.IOUtil.write(IOUtil.java:46)
+Mon May 28 12:11:44 CEST 2012: CRITICAL: 	at sun.nio.ch.SocketChannelImpl.write(SocketChannelImpl.java:450)
+Mon May 28 12:11:44 CEST 2012: CRITICAL: 	at com.mnorrman.datastorageproject.network.jobs.GetJob.writeOperation(GetJob.java:111)
+Mon May 28 12:11:44 CEST 2012: CRITICAL: 	at com.mnorrman.datastorageproject.network.ExternalTrafficHandler.run(ExternalTrafficHandler.java:184)
+Mon May 28 12:11:44 CEST 2012: CRITICAL: java.io.IOException: En etablerad anslutning avbröts av programvaran i värddatorn
+Mon May 28 12:11:44 CEST 2012: CRITICAL: 	at sun.nio.ch.SocketDispatcher.write0(Native Method)
+Mon May 28 12:11:44 CEST 2012: CRITICAL: 	at sun.nio.ch.SocketDispatcher.write(SocketDispatcher.java:51)
+Mon May 28 12:11:44 CEST 2012: CRITICAL: 	at sun.nio.ch.IOUtil.writeFromNativeBuffer(IOUtil.java:89)
+Mon May 28 12:11:44 CEST 2012: CRITICAL: 	at sun.nio.ch.IOUtil.write(IOUtil.java:46)
+Mon May 28 12:11:44 CEST 2012: CRITICAL: 	at sun.nio.ch.SocketChannelImpl.write(SocketChannelImpl.java:450)
+Mon May 28 12:11:44 CEST 2012: CRITICAL: 	at com.mnorrman.datastorageproject.network.jobs.GetJob.writeOperation(GetJob.java:111)
+Mon May 28 12:11:44 CEST 2012: CRITICAL: 	at com.mnorrman.datastorageproject.network.ExternalTrafficHandler.run(ExternalTrafficHandler.java:184)
+Mon May 28 12:13:38 CEST 2012: WARNING: Uncorrect shutdown detected. Verifying data integrity...
+Mon May 28 12:13:48 CEST 2012: CRITICAL: java.io.IOException: En etablerad anslutning avbröts av programvaran i värddatorn
+Mon May 28 12:13:48 CEST 2012: CRITICAL: 	at sun.nio.ch.SocketDispatcher.write0(Native Method)
+Mon May 28 12:13:48 CEST 2012: CRITICAL: 	at sun.nio.ch.SocketDispatcher.write(SocketDispatcher.java:51)
+Mon May 28 12:13:48 CEST 2012: CRITICAL: 	at sun.nio.ch.IOUtil.writeFromNativeBuffer(IOUtil.java:89)
+Mon May 28 12:13:48 CEST 2012: CRITICAL: 	at sun.nio.ch.IOUtil.write(IOUtil.java:46)
+Mon May 28 12:13:48 CEST 2012: CRITICAL: 	at sun.nio.ch.SocketChannelImpl.write(SocketChannelImpl.java:450)
+Mon May 28 12:13:48 CEST 2012: CRITICAL: 	at com.mnorrman.datastorageproject.network.jobs.GetJob.writeOperation(GetJob.java:111)
+Mon May 28 12:13:48 CEST 2012: CRITICAL: 	at com.mnorrman.datastorageproject.network.ExternalTrafficHandler.run(ExternalTrafficHandler.java:184)
+Mon May 28 12:13:48 CEST 2012: CRITICAL: java.io.IOException: En etablerad anslutning avbröts av programvaran i värddatorn
+Mon May 28 12:13:48 CEST 2012: CRITICAL: 	at sun.nio.ch.SocketDispatcher.write0(Native Method)
+Mon May 28 12:13:48 CEST 2012: CRITICAL: 	at sun.nio.ch.SocketDispatcher.write(SocketDispatcher.java:51)
+Mon May 28 12:13:48 CEST 2012: CRITICAL: 	at sun.nio.ch.IOUtil.writeFromNativeBuffer(IOUtil.java:89)
+Mon May 28 12:13:48 CEST 2012: CRITICAL: 	at sun.nio.ch.IOUtil.write(IOUtil.java:46)
+Mon May 28 12:13:48 CEST 2012: CRITICAL: 	at sun.nio.ch.SocketChannelImpl.write(SocketChannelImpl.java:450)
+Mon May 28 12:13:48 CEST 2012: CRITICAL: 	at com.mnorrman.datastorageproject.network.jobs.GetJob.writeOperation(GetJob.java:111)
+Mon May 28 12:13:48 CEST 2012: CRITICAL: 	at com.mnorrman.datastorageproject.network.ExternalTrafficHandler.run(ExternalTrafficHandler.java:184)
+Mon May 28 12:17:48 CEST 2012: WARNING: Uncorrect shutdown detected. Verifying data integrity...
+Mon May 28 12:17:59 CEST 2012: CRITICAL: java.io.IOException: En etablerad anslutning avbröts av programvaran i värddatorn
+Mon May 28 12:17:59 CEST 2012: CRITICAL: 	at sun.nio.ch.SocketDispatcher.write0(Native Method)
+Mon May 28 12:17:59 CEST 2012: CRITICAL: 	at sun.nio.ch.SocketDispatcher.write(SocketDispatcher.java:51)
+Mon May 28 12:17:59 CEST 2012: CRITICAL: 	at sun.nio.ch.IOUtil.writeFromNativeBuffer(IOUtil.java:89)
+Mon May 28 12:17:59 CEST 2012: CRITICAL: 	at sun.nio.ch.IOUtil.write(IOUtil.java:46)
+Mon May 28 12:17:59 CEST 2012: CRITICAL: 	at sun.nio.ch.SocketChannelImpl.write(SocketChannelImpl.java:450)
+Mon May 28 12:17:59 CEST 2012: CRITICAL: 	at com.mnorrman.datastorageproject.network.jobs.GetJob.writeOperation(GetJob.java:112)
+Mon May 28 12:17:59 CEST 2012: CRITICAL: 	at com.mnorrman.datastorageproject.network.ExternalTrafficHandler.run(ExternalTrafficHandler.java:184)
+Mon May 28 12:20:27 CEST 2012: WARNING: Uncorrect shutdown detected. Verifying data integrity...
+Mon May 28 12:20:39 CEST 2012: CRITICAL: java.io.IOException: En etablerad anslutning avbröts av programvaran i värddatorn
+Mon May 28 12:20:39 CEST 2012: CRITICAL: 	at sun.nio.ch.SocketDispatcher.write0(Native Method)
+Mon May 28 12:20:39 CEST 2012: CRITICAL: 	at sun.nio.ch.SocketDispatcher.write(SocketDispatcher.java:51)
+Mon May 28 12:20:39 CEST 2012: CRITICAL: 	at sun.nio.ch.IOUtil.writeFromNativeBuffer(IOUtil.java:89)
+Mon May 28 12:20:39 CEST 2012: CRITICAL: 	at sun.nio.ch.IOUtil.write(IOUtil.java:46)
+Mon May 28 12:20:39 CEST 2012: CRITICAL: 	at sun.nio.ch.SocketChannelImpl.write(SocketChannelImpl.java:450)
+Mon May 28 12:20:39 CEST 2012: CRITICAL: 	at com.mnorrman.datastorageproject.network.jobs.GetJob.writeOperation(GetJob.java:113)
+Mon May 28 12:20:39 CEST 2012: CRITICAL: 	at com.mnorrman.datastorageproject.network.ExternalTrafficHandler.run(ExternalTrafficHandler.java:184)
+Mon May 28 12:24:09 CEST 2012: WARNING: Uncorrect shutdown detected. Verifying data integrity...
+Mon May 28 12:24:22 CEST 2012: CRITICAL: java.io.IOException: En etablerad anslutning avbröts av programvaran i värddatorn
+Mon May 28 12:24:22 CEST 2012: CRITICAL: 	at sun.nio.ch.SocketDispatcher.write0(Native Method)
+Mon May 28 12:24:22 CEST 2012: CRITICAL: 	at sun.nio.ch.SocketDispatcher.write(SocketDispatcher.java:51)
+Mon May 28 12:24:22 CEST 2012: CRITICAL: 	at sun.nio.ch.IOUtil.writeFromNativeBuffer(IOUtil.java:89)
+Mon May 28 12:24:22 CEST 2012: CRITICAL: 	at sun.nio.ch.IOUtil.write(IOUtil.java:46)
+Mon May 28 12:24:22 CEST 2012: CRITICAL: 	at sun.nio.ch.SocketChannelImpl.write(SocketChannelImpl.java:450)
+Mon May 28 12:24:22 CEST 2012: CRITICAL: 	at com.mnorrman.datastorageproject.network.jobs.GetJob.writeOperation(GetJob.java:115)
+Mon May 28 12:24:22 CEST 2012: CRITICAL: 	at com.mnorrman.datastorageproject.network.ExternalTrafficHandler.run(ExternalTrafficHandler.java:184)
+Mon May 28 12:24:49 CEST 2012: WARNING: Uncorrect shutdown detected. Verifying data integrity...
+Mon May 28 12:26:14 CEST 2012: WARNING: Uncorrect shutdown detected. Verifying data integrity...
+Mon May 28 12:28:17 CEST 2012: WARNING: Uncorrect shutdown detected. Verifying data integrity...
+Mon May 28 12:29:07 CEST 2012: WARNING: Uncorrect shutdown detected. Verifying data integrity...
+Mon May 28 12:30:42 CEST 2012: WARNING: Uncorrect shutdown detected. Verifying data integrity...
+Mon May 28 12:32:23 CEST 2012: WARNING: Uncorrect shutdown detected. Verifying data integrity...
+Mon May 28 12:32:24 CEST 2012: CRITICAL: java.net.BindException: Address already in use: bind
+Mon May 28 12:32:24 CEST 2012: CRITICAL: 	at sun.nio.ch.Net.bind0(Native Method)
+Mon May 28 12:32:24 CEST 2012: CRITICAL: 	at sun.nio.ch.Net.bind(Net.java:344)
+Mon May 28 12:32:24 CEST 2012: CRITICAL: 	at sun.nio.ch.Net.bind(Net.java:336)
+Mon May 28 12:32:24 CEST 2012: CRITICAL: 	at sun.nio.ch.ServerSocketChannelImpl.bind(ServerSocketChannelImpl.java:199)
+Mon May 28 12:32:24 CEST 2012: CRITICAL: 	at sun.nio.ch.ServerSocketAdaptor.bind(ServerSocketAdaptor.java:74)
+Mon May 28 12:32:24 CEST 2012: CRITICAL: 	at sun.nio.ch.ServerSocketAdaptor.bind(ServerSocketAdaptor.java:67)
+Mon May 28 12:32:24 CEST 2012: CRITICAL: 	at com.mnorrman.datastorageproject.network.DualClusterListener.run(DualClusterListener.java:43)
+Mon May 28 12:40:05 CEST 2012: WARNING: Uncorrect shutdown detected. Verifying data integrity...
+Mon May 28 12:40:05 CEST 2012: WARNING: No data in file, jumping out

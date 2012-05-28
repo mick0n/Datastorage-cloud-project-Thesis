@@ -40,12 +40,12 @@ public class DataProcessor {
     public int retrieveData(ByteBuffer buffer, long position, IndexedDataObject ido) {
         try {
             if (buffer.position() != 0) {
-                buffer.clear();
+                buffer.rewind();
             }
 
             ticket.getChannel().position(((ido.getOffset() + 512L) + position));
 
-            if (ido.getLength() - position < buffer.capacity()) {
+            if (ido.getLength() - position < buffer.limit()) {
                 buffer.limit((int) (ido.getLength() - position));
             }
 
@@ -98,13 +98,8 @@ public class DataProcessor {
         finish();
         return false;
     }
-
+    
     public IndexedDataObject storeData(UnindexedDataObject udo) {
-
-        long filesizeBeforeOperation = -1;
-
-
-
         try {
             ByteBuffer bbb = MetaDataComposer.decompose(udo);
             bbb.position(256);
@@ -114,8 +109,6 @@ public class DataProcessor {
             BackStorage.fileEditSemaphore.acquire();
             
             long newOffset = ticket.getChannel().size();
-
-            filesizeBeforeOperation = newOffset;
 
             ticket.getChannel().position(newOffset);
             ticket.getChannel().write(bbb);
@@ -135,7 +128,7 @@ public class DataProcessor {
             ticket.getChannel().write(voidbuf);
             ticket.getChannel().position(tempPos);
 
-            BackStorage.fileEditSemaphore.release();
+            
             
             FileInputStream fis = new FileInputStream(udo.getTempFile());
             FileChannel fc = fis.getChannel();
@@ -143,12 +136,13 @@ public class DataProcessor {
             //Transfer all data from the temporary file into the backstorage.
             ticket.getChannel().transferFrom(fc, tempPos, udo.getTempFile().length());
             fc.close();
+            BackStorage.fileEditSemaphore.release();
 
             
             
             //Remove the temporary file.
             udo.removeTempFile();
-
+            finish();
             return new IndexedDataObject(udo, newOffset, newVersion);
 
         } catch (IOException e) {

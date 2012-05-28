@@ -12,7 +12,6 @@ import com.mnorrman.datastorageproject.network.jobs.InternalJob;
 import com.mnorrman.datastorageproject.network.jobs.ReceiveConnectJob;
 import com.mnorrman.datastorageproject.network.jobs.SyncStateJob;
 import com.mnorrman.datastorageproject.objects.ServerNode;
-import com.mnorrman.datastorageproject.objects.Tree;
 import com.mnorrman.datastorageproject.tools.HexConverter;
 import java.io.IOException;
 import java.net.InetAddress;

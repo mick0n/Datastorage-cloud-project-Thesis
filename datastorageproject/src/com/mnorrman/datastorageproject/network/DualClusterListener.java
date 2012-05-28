@@ -62,18 +62,14 @@ public class DualClusterListener extends Thread{
                     it.remove();
                     
                     if(key.isValid() && key.isAcceptable()){
-                        System.out.println("Key is acceptable on port " + ((ServerSocketChannel)key.channel()).socket().getLocalPort());
                         ServerSocketChannel ssc = (ServerSocketChannel)key.channel();
                         boolean isClient = ssc.socket().getLocalPort() == Integer.parseInt(Main.properties.getValue("externalport").toString());
                         
                         SocketChannel sc = ssc.accept();
-                        System.out.println("Socketchannel is " + sc);
                         sc.configureBlocking(false);
                         if(isClient){
-                            System.out.println("Adding client");
                             eth.addSocketChannel(sc);
                         }else{
-                            System.out.println("Adding child");
                             ith.addSocketChannel(sc);
                         }
                     }

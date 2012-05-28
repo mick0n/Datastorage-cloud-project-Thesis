@@ -60,14 +60,14 @@ public class PutJob extends ExternalJob {
             long length = buffer.getLong();
 
             udo = new UnindexedDataObject(new File("putjob" + Math.random()), column, row, owner, length);
-            System.out.println("udo: " + udo.toString());
 
             gotUdo = true;
             buffer.clear();
             return true;
         }
 
-        output = new FileOutputStream(udo.getTempFile()).getChannel();
+        if(output == null)
+            output = new FileOutputStream(udo.getTempFile()).getChannel();
 
         int currPos = buffer.position();
 

@@ -49,6 +49,7 @@ public class BackStorage {
         }
 
         /**
+         * Definition from Java SE 1.4.2 Javadoc
          * "r" Open for reading only. Invoking any of the write methods of the
          * resulting object will cause an IOException to be thrown.
          * "rw" Open
@@ -248,6 +249,12 @@ public class BackStorage {
         Main.state = ServerState.CLEANING;
         LogTool.log("Starting to clean the backstorage", LogTool.INFO);
 
+        try{
+            fileEditSemaphore.acquire();
+        }catch(InterruptedException e){
+            LogTool.log(e, LogTool.CRITICAL);
+        }
+        
         long position = 0; //Position in file
         ByteBuffer meta = ByteBuffer.allocate(512);
         IndexedDataObject temp;
@@ -284,7 +291,9 @@ public class BackStorage {
         } catch (IOException e) {
             LogTool.log(e, LogTool.CRITICAL);
         }
-
+        
+        fileEditSemaphore.release();
+        
         LogTool.log("Done cleaning backstorage", LogTool.INFO);
         Main.state = ServerState.IDLE;
         return true;

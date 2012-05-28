@@ -8,6 +8,7 @@ import com.mnorrman.datastorageproject.LogTool;
 import com.mnorrman.datastorageproject.Main;
 import com.mnorrman.datastorageproject.network.jobs.ExternalJob;
 import com.mnorrman.datastorageproject.network.jobs.PutJob;
+import com.mnorrman.datastorageproject.network.jobs.GetJob;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.ClosedChannelException;
@@ -103,7 +104,12 @@ public class ExternalTrafficHandler extends Thread {
                                 buffer.limit(1);
                             }else if(jobs.get(etc.identifier) instanceof PutJob){
                                 if(!((PutJob)jobs.get(etc.identifier)).gotUdo())
-                                    buffer.limit(392);
+                                    buffer.limit(392);                                
+                                else
+                                    buffer.limit(bufferLimit);
+                            }else if(jobs.get(etc.identifier) instanceof GetJob){
+                                if(!((GetJob)jobs.get(etc.identifier)).gotUdo())
+                                    buffer.limit(256);
                                 else
                                     buffer.limit(bufferLimit);
                             }else{
@@ -133,30 +139,13 @@ public class ExternalTrafficHandler extends Thread {
 
                                 switch (command) {
                                     case GET:
+                                        GetJob gj = new GetJob(etc, this, main.getNewDataProcessor());
+                                        jobs.put(gj.getContext().identifier, gj);
                                         break;
                                     case PUT:
                                         PutJob pj = new PutJob(etc, this, main.getNewDataProcessor());
                                         jobs.put(pj.getContext().identifier, pj);
                                         break;
-//                                    case CONNECT:
-//                                        if (!master && cmv.getFrom().equals("00000000")) {
-//                                            if(master){ masterStuff.tree.getNode(itc.identifier).getServerNode().setState(ServerState.NOTRUNNING); }
-//                                            key.cancel();
-//                                            connections.remove(itc.identifier);
-//                                            cmv = null;
-//                                            LogTool.log("Connection from " + itc.channel.getRemoteAddress() + " was denied", LogTool.INFO);
-//                                            return;
-//                                        }
-//                                        ReceiveConnectJob rcj = new ReceiveConnectJob(itc, cmv.getJobID(), this);
-//                                        jobs.put(rcj.getJobID(), rcj);
-//                                        cmv.setJobID(rcj.getJobID());
-//                                        //jobQueue.add(mcj);
-//                                        break;
-//                                    case SYNC_STATE:
-//                                        SyncStateJob ssj = new SyncStateJob(itc, main, this);
-//                                        jobs.put(ssj.getJobID(), ssj);
-//                                        cmv.setJobID(ssj.getJobID());
-//                                        break;
                                 }
                             }else{
                                 if (jobs.containsKey(etc.identifier)) {
@@ -204,12 +193,6 @@ public class ExternalTrafficHandler extends Thread {
             } catch (IOException e) {
                 LogTool.log(e, LogTool.CRITICAL);
             }
-//
-//            if (jobs.isEmpty() && jobQueue.isEmpty() && Main.state.getValue() > ServerState.INDEXING.getValue()) {
-//                Main.state = ServerState.IDLE;
-//            } else if (Main.state.getValue() > ServerState.INDEXING.getValue()) {
-//                Main.state = ServerState.RUNNING;
-//            }
 
             //After checking all keys we check if there are any channels waiting
             //to be registered with this selector. Creates a new ID for each
