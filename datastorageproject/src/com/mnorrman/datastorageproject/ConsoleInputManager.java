@@ -43,7 +43,11 @@ public class ConsoleInputManager extends Thread {
         StringTokenizer st = null;
         print("Welcome to Console Input Manager.");
         do {
-            st = new StringTokenizer(input.nextLine().trim(), " ");
+            try{
+                st = new StringTokenizer(input.nextLine().trim(), " ");
+            }catch(Exception e){
+                continue;
+            }
             command = st.nextToken();
             if (command.toLowerCase().equals("exit")) {
                 //Nothing to do here

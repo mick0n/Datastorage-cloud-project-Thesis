@@ -141,100 +141,93 @@ public class InternalTrafficHandler extends Thread {
                     //Remove key, otherwise it will stay in the list forever.
                     it.remove();
 
-                    try {
-                        if (key.isValid() && key.isReadable()) {
-                            InternalTrafficContext itc = (InternalTrafficContext) key.attachment();
+                    if (key.isValid() && key.isReadable()) {
+                        InternalTrafficContext itc = (InternalTrafficContext) key.attachment();
 
-                            ClusterMessageVariables cmv = new ClusterMessageVariables();
+                        ClusterMessageVariables cmv = new ClusterMessageVariables();
 
-                            buffer.limit(8);
-                            if (buffer.position() != 0) {
-                                buffer.rewind();
-                            }
+                        buffer.limit(8);
+                        if (buffer.position() != 0) {
+                            buffer.rewind();
+                        }
 
-                            while (buffer.hasRemaining()) {
-                                try {
-                                    if ((readBytes = itc.channel.read(buffer)) == -1) {
-                                        if(master){ masterStuff.tree.getNode(itc.identifier).getServerNode().setState(ServerState.NOTRUNNING); }
-                                        connections.remove(itc.identifier);
-                                        key.cancel();
-                                        LogTool.log("Connection from " + itc.channel.getRemoteAddress() + " was closed", LogTool.INFO);
-                                        break;
-                                    }
-                                    if (buffer.limit() == 8 && buffer.position() == buffer.limit()) {
-                                        buffer.rewind();
-                                        cmv.setFrom(HexConverter.toHex(buffer.getInt()));
-                                        cmv.setLength(buffer.getInt());
-                                        if (cmv.getLength() > 0) {
-                                            buffer.limit(8 + cmv.getLength());
-                                        }
-                                    }
-
-                                } catch (IOException e) {
+                        while (buffer.hasRemaining()) {
+                            try {
+                                if ((readBytes = itc.channel.read(buffer)) == -1) {
                                     if(master){ masterStuff.tree.getNode(itc.identifier).getServerNode().setState(ServerState.NOTRUNNING); }
                                     connections.remove(itc.identifier);
                                     key.cancel();
                                     LogTool.log("Connection from " + itc.channel.socket().getInetAddress().getHostAddress() + ":" + itc.channel.socket().getPort() + " was closed", LogTool.INFO);
                                     break;
                                 }
-                            }
+                                if (buffer.limit() == 8 && buffer.position() == buffer.limit()) {
+                                    buffer.rewind();
+                                    cmv.setFrom(HexConverter.toHex(buffer.getInt()));
+                                    cmv.setLength(buffer.getInt());
+                                    if (cmv.getLength() > 0) {
+                                        buffer.limit(8 + cmv.getLength());
+                                    }
+                                }
 
-                            if (buffer.position() < 12) {
+                            } catch (IOException e) {
+                                if(master){ masterStuff.tree.getNode(itc.identifier).getServerNode().setState(ServerState.NOTRUNNING); }
+                                connections.remove(itc.identifier);
+                                key.cancel();
+                                LogTool.log("Connection from " + itc.channel.socket().getInetAddress().getHostAddress() + ":" + itc.channel.socket().getPort() + " was closed", LogTool.INFO);
                                 break;
                             }
-
-                            buffer.flip();
-                            cmv = new ClusterMessageVariables(buffer);
-
-                            if (cmv.getJobID().equals("00000000") || !jobs.containsKey(cmv.getJobID())) {
-                                Protocol command = Protocol.getCommand(buffer.get());
-
-                                switch (command) {
-                                    case CONNECT:
-                                        if (!master && cmv.getFrom().equals("00000000")) {
-                                            if(master){ masterStuff.tree.getNode(itc.identifier).getServerNode().setState(ServerState.NOTRUNNING); }
-                                            key.cancel();
-                                            connections.remove(itc.identifier);
-                                            cmv = null;
-                                            LogTool.log("Connection from " + itc.channel.getRemoteAddress() + " was denied", LogTool.INFO);
-                                            return;
-                                        }
-                                        ReceiveConnectJob rcj = new ReceiveConnectJob(itc, cmv.getJobID(), this);
-                                        jobs.put(rcj.getJobID(), rcj);
-                                        cmv.setJobID(rcj.getJobID());
-                                        //jobQueue.add(mcj);
-                                        break;
-                                    case SYNC_STATE:
-                                        SyncStateJob ssj = new SyncStateJob(itc, main, this);
-                                        jobs.put(ssj.getJobID(), ssj);
-                                        cmv.setJobID(ssj.getJobID());
-                                        break;
-                                }
-                            }
-
-                            if (cmv != null) {
-                                //Perform the job
-                                InternalJob job = jobs.get(cmv.getJobID());
-                                try {
-                                    if (job.readOperation(buffer)) {
-                                        //If the readOperation returns true it
-                                        //means it has something to write.
-                                        jobQueue.offer(job);
-                                    }
-                                } catch (IOException e) {
-                                    LogTool.log(e, LogTool.CRITICAL);
-                                }
-                                if (job.isFinished()) {
-                                    jobs.remove(job.getJobID());
-                                }
-                            }
-                            buffer.clear();
                         }
-                    } catch (IOException e) {
-                        //Remove the channel from this selector
-                        key.cancel();
-                        connections.remove(((InternalTrafficContext) key.attachment()).identifier);
-                        LogTool.log(e, LogTool.WARNING);
+
+                        if (buffer.position() < 12) {
+                            break;
+                        }
+
+                        buffer.flip();
+                        cmv = new ClusterMessageVariables(buffer);
+
+                        if (cmv.getJobID().equals("00000000") || !jobs.containsKey(cmv.getJobID())) {
+                            Protocol command = Protocol.getCommand(buffer.get());
+
+                            switch (command) {
+                                case CONNECT:
+                                    if (!master && cmv.getFrom().equals("00000000")) {
+                                        if(master){ masterStuff.tree.getNode(itc.identifier).getServerNode().setState(ServerState.NOTRUNNING); }
+                                        key.cancel();
+                                        connections.remove(itc.identifier);
+                                        cmv = null;
+                                        LogTool.log("Connection from " + itc.channel.socket().getInetAddress().getHostAddress() + ":" + itc.channel.socket().getPort() + " was denied", LogTool.INFO);
+                                        return;
+                                    }
+                                    ReceiveConnectJob rcj = new ReceiveConnectJob(itc, cmv.getJobID(), this);
+                                    jobs.put(rcj.getJobID(), rcj);
+                                    cmv.setJobID(rcj.getJobID());
+                                    //jobQueue.add(mcj);
+                                    break;
+                                case SYNC_STATE:
+                                    SyncStateJob ssj = new SyncStateJob(itc, main, this);
+                                    jobs.put(ssj.getJobID(), ssj);
+                                    cmv.setJobID(ssj.getJobID());
+                                    break;
+                            }
+                        }
+
+                        if (cmv != null) {
+                            //Perform the job
+                            InternalJob job = jobs.get(cmv.getJobID());
+                            try {
+                                if (job.readOperation(buffer)) {
+                                    //If the readOperation returns true it
+                                    //means it has something to write.
+                                    jobQueue.offer(job);
+                                }
+                            } catch (IOException e) {
+                                LogTool.log(e, LogTool.CRITICAL);
+                            }
+                            if (job.isFinished()) {
+                                jobs.remove(job.getJobID());
+                            }
+                        }
+                        buffer.clear();
                     }
                 }
             }

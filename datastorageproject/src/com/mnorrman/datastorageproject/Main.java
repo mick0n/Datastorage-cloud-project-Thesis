@@ -216,7 +216,7 @@ public class Main {
 //            System.exit(0);
 //        }
 
-        LogTool.setLogLevel(LogTool.WARNING);
+        LogTool.setLogLevel(LogTool.INFO);
 
         state = ServerState.NOTRUNNING;
 
@@ -244,8 +244,8 @@ public class Main {
         Main m = new Main();
 
         //Add a consoleInputManager
-        ConsoleInputManager console = new ConsoleInputManager(m);
-        console.start();
+//        ConsoleInputManager console = new ConsoleInputManager(m);
+//        console.start();
     }
 
     /**
